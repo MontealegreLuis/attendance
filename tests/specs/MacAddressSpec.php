@@ -6,6 +6,7 @@
  */
 namespace specs\Codeup;
 
+use Codeup\MacAddress;
 use PhpSpec\ObjectBehavior;
 
 class MacAddressSpec extends ObjectBehavior
@@ -20,5 +21,11 @@ class MacAddressSpec extends ObjectBehavior
     {
         $this->beConstructedThrough('withValue', ['this is not an address']);
         $this->shouldThrow(\Exception::class)->duringInstantiation();
+    }
+
+    function it_should_know_when_it_is_equal_to_another_address()
+    {
+        $this->beConstructedThrough('withValue', ['e0:ac:cb:82:46:6e']);
+        $this->equals(MacAddress::withValue('e0:ac:cb:82:46:6e'))->shouldBe(true);
     }
 }
