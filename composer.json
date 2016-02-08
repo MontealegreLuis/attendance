@@ -4,6 +4,11 @@
             "Codeup\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Codeup\\": "tests/src"
+        }
+    },
     "config": {
         "bin-dir": "bin/"
     },
@@ -13,6 +18,7 @@
         "beberlei/assert": "^2.4"
     },
     "require-dev": {
-        "phpspec/phpspec": "^2.4"
+        "phpspec/phpspec": "^2.4",
+        "fzaninotto/faker": "^1.5"
     }
 }

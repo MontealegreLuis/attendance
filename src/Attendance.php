@@ -19,32 +19,39 @@ class Attendance
     /** @var int */
     private $type;
 
+    /** @var Student */
+    private $student;
+
     /**
      * @param DateTime $date
      * @param int $type
+     * @param Student $student
      */
-    private function __construct(DateTime $date, $type)
+    private function __construct(DateTime $date, $type, Student $student)
     {
         $this->date = $date;
         $this->type = $type;
+        $this->student = $student;
     }
 
     /**
      * @param DateTime $aDate
+     * @param Student $student
      * @return Attendance
      */
-    public static function checkOut(DateTime $aDate)
+    public static function checkOut(DateTime $aDate, Student $student)
     {
-        return new Attendance($aDate, self::CHECK_OUT);
+        return new Attendance($aDate, self::CHECK_OUT, $student);
     }
 
     /**
      * @param DateTime $aDate
+     * @param Student $student
      * @return Attendance
      */
-    public static function checkIn(DateTime $aDate)
+    public static function checkIn(DateTime $aDate, Student $student)
     {
-        return new Attendance($aDate, self::CHECK_IN);
+        return new Attendance($aDate, self::CHECK_IN, $student);
     }
 
     /**

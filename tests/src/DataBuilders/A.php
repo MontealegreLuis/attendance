@@ -4,10 +4,12 @@
  *
  * This source file is subject to the license that is bundled with this package in the file LICENSE.
  */
-namespace Codeup;
+namespace Codeup\DataBuilders;
 
-interface AttendanceRecords
+class A
 {
-
-    public function register(Attendance $attendance);
+    public static function student()
+    {
+        return new StudentBuilder();
+    }
 }
