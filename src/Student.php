@@ -7,6 +7,7 @@
 namespace Codeup;
 
 use Assert\Assertion;
+use DateTime;
 
 class Student
 {
@@ -33,11 +34,13 @@ class Student
 
     /**
      * @param Bootcamp $bootcamp
+     * @param string $name
+     * @param MacAddress $macAddress
      * @return Student
      */
-    public static function attend(Bootcamp $bootcamp)
+    public static function attend(Bootcamp $bootcamp, $name, MacAddress $macAddress)
     {
-        return new Student($bootcamp);
+        return new Student($bootcamp, $name, $macAddress);
     }
 
     /**
@@ -48,5 +51,30 @@ class Student
         Assertion::string($name);
         Assertion::notEmpty(trim($name));
         $this->name = $name;
+    }
+
+    public function name()
+    {
+        return $this->name;
+    }
+
+    public function checkIn(DateTime $now)
+    {
+        // TODO: write logic here
+    }
+
+    public function checkOut(DateTime $now)
+    {
+        // TODO: write logic here
+    }
+
+    public function hasCheckedIn()
+    {
+        return true;
+    }
+
+    public function hasCheckedOut()
+    {
+        return true;
     }
 }

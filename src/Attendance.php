@@ -8,7 +8,50 @@ namespace Codeup;
 
 use DateTime;
 
-interface Attendance
+class Attendance
 {
-    public function on(DateTime $date);
+    const CHECK_IN = 0;
+    const CHECK_OUT = 1;
+
+    /** @var DateTime */
+    private $date;
+
+    /** @var int */
+    private $type;
+
+    /**
+     * @param DateTime $date
+     * @param int $type
+     */
+    private function __construct(DateTime $date, $type)
+    {
+        $this->date = $date;
+        $this->type = $type;
+    }
+
+    /**
+     * @param DateTime $aDate
+     * @return Attendance
+     */
+    public static function checkOut(DateTime $aDate)
+    {
+        return new Attendance($aDate, self::CHECK_OUT);
+    }
+
+    /**
+     * @param DateTime $aDate
+     * @return Attendance
+     */
+    public static function checkIn(DateTime $aDate)
+    {
+        return new Attendance($aDate, self::CHECK_IN);
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function onDate()
+    {
+        return $this->date;
+    }
 }
