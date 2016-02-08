@@ -32,9 +32,12 @@ class MacAddress
      */
     private function setAddress($value)
     {
-        if (!filter_var($value, FILTER_VALIDATE_MAC)) {
-            throw new \Exception("{$value} is not a valid MAC address");
-        }
+        AssertValueIs::macAddress($value);
         $this->value = $value;
+    }
+
+    public static function isValid($address)
+    {
+        return preg_match('/^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/', trim($address)) === 1;
     }
 }

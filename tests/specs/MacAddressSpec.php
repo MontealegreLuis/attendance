@@ -12,8 +12,8 @@ class MacAddressSpec extends ObjectBehavior
 {
     function it_should_be_created_with_a_valid_value()
     {
-        $this->beConstructedThrough('withValue', ['00-80-C8-E3-4C-BD']);
-        $this->value()->shouldBe('00-80-C8-E3-4C-BD');
+        $this->beConstructedThrough('withValue', ['e0:ac:cb:82:46:6e']);
+        $this->value()->shouldBe('e0:ac:cb:82:46:6e');
     }
 
     function it_should_not_be_created_with_an_invalid_address()

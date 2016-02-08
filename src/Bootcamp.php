@@ -6,7 +6,6 @@
  */
 namespace Codeup;
 
-use Assert\Assertion;
 use DateTime;
 
 class Bootcamp
@@ -50,7 +49,7 @@ class Bootcamp
      */
     private function setCohortName($name)
     {
-        Assertion::notBlank(trim($name), "Cohort's name cannot be empty");
+        AssertValueIs::notBlank(trim($name), "Cohort's name cannot be empty");
         $this->cohortName = $name;
     }
 }

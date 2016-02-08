@@ -6,7 +6,6 @@
  */
 namespace Codeup;
 
-use Assert\Assertion;
 use DateTime;
 
 class Student
@@ -48,8 +47,8 @@ class Student
      */
     private function setName($name)
     {
-        Assertion::string($name);
-        Assertion::notEmpty(trim($name));
+        AssertValueIs::string($name);
+        AssertValueIs::notEmpty(trim($name));
         $this->name = $name;
     }
 
