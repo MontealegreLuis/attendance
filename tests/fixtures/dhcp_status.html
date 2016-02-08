@@ -1,0 +1,2176 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="Pragma" content="No-Cache">
+    <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+    <title>Linksys LRT214 Configuration Utility</title>
+    <link type="text/css" rel="stylesheet" href="dhcp_status_files/nk.html">
+    <script src="dhcp_status_files/LRT214Sep%252014%25202015174537nk.html"></script>
+    <!--<script src="nk.js"></script> -->
+    <script src="dhcp_status_files/LRT214Sep%252014%25202015174537lg.html"></script>
+    <!--<script src="lg.js"></script> -->
+    <script language="JavaScript">
+        /***************************************************/
+        /*												     */
+        /*      		Begin of content's JavaScript function    	    */
+        /*												    */
+        /***************************************************/
+        function Entryfunction() {
+            ChangeBgsize();
+        }
+        function Leavefunction() {
+            chLeave();
+        }
+        var removeLinen;
+        function removeLine(n) {
+            removeLinen = n;
+            top.ConfirmMsg("Confirm", cRemoveClient, "removeLine", "");
+            /*	if (confirm(cRemoveClient))
+             {
+             document.formdhcp_status.RemoveLine.value=n;
+             window.status=wRemoveClient;
+             document.formdhcp_status.submit();
+             }*/
+        }
+        var removeLinev6n;
+        function removeLine_v6(n) {
+            removeLinev6n = n;
+            top.ConfirmMsg("Confirm", cRemoveClient, "removeLine_v6", "");
+            /*	if (confirm(cRemoveClient))
+             {
+             document.formdhcp_status.RemoveLine_v6.value=n;
+             window.status=wRemoveClient;
+             document.formdhcp_status.submit();
+             }*/
+        }
+
+        function getIPNumber(ipAddr) {
+            var result = 0;
+            var value = 0;
+            var ipParts = new Array();
+
+            ipParts = ipAddr.split(".");
+
+            for (var i = 0; i < ipParts.length; i++) {
+                var addr = ipParts[i];
+
+                if (i == 0)
+                    value = addr * 256 * 256 * 256;
+                else if (i == 1)
+                    value = addr * 256 * 256;
+                else if (i == 2)
+                    value = addr * 256;
+                else if (i == 3)
+                    value = addr * 1;
+
+                result = result + value;
+            }
+            return result;
+        }
+
+        function IP_S_to_B_Data(a, b) {
+            var aText = a;
+            var bText = b;
+            var items;
+
+            if (!a) return -1;
+            if (!b) return 1;
+
+            items = aText.split(splitVarforSpecialWordField + "#");
+            aText = getIPNumber(items[0]);
+
+            items = bText.split(splitVarforSpecialWordField + "#");
+            bText = getIPNumber(items[0]);
+
+            if (aText < bText) return -1;
+            if (aText > bText) return 1;
+            return 0;
+        }
+
+        var list;
+        function produce_table(data) {
+            var items;
+
+            list = data.split(splitVarforSpecialWordField + "?");
+            list.sort(IP_S_to_B_Data);
+
+            if (list.length < 2) return;
+
+            document.write('<tr>');
+            document.write('<td class="STtable">');
+            document.write('<table width="100%"  class="STtable"  border="0">');
+
+            for (var i = 1; i < list.length; i++) {
+                items = list[i].split(splitVarforSpecialWordField + "#");
+                if (i % 2 == 1)
+                    Print_table_tr_cell("OddRow", items[1], items[0], items[2], items[3], items[4]);
+                else
+                    Print_table_tr_cell("EvenRow", items[1], items[0], items[2], items[3], items[4]);
+                //list[i]=list[i]+"#"+i;
+            }
+            document.write('</table>');
+            document.write('</td>');
+            document.write('</tr>');
+        }
+
+        function produce_table_v6(data) {
+            var items;
+
+            list = data.split(splitVarforSpecialWordField + "?");
+            list.sort(IP_S_to_B_Data);
+
+            if (list.length < 2) return;
+
+            for (var i = 1; i < list.length; i++) {
+                items = list[i].split(splitVarforSpecialWordField + "#");
+                if (i % 2 == 1)
+                    Print_table_tr_cell_v6("OddRow", items[1], items[0], items[3]);
+                else
+                    Print_table_tr_cell_v6("EvenRow", items[1], items[0], items[3]);
+                //Print_table_tr_cell_v6("OddRow",items[1],items[0],items[2],items[3]); print MAC
+            }
+        }
+
+
+        function EditIndexChange(F) {
+            F.SubnetEditIndex.value = F.indexID.value
+            // F.submitStatus.value=0;
+            F.submit();
+        }
+
+        function chChangeIPmode(val) {
+            var obj;
+            var F = document.formdhcp_status;
+            var serviceName = "IPv6 DHCP Server";
+
+            if (val == 1) {
+                obj = MM_findObj('ClientTableV4', '');
+                obj.style.display = style_display_on();
+                obj = MM_findObj('ClientTableV6', '');
+                obj.style.display = 'none';
+            }
+            else if (val == 2) {
+                if ('checked' == "checked") {
+                    top.ConfirmMsg("Confirm", (alertMessageBegin + serviceName + selectMessage), "chChangeIPmode", "");
+                    /*			if (confirm(alertMessageBegin+serviceName+selectMessage)){
+                     document.location.href="network.htm";
+                     }*/
+                }
+                else {
+                    obj = MM_findObj('ClientTableV4', '');
+                    obj.style.display = 'none';
+                    obj = MM_findObj('ClientTableV6', '');
+                    obj.style.display = style_display_on();
+                }
+
+            }
+
+        }
+
+        function ConfirmMsgResult(chose, mode, a) {
+            if (mode == "removeLine") {
+                if (chose == "yes") {
+                    document.formdhcp_status.RemoveLine.value = removeLinen;
+                    window.status = wRemoveClient;
+                    document.formdhcp_status.submit();
+                }
+                else if (chose == "no") {
+                    return;
+                }
+            }
+
+            if (mode == "removeLine_v6") {
+                if (chose == "yes") {
+                    document.formdhcp_status.RemoveLine_v6.value = removeLinev6n;
+                    window.status = wRemoveClient;
+                    document.formdhcp_status.submit();
+                }
+                else if (chose == "no") {
+                    return;
+                }
+            }
+
+            if (mode == "chChangeIPmode") {
+                if (chose == "yes") {
+                    document.location.href = "network.htm";
+                }
+                else if (chose == "no") {
+                    return;
+                }
+            }
+        }
+
+        //================= End =================*/
+
+        /***************************************************/
+        /*												   */
+        /*      			  Begin of content    				   */
+        /*												   */
+        /***************************************************/
+        var ButtonType = "Refresh";		// NULL/Refresh/OkCancel/BackOkCancel/ShowTableOkCancel
+        var Reloadlink = "";
+        var helplink = 'help_dhcp_status.html';
+        var UserName = 'admin';
+        var FixedTableWidth = "100%";
+        var head_width = 130;
+
+        function PrintContent() {
+            PrintBeginContent();
+            PrintDhcpStatus(1);
+            PrintClientTable(0);
+            chChangeIPmode(1);
+            PrintEndContent();
+        }
+
+        function PrintDhcpStatus(hasUnderLine) {
+            PrintBeginBlock(0);
+            var data = document.formdhcp_status.SubnetData.value.split(';');
+            var server_data = document.formdhcp_status.DHCPServerStatus.value.split(',');
+            document.write('<table width="' + FixedTableWidth + '" class="Infotable" border="' + Tableborder + '">');
+            document.write('<tr>');
+            document.write('<td width="' + head_width + '"></td>');
+            document.write('<th>IPv4</th>');
+            document.write('<th>IPv6</th>');
+            document.write('</tr>');
+            document.write('<tr>');
+            document.write('<td width="' + head_width + '" align="left">VID&nbsp;:&nbsp;</td>');
+            document.write('<td width="40%">');
+            document.write('<select class="select" id="indexID" name="indexID" style="width:50px" onChange="EditIndexChange(this.form);">');
+            for (var i = 0; i <= data.length - 1; i++) {
+                document.write('<option value="' + data[i] + '" ');
+                if (data[i] == document.formdhcp_status.SubnetEditIndex.value)
+                    document.write(' selected');
+                document.write('>' + data[i] + '</option>');
+            }
+            document.write('</select>');
+            document.write('</td>');
+
+            document.write('<td width="40%"></td>');
+            document.write('<td></td>');
+            document.write('</tr>');
+            document.write('<tr>');
+            document.write('<td width="' + head_width + '" align="left">DHCP Server&nbsp;:&nbsp;</td>');
+            document.write('<td width="40%">' + server_data[0] + '</td>');
+            document.write('<td width="40%">fc00::1</td>');
+            document.write('<td></td>');
+            document.write('</tr>');
+            document.write('<tr>');
+            document.write('<td width="' + head_width + '" align="left">Dynamic IP Used&nbsp;:&nbsp;</td>');
+            document.write('<td>' + server_data[1] + '</td>');
+            document.write('<td></td>');
+            document.write('</tr>');
+            document.write('<tr>');
+            document.write('<td width="' + head_width + '" align="left">Static IP Used&nbsp;:&nbsp;</td>');
+            document.write('<td>' + server_data[2] + '</td>');
+            document.write('<td>---</td>');
+            document.write('<td></td>');
+            document.write('</tr>');
+            document.write('<tr>');
+            document.write('<td width="' + head_width + '" align="left">DHCP Available&nbsp;:&nbsp;</td>');
+            document.write('<td>' + server_data[3] + '</td>');
+            document.write('<td></td>');
+            document.write('<td></td>');
+            document.write('</tr>');
+            document.write('<tr>');
+            document.write('<td width="' + head_width + '" align="left">Total&nbsp;:&nbsp;</td>');
+            document.write('<td>' + server_data[4] + '</td>');
+            document.write('<td>128</td>');
+            document.write('<td></td>');
+            document.write('</tr>');
+            document.write('</table>');
+            PrintEndBlock(hasUnderLine, 1);
+        }
+
+        function Print_table_tr_cell(cell_type, host_name, IP, MAC, time, bind_name) {
+            document.write('<tr class=' + cell_type + ' >');
+            document.write('<td class="tdContentBorderRight tdContentC">' + host_name + '</td>');
+            document.write('<td class="tdContentBorderRight tdContentC">' + bind_name + '<img border="0" src="images/_blank.gif" width="1" height="1"></td>');
+            document.write('<td class="tdContentBorderRight tdContentC">' + IP + '</td>');
+            document.write('<td class="tdContentBorderRight tdContentC">' + MAC + '</td>');
+            document.write('<td class="tdContentBorderRight tdContentC">' + time + '</td>');
+            document.write('<td class="tdContentBorderRight tdContentC"><a href=javascript:removeLine("' + IP + '")><img src=images/trash.gif width=20 height=16 border=0 title=Delete></a></td>');
+
+            document.write('<td class="tdContentC">');
+            document.write('<img border="0" src="images/_blank.gif" width="10" height="1">');
+            document.write('</td>');
+
+            document.write('</tr>');
+        }
+
+        function Print_table_tr_cell_v6(cell_type, host_name, IP, time) {
+            document.write('<tr class=' + cell_type + ' >');
+            document.write('<td class="tdContentBorderRight tdContentC">' + host_name + '<img border="0" src="images/_blank.gif" width="8" height="1"></td>');
+            document.write('<td class="tdContentBorderRight tdContentC">' + IP + '</td>');
+            document.write('<td class="tdContentBorderRight tdContentC">' + time + '</td>');
+
+            document.write('<td class="tdContentC">');
+            document.write('<img border="0" src="images/_blank.gif" width="10" height="1">');
+            document.write('</td>');
+
+            document.write('</tr>');
+        }
+
+        function PrintClientTable(hasUnderLine) {
+
+            //PrintBeginBlock(1, "Client Table");
+            var titlestr = "Client Table";
+            document.write('<tr><td>');
+            document.write('<table id="' + titlestr + '" width="100%" class="Grouptitle" border="0" cellpadding="0" cellspacing="0">');
+            document.write('<tr>');
+            document.write('<td align="left" valign="top"><font class="Grouptitle">');
+            PrintBarItem(titlestr);
+            document.write('</font></td>');
+            document.write('</tr>');
+            document.write('</table>');
+            document.write('<table id="' + titlestr + 'content" width="100%" border="0" cellpadding="0" cellspacing="0">');
+            document.write('<tr>');
+            document.write('<td align="left" valign="top">');
+
+            var data = document.formdhcp_status.DHCPClientStatus.value.split(';');
+            document.write('<table id=ClientTableV4  width="' + FixedTableWidth + '" border="0">');
+            PrintIPTypeTab('IPv4', 'true', 'IPv6', 'false');
+            document.write('<tr><td class="ipvxtabtable" style="background:#f9f9f9;">');
+            document.write('<table width="100%" cellpadding="0" cellspacing="0">');
+            document.write('<tr><td>');
+
+            document.write('<table width="100%" class="SpecialTable" cellspacing="0" cellpadding="0" border="0">');
+            document.write('<tr>');
+            document.write('<th class="firstth tdContentC">');
+            document.write('<img border="0" src="images/_blank.gif" width="10" height="1">');
+            document.write('Client Host Name');
+            document.write('<img border="0" src="images/_blank.gif" width="10" height="1">');
+            document.write('</th>');
+
+            document.write('<th class="middleth tdContentC">');
+            document.write('<img border="0" src="images/_blank.gif" width="10" height="1">');
+            document.write('Rule Name');
+            document.write('<img border="0" src="images/_blank.gif" width="10" height="1">');
+            document.write('</th>');
+            //
+            document.write('<th class="middleth tdContentC">');
+            document.write('<img border="0" src="images/_blank.gif" width="10" height="1">');
+            document.write('IP Address');
+            document.write('<img border="0" src="images/_blank.gif" width="10" height="1">');
+            document.write('</th>');
+
+            document.write('<th class="middleth tdContentC">');
+            document.write('<img border="0" src="images/_blank.gif" width="10" height="1">');
+            document.write('MAC Address');
+            document.write('<img border="0" src="images/_blank.gif" width="10" height="1">');
+            document.write('</th>');
+
+            document.write('<th class="middleth tdContentC">');
+            document.write('<img border="0" src="images/_blank.gif" width="10" height="1">');
+            document.write('Client Lease Time');
+            document.write('<img border="0" src="images/_blank.gif" width="10" height="1">');
+            document.write('</th>');
+
+            document.write('<th class="middleth tdContentC">');
+            document.write('<img border="0" src="images/_blank.gif" width="10" height="1">');
+            document.write('Delete');
+            document.write('<img border="0" src="images/_blank.gif" width="10" height="1">');
+            document.write('</th>');
+
+            document.write('<th class="lastth tdContentC">');
+            document.write('<img border="0" src="images/_blank.gif" width="10" height="1">');
+            document.write('</th>');
+            document.write('</tr>');
+
+            if ((data.length - 1) > 0) {
+                for (var i = 0; i < data.length - 1; i++) {//host_name ,rulename, ip ,mac ,leasetime
+                    //Print_table_tr_cell(cell_type,host_name,IP,MAC, time, bind_name)
+                    var client_data = data[i].split('&');
+                    if (i % 2 == 1)
+                        Print_table_tr_cell("OddRow", client_data[0], client_data[2], client_data[3], client_data[4], client_data[1]);
+                    else
+                        Print_table_tr_cell("EvenRow", client_data[0], client_data[2], client_data[3], client_data[4], client_data[1]);
+
+                }
+            }
+            document.write('</table>');
+
+            document.write('</td>');
+            document.write('</tr>');
+            document.write('</table>');
+
+            document.write('</td>');
+            document.write('</tr>');
+            document.write('</table>');
+
+//ipv6
+            document.write('<table id=ClientTableV6  width="' + FixedTableWidth + '" border="0"><tr><td>');
+            PrintIPTypeTab('IPv4', 'false', 'IPv6', 'true');
+            document.write('<tr><td class="ipvxtabtable" style="background:#f9f9f9;">');
+            document.write('<table width="100%" cellpadding="0" cellspacing="0">');
+            document.write('<tr><td>');
+
+            document.write('<table width="100%" class="SpecialTable" cellspacing="0" cellpadding="0" border="0">');
+            document.write('<tr height="20">');
+            document.write('<th class="firstth tdContentC">');
+            document.write('<img border="0" src="images/_blank.gif" width="10" height="1">');
+            document.write('Client Host Name');
+            document.write('<img border="0" src="images/_blank.gif" width="10" height="1">');
+            document.write('</th>');
+
+            document.write('<th class="middleth tdContentC">');
+            document.write('<img border="0" src="images/_blank.gif" width="10" height="1">');
+            document.write('IP Address');
+            document.write('<img border="0" src="images/_blank.gif" width="10" height="1">');
+            document.write('</th>');
+
+            document.write('<th class="middleth tdContentC">');
+            document.write('<img border="0" src="images/_blank.gif" width="10" height="1">');
+            document.write('Client Lease Time');
+            document.write('<img border="0" src="images/_blank.gif" width="10" height="1">');
+            document.write('</th>');
+
+            document.write('<th class="lastth tdContentC">');
+            document.write('<img border="0" src="images/_blank.gif" width="10" height="1">');
+            document.write('</th>');
+            document.write('</tr>');
+
+            if ('checked' != "checked") {
+
+            }
+            document.write('</table>');
+
+            document.write('</td>');
+            document.write('</tr>');
+            document.write('</table>');
+
+            document.write('</td>');
+            document.write('</tr>');
+            document.write('</table>');
+
+            PrintEndBlock(hasUnderLine);
+        }
+
+        //=============== End of content ===============*/
+    </script>
+</head>
+<body class="mainframe" onload="Entryfunction();" onunload="Leavefunction();"
+      onresize="ChangeBgsize();">
+<script>PrintBackground();</script>
+<div id="maskAlertDiv" class="divAll">&nbsp;</div>
+<div id="AlertDiv"
+     style="display:none;position: absolute; width: 356px; top: 30%; left: 40%; background: none repeat scroll 0% 0% white; z-index: 1112;"></div>
+<div id="AlertDiv1"
+     style="display:none;position: absolute; width: 356px; top: 30%; left: 40%; background: none repeat scroll 0% 0% white; z-index:1113;"></div>
+<div id="AlertDiv2"
+     style="display:none;position: absolute; width: 356px; top: 30%; left: 40%; background: none repeat scroll 0% 0% white; z-index:1114;"></div>
+<div id="AlertDiv3"
+     style="display:none;position: absolute; width: 356px; top: 30%; left: 40%; background: none repeat scroll 0% 0% white; z-index:1115;"></div>
+<div id="AlertDiv4"
+     style="display:none;position: absolute; width: 356px; top: 30%; left: 40%; background: none repeat scroll 0% 0% white; z-index:1116;"></div>
+<div class="page"></div>
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+    <form id="submitform" name="submitform" method="post"></form>
+    <input id="pagewidthindex" name="pagewidthindex" value="0" type="hidden">
+    <input id="submitStatus" name="submitStatus" value="99" type="hidden">
+    <script>var PageWidth = document.submitform.pagewidthindex.value;</script>
+
+
+    <script src="dhcp_status_files/config.html"></script>
+    <script src="dhcp_status_files/LRT214Sep%252014%25202015174537menu.html"></script>
+    <!--<script src="menu.js"></script> -->
+    <script>
+        SetItemInit(foldersTree, 3, 2);		// Set Selected Node
+        initializeTree(foldersTree); 			// Draw Menu & Layout
+    </script>
+    <tbody>
+    <tr>
+        <td style="border-collapse: collapse;width:100%;" align="center"
+            valign="top">
+            <table id="mainframe"
+                   style="min-width: 965px; background: white none repeat scroll 0% 0%; border-collapse: collapse;"
+                   cellpadding="0" cellspacing="0" border="0" height="100%">
+                <tbody>
+                <tr>
+                    <td class="logoleft" colspan="0" padding-left="30px"
+                        height="60" valign="middle">
+                        <table style="border-collapse: collapse;"
+                               cellpadding="0" cellspacing="0" border="0"
+                               width="100%">
+                            <tbody>
+                            <tr>
+                                <td class="leftheaderfont" rowspan="2"
+                                    valign="bottom" width="62">
+                                    <div class="Logo"
+                                         onclick="window.open('http://www.belkin.com/');"></div>
+                                </td>
+                                <td class="rightheaderfont" align="right"
+                                    valign="bottom"><img
+                                        src="dhcp_status_files/_blank.html"
+                                        border="0" height="1" width="20">Page
+                                    Width:<img
+                                            src="dhcp_status_files/_blank.html"
+                                            border="0" height="1"
+                                            width="8"><select class="Select"
+                                                              name="pagewidth"
+                                                              id="pagewidth"
+                                                              onchange="setframewidth(this);">
+                                        <option value="" selected="selected">
+                                            Auto
+                                        </option>
+                                        <option value="965">965px</option>
+                                        <option value="1206">1.25*965px</option>
+                                        <option value="1448">1.5*965px</option>
+                                        <option value="1668">1.75*965px</option>
+                                        <option value="1930">2*965px</option>
+                                    </select><img
+                                            src="dhcp_status_files/_blank.html"
+                                            border="0" height="1" width="20">admin<img
+                                            src="dhcp_status_files/_blank.html"
+                                            border="0" height="1"
+                                            width="20"><img
+                                            src="dhcp_status_files/icon_logout.html"
+                                            border="0" height="12" width="12">&nbsp;<a
+                                            href="http://10.10.1.1/cgi-bin/welcome.cgi?&amp;status=logout">Logout</a><img
+                                            src="dhcp_status_files/_blank.html"
+                                            border="0" height="1"
+                                            width="20"><img
+                                            src="dhcp_status_files/icon_help.html"
+                                            border="0" height="12" width="12">&nbsp;<a
+                                            color="#ffffff"
+                                            href="javascript:callHelp();">Help</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="downheader" colspan="1"
+                                    valign="bottom">LRT214&nbsp;&nbsp;Gigabit
+                                    VPN Router
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <table cellpadding="0" cellspacing="0" border="0"
+                               width="100%">
+                            <tbody>
+                            <tr>
+                                <td colspan="3">
+                                    <table border-collapse="collapse"
+                                           cellpadding="0" cellspacing="0"
+                                           border="0" width="100%">
+                                        <tbody>
+                                        <tr height="26">
+                                            <td id="summary" name="summary"
+                                                class="menustyle2"
+                                                align="center"><a
+                                                    onclick="JavaScript:callMenuPage('home.htm',1);">System
+                                                Status</a></td>
+                                            <td id="wizard" name="wizard"
+                                                class="menustyle2"
+                                                align="center"><a
+                                                    onclick="JavaScript:callMenuPage('wizard.htm',2);">Quick
+                                                Start</a></td>
+                                            <td id="network" name="network"
+                                                class="menustyle1"
+                                                align="center" height="40"
+                                                width="193"><a
+                                                    onclick="JavaScript:callMenuPage('network.htm',3);">Configuration</a>
+                                            </td>
+                                            <td id="maintenance"
+                                                name="maintenance"
+                                                class="menustyle2"
+                                                align="center"><a
+                                                    onclick="JavaScript:callMenuPage('sys_diag.htm',4);">Maintenance</a>
+                                            </td>
+                                            <td id="tec" name="tec"
+                                                class="menustyle2"
+                                                align="center"><a
+                                                    onclick="JavaScript:callMenuPage('support.htm',5);">Support</a>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><img src="dhcp_status_files/_blank.html"
+                                         border="0" height="8" width="1"></td>
+                            </tr>
+                            <tr></tr>
+                            <tr>
+                                <td class="contentframe" valign="top">
+                                    <div id="menuoverflow" width="200"
+                                         style="overflow-x:hidden;overflow-y:auto;height:412px;">
+                                        <table id="MainMenuList" valign="top"
+                                               style="background-color:#a5a5a5;"
+                                               cellpadding="0" cellspacing="0"
+                                               border="0" width="200">
+                                            <tbody>
+                                            <tr>
+                                                <td width="200">
+                                                    <table cellpadding="0"
+                                                           cellspacing="0"
+                                                           border="0"
+                                                           width="100%">
+                                                        <tbody>
+                                                        <tr>
+                                                            <td class="UnSelectMenu"
+                                                                onmouseover="this.className='HoverMenu', window.status='Setup'"
+                                                                onmouseout="this.className='UnSelectMenu'"
+                                                                onmousedown="this.className='PressMenu'"
+                                                                onclick="javacript:location.href='network.htm'"
+                                                                align="left"
+                                                                height="30"
+                                                                valign="middle"
+                                                                width="200"><img
+                                                                    src="dhcp_status_files/_blank.html"
+                                                                    border="0"
+                                                                    width="4"><img
+                                                                    src="dhcp_status_files/cend30.html"
+                                                                    border="0"
+                                                                    height="12"
+                                                                    width="12"><img
+                                                                    src="dhcp_status_files/_blank.html"
+                                                                    border="0"
+                                                                    width="5">Setup
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td width="200">
+                                                    <table cellpadding="0"
+                                                           cellspacing="0"
+                                                           border="0"
+                                                           width="100%">
+                                                        <tbody>
+                                                        <tr>
+                                                            <td class="SelectedMenu"
+                                                                onmouseover="window.status='DHCP'"
+                                                                onmouseout="window.status=''"
+                                                                align="left"
+                                                                height="24"
+                                                                valign="middle"
+                                                                width="200"><img
+                                                                    src="dhcp_status_files/_blank.html"
+                                                                    border="0"
+                                                                    width="4"><img
+                                                                    src="dhcp_status_files/cend10.html"
+                                                                    border="0"
+                                                                    height="12"
+                                                                    width="12"><img
+                                                                    src="dhcp_status_files/_blank.html"
+                                                                    border="0"
+                                                                    width="5">DHCP
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <table cellpadding="0"
+                                                                       cellspacing="0"
+                                                                       border="0"
+                                                                       width="200">
+                                                                    <tbody>
+                                                                    <tr>
+                                                                        <td align="left"
+                                                                            valign="top">
+                                                                            <table cellpadding="0"
+                                                                                   cellspacing="0"
+                                                                                   border="0"
+                                                                                   width="100%">
+                                                                                <tbody>
+                                                                                <tr>
+                                                                                    <td class="UnSelectItem"
+                                                                                        height="4"></td>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <td class="UnSelectItem"
+                                                                                        onmouseover="window.status='DHCP Setup';"
+                                                                                        onmouseout="window.status='';"
+                                                                                        height="20">
+                                                                                        <a href="http://10.10.1.1/dhcp_setup.htm">DHCP
+                                                                                            Setup</a>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <td class="SelectItem"
+                                                                                        onmouseover="window.status='DHCP Status'"
+                                                                                        onmouseout="window.status=''"
+                                                                                        height="20">
+                                                                                        <a href="http://10.10.1.1/dhcp_status.htm"
+                                                                                           style="text-decoration:none"><span
+                                                                                                style="color:#0068d9;background:#fff;">DHCP Status</span></a>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <td class="UnSelectItem"
+                                                                                        onmouseover="window.status='Router Advertisement';"
+                                                                                        onmouseout="window.status='';"
+                                                                                        height="20">
+                                                                                        <a href="http://10.10.1.1/dhcp_ra.htm">Router
+                                                                                            Advertisement</a>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <td class="UnSelectItem"
+                                                                                        onmouseover="window.status='IP &amp; MAC binding';"
+                                                                                        onmouseout="window.status='';"
+                                                                                        height="20">
+                                                                                        <a href="http://10.10.1.1/dhcp_static.htm">IP
+                                                                                            &amp;
+                                                                                            MAC
+                                                                                            binding</a>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <td class="UnSelectItem"
+                                                                                        onmouseover="window.status='DNS Local Database';"
+                                                                                        onmouseout="window.status='';"
+                                                                                        height="20">
+                                                                                        <a href="http://10.10.1.1/dhcp_dns.htm">DNS
+                                                                                            Local
+                                                                                            Database</a>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <td class="UnSelectItem"
+                                                                                        height="4"></td>
+                                                                                </tr>
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </td>
+                                                                    </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td bgcolor="#8499A2"
+                                                    height="1"></td>
+                                            </tr>
+                                            <tr>
+                                                <td width="200">
+                                                    <table cellpadding="0"
+                                                           cellspacing="0"
+                                                           border="0"
+                                                           width="100%">
+                                                        <tbody>
+                                                        <tr>
+                                                            <td class="UnSelectMenu"
+                                                                onmouseover="this.className='HoverMenu', window.status='System Management'"
+                                                                onmouseout="this.className='UnSelectMenu'"
+                                                                onmousedown="this.className='PressMenu'"
+                                                                onclick="javacript:location.href='edit_sys_dualwan2.htm'"
+                                                                align="left"
+                                                                height="30"
+                                                                valign="middle"
+                                                                width="200"><img
+                                                                    src="dhcp_status_files/_blank.html"
+                                                                    border="0"
+                                                                    width="4"><img
+                                                                    src="dhcp_status_files/cend30.html"
+                                                                    border="0"
+                                                                    height="12"
+                                                                    width="12"><img
+                                                                    src="dhcp_status_files/_blank.html"
+                                                                    border="0"
+                                                                    width="5">System
+                                                                Management
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td width="200">
+                                                    <table cellpadding="0"
+                                                           cellspacing="0"
+                                                           border="0"
+                                                           width="100%">
+                                                        <tbody>
+                                                        <tr>
+                                                            <td class="UnSelectMenu"
+                                                                onmouseover="this.className='HoverMenu', window.status='Port Management'"
+                                                                onmouseout="this.className='UnSelectMenu'"
+                                                                onmousedown="this.className='PressMenu'"
+                                                                onclick="javacript:location.href='lan_setting.htm'"
+                                                                align="left"
+                                                                height="30"
+                                                                valign="middle"
+                                                                width="200"><img
+                                                                    src="dhcp_status_files/_blank.html"
+                                                                    border="0"
+                                                                    width="4"><img
+                                                                    src="dhcp_status_files/cend30.html"
+                                                                    border="0"
+                                                                    height="12"
+                                                                    width="12"><img
+                                                                    src="dhcp_status_files/_blank.html"
+                                                                    border="0"
+                                                                    width="5">Port
+                                                                Management
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td width="200">
+                                                    <table cellpadding="0"
+                                                           cellspacing="0"
+                                                           border="0"
+                                                           width="100%">
+                                                        <tbody>
+                                                        <tr>
+                                                            <td class="UnSelectMenu"
+                                                                onmouseover="this.className='HoverMenu', window.status='Firewall'"
+                                                                onmouseout="this.className='UnSelectMenu'"
+                                                                onmousedown="this.className='PressMenu'"
+                                                                onclick="javacript:location.href='f_general.htm'"
+                                                                align="left"
+                                                                height="30"
+                                                                valign="middle"
+                                                                width="200"><img
+                                                                    src="dhcp_status_files/_blank.html"
+                                                                    border="0"
+                                                                    width="4"><img
+                                                                    src="dhcp_status_files/cend30.html"
+                                                                    border="0"
+                                                                    height="12"
+                                                                    width="12"><img
+                                                                    src="dhcp_status_files/_blank.html"
+                                                                    border="0"
+                                                                    width="5">Firewall
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td width="200">
+                                                    <table cellpadding="0"
+                                                           cellspacing="0"
+                                                           border="0"
+                                                           width="100%">
+                                                        <tbody>
+                                                        <tr>
+                                                            <td class="UnSelectMenu"
+                                                                onmouseover="this.className='HoverMenu', window.status='VPN'"
+                                                                onmouseout="this.className='UnSelectMenu'"
+                                                                onmousedown="this.className='PressMenu'"
+                                                                onclick="javacript:location.href='vpn_summary.htm'"
+                                                                align="left"
+                                                                height="30"
+                                                                valign="middle"
+                                                                width="200"><img
+                                                                    src="dhcp_status_files/_blank.html"
+                                                                    border="0"
+                                                                    width="4"><img
+                                                                    src="dhcp_status_files/cend30.html"
+                                                                    border="0"
+                                                                    height="12"
+                                                                    width="12"><img
+                                                                    src="dhcp_status_files/_blank.html"
+                                                                    border="0"
+                                                                    width="5">VPN
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td width="200">
+                                                    <table cellpadding="0"
+                                                           cellspacing="0"
+                                                           border="0"
+                                                           width="100%">
+                                                        <tbody>
+                                                        <tr>
+                                                            <td class="UnSelectMenu"
+                                                                onmouseover="this.className='HoverMenu', window.status='EasyLink VPN'"
+                                                                onmouseout="this.className='UnSelectMenu'"
+                                                                onmousedown="this.className='PressMenu'"
+                                                                onclick="javacript:location.href='ezlinkvpn_summary.htm'"
+                                                                align="left"
+                                                                height="30"
+                                                                valign="middle"
+                                                                width="200"><img
+                                                                    src="dhcp_status_files/_blank.html"
+                                                                    border="0"
+                                                                    width="4"><img
+                                                                    src="dhcp_status_files/cend30.html"
+                                                                    border="0"
+                                                                    height="12"
+                                                                    width="12"><img
+                                                                    src="dhcp_status_files/_blank.html"
+                                                                    border="0"
+                                                                    width="5">EasyLink
+                                                                VPN
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td width="200">
+                                                    <table cellpadding="0"
+                                                           cellspacing="0"
+                                                           border="0"
+                                                           width="100%">
+                                                        <tbody>
+                                                        <tr>
+                                                            <td class="UnSelectMenu"
+                                                                onmouseover="this.className='HoverMenu', window.status='OpenVPN'"
+                                                                onmouseout="this.className='UnSelectMenu'"
+                                                                onmousedown="this.className='PressMenu'"
+                                                                onclick="javacript:location.href='openvpn_summary.htm'"
+                                                                align="left"
+                                                                height="30"
+                                                                valign="middle"
+                                                                width="200"><img
+                                                                    src="dhcp_status_files/_blank.html"
+                                                                    border="0"
+                                                                    width="4"><img
+                                                                    src="dhcp_status_files/cend30.html"
+                                                                    border="0"
+                                                                    height="12"
+                                                                    width="12"><img
+                                                                    src="dhcp_status_files/_blank.html"
+                                                                    border="0"
+                                                                    width="5">OpenVPN
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td width="200">
+                                                    <table cellpadding="0"
+                                                           cellspacing="0"
+                                                           border="0"
+                                                           width="100%">
+                                                        <tbody>
+                                                        <tr>
+                                                            <td class="UnSelectMenu"
+                                                                onmouseover="this.className='HoverMenu', window.status='Log'"
+                                                                onmouseout="this.className='UnSelectMenu'"
+                                                                onmousedown="this.className='PressMenu'"
+                                                                onclick="javacript:location.href='log_setting.htm'"
+                                                                align="left"
+                                                                height="30"
+                                                                valign="middle"
+                                                                width="200"><img
+                                                                    src="dhcp_status_files/_blank.html"
+                                                                    border="0"
+                                                                    width="4"><img
+                                                                    src="dhcp_status_files/cend30.html"
+                                                                    border="0"
+                                                                    height="12"
+                                                                    width="12"><img
+                                                                    src="dhcp_status_files/_blank.html"
+                                                                    border="0"
+                                                                    width="5">Log
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <div style="height: 33px;"
+                                                         class="contback"
+                                                         id="contback"></div>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </td>
+
+                                <form name="formdhcp_status"
+                                      action="dhcp_status.htm"
+                                      method="post"></form>
+                                <input name="RemoveLine" value="0"
+                                       type="hidden">
+                                <input name="RemoveLine_v6" value="0"
+                                       type="hidden">
+                                <input name="page" value="dhcp_status.htm"
+                                       type="hidden">
+                                <input name="StatusType" value="1"
+                                       type="hidden">
+                                <input name="SubnetData" value="1;2"
+                                       type="hidden">
+                                <input name="SubnetEditType" value="1"
+                                       type="hidden">
+                                <input name="SubnetEditIndex" value="1"
+                                       type="hidden">
+                                <input name="DHCPClientStatus"
+                                       value=" Codeups-Mini-2 &amp;&amp;10.10.1.4&amp;68:5b:35:ad:d4:79&amp;  56 Minutes,  2 Seconds; Dans-iPad &amp;&amp;10.10.1.12&amp;4c:b1:99:77:6c:75&amp;  50 Minutes,  19 Seconds; MichaelysiPhone &amp;&amp;10.10.1.13&amp;9c:f3:87:55:4c:4c&amp;  51 Minutes,  45 Seconds; Dans-iPhone-6 &amp;&amp;10.10.1.35&amp;78:7e:61:49:3e:1f&amp;  26 Minutes,  31 Seconds; android-8b9c1ae743a4f513 &amp;&amp;10.10.1.40&amp;a0:91:69:b7:10:76&amp;  55 Minutes,  25 Seconds; BRW008092B26C3D &amp;&amp;10.10.1.44&amp;00:80:92:b2:6c:3d&amp;  57 Minutes,  7 Seconds; Big-Classroom &amp;&amp;10.10.1.50&amp;1c:1a:c0:80:82:89&amp;  58 Minutes,  37 Seconds; NPI69C1B1 &amp;&amp;10.10.1.55&amp;0c:84:dc:a4:42:8e&amp;  54 Minutes,  43 Seconds; Hannahs-Air &amp;&amp;10.10.1.68&amp;34:36:3b:74:c5:be&amp;  38 Minutes,  52 Seconds; Jennis-Air &amp;&amp;10.10.1.70&amp;d0:e1:40:8c:93:dc&amp;  52 Minutes,  57 Seconds; Hannahs-iPhone &amp;&amp;10.10.1.146&amp;38:71:de:14:4d:02&amp;  58 Minutes,  27 Seconds; DESKTOP-OF5RR90 &amp;&amp;10.10.1.165&amp;60:6d:c7:d9:f3:cf&amp;  30 Minutes,  51 Seconds; GearS2-16EE &amp;&amp;10.10.1.167&amp;ec:9b:f3:b0:fb:d8&amp;  33 Minutes,  28 Seconds; MacBooks-Air &amp;&amp;10.10.1.225&amp;98:e0:d9:99:9f:79&amp;  34 Minutes,  44 Seconds; Michaels-MBP-2 &amp;&amp;10.10.1.227&amp;e4:ce:8f:13:bc:d4&amp;  55 Minutes,  7 Seconds; Richards-MBP-2 &amp;&amp;10.10.1.230&amp;c0:ce:cd:eb:f6:bd&amp;  59 Minutes,  36 Seconds; Jimmys-iPhone &amp;&amp;10.10.1.242&amp;04:db:56:07:e6:00&amp;  54 Minutes,  6 Seconds; Jeans-Air &amp;&amp;10.10.1.252&amp;e0:ac:cb:82:46:6e&amp;  45 Minutes,  22 Seconds;"
+                                       type="hidden">
+                                <input name="DHCPServerStatus"
+                                       value="10.10.1.1,18,0,235,253,"
+                                       type="hidden">
+
+                                <script>PrintContent();</script>
+                                <td class="contentbg" valign="top" width="100%">
+                                    <div id="content_height"
+                                         style="overflow-x: hidden; overflow-y: auto; height: 412px;">
+                                        <table id="content_block" width="98%">
+                                            <tbody>
+                                            <tr>
+                                                <td>
+                                                    <table style="border-collapse: collapse"
+                                                           border="0"
+                                                           width="100%">
+                                                        <tbody>
+                                                        <tr>
+                                                            <td class="Contenttitle">
+                                                                DHCP Status
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <table class="GroupContent"
+                                                           cellpadding="0"
+                                                           cellspacing="0"
+                                                           border="0"
+                                                           width="100%">
+                                                        <tbody>
+                                                        <tr>
+                                                            <td class="block"
+                                                                align="left"
+                                                                valign="top">
+                                                                <table class="Infotable"
+                                                                       border="0"
+                                                                       width="100%">
+                                                                    <tbody>
+                                                                    <tr>
+                                                                        <td width="130"></td>
+                                                                        <th>
+                                                                            IPv4
+                                                                        </th>
+                                                                        <th>
+                                                                            IPv6
+                                                                        </th>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td align="left"
+                                                                            width="130">
+                                                                            VID&nbsp;:&nbsp;</td>
+                                                                        <td width="40%">
+                                                                            <select class="select"
+                                                                                    id="indexID"
+                                                                                    name="indexID"
+                                                                                    style="width:50px"
+                                                                                    onchange="EditIndexChange(this.form);">
+                                                                                <option value="1"
+                                                                                        selected="selected">
+                                                                                    1
+                                                                                </option>
+                                                                                <option value="2">
+                                                                                    2
+                                                                                </option>
+                                                                            </select>
+                                                                        </td>
+                                                                        <td width="40%"></td>
+                                                                        <td></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td align="left"
+                                                                            width="130">
+                                                                            DHCP
+                                                                            Server&nbsp;:&nbsp;</td>
+                                                                        <td width="40%">
+                                                                            10.10.1.1
+                                                                        </td>
+                                                                        <td width="40%">
+                                                                            fc00::1
+                                                                        </td>
+                                                                        <td></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td align="left"
+                                                                            width="130">
+                                                                            Dynamic
+                                                                            IP
+                                                                            Used&nbsp;:&nbsp;</td>
+                                                                        <td>18
+                                                                        </td>
+                                                                        <td></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td align="left"
+                                                                            width="130">
+                                                                            Static
+                                                                            IP
+                                                                            Used&nbsp;:&nbsp;</td>
+                                                                        <td>0
+                                                                        </td>
+                                                                        <td>
+                                                                            ---
+                                                                        </td>
+                                                                        <td></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td align="left"
+                                                                            width="130">
+                                                                            DHCP
+                                                                            Available&nbsp;:&nbsp;</td>
+                                                                        <td>
+                                                                            235
+                                                                        </td>
+                                                                        <td></td>
+                                                                        <td></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td align="left"
+                                                                            width="130">
+                                                                            Total&nbsp;:&nbsp;</td>
+                                                                        <td>
+                                                                            253
+                                                                        </td>
+                                                                        <td>
+                                                                            128
+                                                                        </td>
+                                                                        <td></td>
+                                                                    </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <table id="Client Table"
+                                                           class="Grouptitle"
+                                                           cellpadding="0"
+                                                           cellspacing="0"
+                                                           border="0"
+                                                           width="100%">
+                                                        <tbody>
+                                                        <tr>
+                                                            <td align="left"
+                                                                valign="top">
+                                                                <font class="Grouptitle">Client
+                                                                    Table<img
+                                                                            src="dhcp_status_files/_blank.html"
+                                                                            border="0"
+                                                                            height="15"
+                                                                            width="1"></font>
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                    <table id="Client Tablecontent"
+                                                           cellpadding="0"
+                                                           cellspacing="0"
+                                                           border="0"
+                                                           width="100%">
+                                                        <tbody>
+                                                        <tr>
+                                                            <td align="left"
+                                                                valign="top">
+                                                                <table style="display: table;"
+                                                                       id="ClientTableV4"
+                                                                       border="0"
+                                                                       width="100%">
+                                                                    <tbody>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <table style="border-bottom:2px solid #7d7d7d;"
+                                                                                   cellpadding="0"
+                                                                                   cellspacing="0"
+                                                                                   width="100%">
+                                                                                <tbody>
+                                                                                <tr>
+                                                                                    <td width="8">
+                                                                                        <img src="dhcp_status_files/_blank.html"
+                                                                                             border="0"
+                                                                                             height="15"
+                                                                                             width="1">
+                                                                                    </td>
+                                                                                    <td class="ipvxtabactive"
+                                                                                        onclick="">
+                                                                                        IPv4
+                                                                                    </td>
+                                                                                    <td class="ipvxtabinactive"
+                                                                                        onclick="chChangeIPmode(2);">
+                                                                                        IPv6
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <img src="dhcp_status_files/_blank.html"
+                                                                                             border="0"
+                                                                                             height="15"
+                                                                                             width="1">
+                                                                                    </td>
+                                                                                </tr>
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td class="ipvxtabtable"
+                                                                            style="background:#f9f9f9;">
+                                                                            <table cellpadding="0"
+                                                                                   cellspacing="0"
+                                                                                   width="100%">
+                                                                                <tbody>
+                                                                                <tr>
+                                                                                    <td>
+                                                                                        <table class="SpecialTable"
+                                                                                               cellpadding="0"
+                                                                                               cellspacing="0"
+                                                                                               border="0"
+                                                                                               width="100%">
+                                                                                            <tbody>
+                                                                                            <tr>
+                                                                                                <th class="firstth tdContentC">
+                                                                                                    <img src="dhcp_status_files/_blank.html"
+                                                                                                         border="0"
+                                                                                                         height="1"
+                                                                                                         width="10">Client
+                                                                                                    Host
+                                                                                                    Name<img
+                                                                                                        src="dhcp_status_files/_blank.html"
+                                                                                                        border="0"
+                                                                                                        height="1"
+                                                                                                        width="10">
+                                                                                                </th>
+                                                                                                <th class="middleth tdContentC">
+                                                                                                    <img src="dhcp_status_files/_blank.html"
+                                                                                                         border="0"
+                                                                                                         height="1"
+                                                                                                         width="10">Rule
+                                                                                                    Name<img
+                                                                                                        src="dhcp_status_files/_blank.html"
+                                                                                                        border="0"
+                                                                                                        height="1"
+                                                                                                        width="10">
+                                                                                                </th>
+                                                                                                <th class="middleth tdContentC">
+                                                                                                    <img src="dhcp_status_files/_blank.html"
+                                                                                                         border="0"
+                                                                                                         height="1"
+                                                                                                         width="10">IP
+                                                                                                    Address<img
+                                                                                                        src="dhcp_status_files/_blank.html"
+                                                                                                        border="0"
+                                                                                                        height="1"
+                                                                                                        width="10">
+                                                                                                </th>
+                                                                                                <th class="middleth tdContentC">
+                                                                                                    <img src="dhcp_status_files/_blank.html"
+                                                                                                         border="0"
+                                                                                                         height="1"
+                                                                                                         width="10">MAC
+                                                                                                    Address<img
+                                                                                                        src="dhcp_status_files/_blank.html"
+                                                                                                        border="0"
+                                                                                                        height="1"
+                                                                                                        width="10">
+                                                                                                </th>
+                                                                                                <th class="middleth tdContentC">
+                                                                                                    <img src="dhcp_status_files/_blank.html"
+                                                                                                         border="0"
+                                                                                                         height="1"
+                                                                                                         width="10">Client
+                                                                                                    Lease
+                                                                                                    Time<img
+                                                                                                        src="dhcp_status_files/_blank.html"
+                                                                                                        border="0"
+                                                                                                        height="1"
+                                                                                                        width="10">
+                                                                                                </th>
+                                                                                                <th class="middleth tdContentC">
+                                                                                                    <img src="dhcp_status_files/_blank.html"
+                                                                                                         border="0"
+                                                                                                         height="1"
+                                                                                                         width="10">Delete<img
+                                                                                                        src="dhcp_status_files/_blank.html"
+                                                                                                        border="0"
+                                                                                                        height="1"
+                                                                                                        width="10">
+                                                                                                </th>
+                                                                                                <th class="lastth tdContentC">
+                                                                                                    <img src="dhcp_status_files/_blank.html"
+                                                                                                         border="0"
+                                                                                                         height="1"
+                                                                                                         width="10">
+                                                                                                </th>
+                                                                                            </tr>
+                                                                                            <tr class="EvenRow">
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    Codeups-Mini-2
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    <img src="dhcp_status_files/_blank.html"
+                                                                                                         border="0"
+                                                                                                         height="1"
+                                                                                                         width="1">
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    10.10.1.4
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    68:5b:35:ad:d4:79
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    56
+                                                                                                    Minutes,
+                                                                                                    2
+                                                                                                    Seconds
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    <a href='javascript:removeLine("10.10.1.4")'><img
+                                                                                                            src="dhcp_status_files/trash.html"
+                                                                                                            title="Delete"
+                                                                                                            border="0"
+                                                                                                            height="16"
+                                                                                                            width="20"></a>
+                                                                                                </td>
+                                                                                                <td class="tdContentC">
+                                                                                                    <img src="dhcp_status_files/_blank.html"
+                                                                                                         border="0"
+                                                                                                         height="1"
+                                                                                                         width="10">
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                            <tr class="OddRow">
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    Dans-iPad
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    <img src="dhcp_status_files/_blank.html"
+                                                                                                         border="0"
+                                                                                                         height="1"
+                                                                                                         width="1">
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    10.10.1.12
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    4c:b1:99:77:6c:75
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    50
+                                                                                                    Minutes,
+                                                                                                    19
+                                                                                                    Seconds
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    <a href='javascript:removeLine("10.10.1.12")'><img
+                                                                                                            src="dhcp_status_files/trash.html"
+                                                                                                            title="Delete"
+                                                                                                            border="0"
+                                                                                                            height="16"
+                                                                                                            width="20"></a>
+                                                                                                </td>
+                                                                                                <td class="tdContentC">
+                                                                                                    <img src="dhcp_status_files/_blank.html"
+                                                                                                         border="0"
+                                                                                                         height="1"
+                                                                                                         width="10">
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                            <tr class="EvenRow">
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    MichaelysiPhone
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    <img src="dhcp_status_files/_blank.html"
+                                                                                                         border="0"
+                                                                                                         height="1"
+                                                                                                         width="1">
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    10.10.1.13
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    9c:f3:87:55:4c:4c
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    51
+                                                                                                    Minutes,
+                                                                                                    45
+                                                                                                    Seconds
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    <a href='javascript:removeLine("10.10.1.13")'><img
+                                                                                                            src="dhcp_status_files/trash.html"
+                                                                                                            title="Delete"
+                                                                                                            border="0"
+                                                                                                            height="16"
+                                                                                                            width="20"></a>
+                                                                                                </td>
+                                                                                                <td class="tdContentC">
+                                                                                                    <img src="dhcp_status_files/_blank.html"
+                                                                                                         border="0"
+                                                                                                         height="1"
+                                                                                                         width="10">
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                            <tr class="OddRow">
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    Dans-iPhone-6
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    <img src="dhcp_status_files/_blank.html"
+                                                                                                         border="0"
+                                                                                                         height="1"
+                                                                                                         width="1">
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    10.10.1.35
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    78:7e:61:49:3e:1f
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    26
+                                                                                                    Minutes,
+                                                                                                    31
+                                                                                                    Seconds
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    <a href='javascript:removeLine("10.10.1.35")'><img
+                                                                                                            src="dhcp_status_files/trash.html"
+                                                                                                            title="Delete"
+                                                                                                            border="0"
+                                                                                                            height="16"
+                                                                                                            width="20"></a>
+                                                                                                </td>
+                                                                                                <td class="tdContentC">
+                                                                                                    <img src="dhcp_status_files/_blank.html"
+                                                                                                         border="0"
+                                                                                                         height="1"
+                                                                                                         width="10">
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                            <tr class="EvenRow">
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    android-8b9c1ae743a4f513
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    <img src="dhcp_status_files/_blank.html"
+                                                                                                         border="0"
+                                                                                                         height="1"
+                                                                                                         width="1">
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    10.10.1.40
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    a0:91:69:b7:10:76
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    55
+                                                                                                    Minutes,
+                                                                                                    25
+                                                                                                    Seconds
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    <a href='javascript:removeLine("10.10.1.40")'><img
+                                                                                                            src="dhcp_status_files/trash.html"
+                                                                                                            title="Delete"
+                                                                                                            border="0"
+                                                                                                            height="16"
+                                                                                                            width="20"></a>
+                                                                                                </td>
+                                                                                                <td class="tdContentC">
+                                                                                                    <img src="dhcp_status_files/_blank.html"
+                                                                                                         border="0"
+                                                                                                         height="1"
+                                                                                                         width="10">
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                            <tr class="OddRow">
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    BRW008092B26C3D
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    <img src="dhcp_status_files/_blank.html"
+                                                                                                         border="0"
+                                                                                                         height="1"
+                                                                                                         width="1">
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    10.10.1.44
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    00:80:92:b2:6c:3d
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    57
+                                                                                                    Minutes,
+                                                                                                    7
+                                                                                                    Seconds
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    <a href='javascript:removeLine("10.10.1.44")'><img
+                                                                                                            src="dhcp_status_files/trash.html"
+                                                                                                            title="Delete"
+                                                                                                            border="0"
+                                                                                                            height="16"
+                                                                                                            width="20"></a>
+                                                                                                </td>
+                                                                                                <td class="tdContentC">
+                                                                                                    <img src="dhcp_status_files/_blank.html"
+                                                                                                         border="0"
+                                                                                                         height="1"
+                                                                                                         width="10">
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                            <tr class="EvenRow">
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    Big-Classroom
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    <img src="dhcp_status_files/_blank.html"
+                                                                                                         border="0"
+                                                                                                         height="1"
+                                                                                                         width="1">
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    10.10.1.50
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    1c:1a:c0:80:82:89
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    58
+                                                                                                    Minutes,
+                                                                                                    37
+                                                                                                    Seconds
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    <a href='javascript:removeLine("10.10.1.50")'><img
+                                                                                                            src="dhcp_status_files/trash.html"
+                                                                                                            title="Delete"
+                                                                                                            border="0"
+                                                                                                            height="16"
+                                                                                                            width="20"></a>
+                                                                                                </td>
+                                                                                                <td class="tdContentC">
+                                                                                                    <img src="dhcp_status_files/_blank.html"
+                                                                                                         border="0"
+                                                                                                         height="1"
+                                                                                                         width="10">
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                            <tr class="OddRow">
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    NPI69C1B1
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    <img src="dhcp_status_files/_blank.html"
+                                                                                                         border="0"
+                                                                                                         height="1"
+                                                                                                         width="1">
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    10.10.1.55
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    0c:84:dc:a4:42:8e
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    54
+                                                                                                    Minutes,
+                                                                                                    43
+                                                                                                    Seconds
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    <a href='javascript:removeLine("10.10.1.55")'><img
+                                                                                                            src="dhcp_status_files/trash.html"
+                                                                                                            title="Delete"
+                                                                                                            border="0"
+                                                                                                            height="16"
+                                                                                                            width="20"></a>
+                                                                                                </td>
+                                                                                                <td class="tdContentC">
+                                                                                                    <img src="dhcp_status_files/_blank.html"
+                                                                                                         border="0"
+                                                                                                         height="1"
+                                                                                                         width="10">
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                            <tr class="EvenRow">
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    Hannahs-Air
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    <img src="dhcp_status_files/_blank.html"
+                                                                                                         border="0"
+                                                                                                         height="1"
+                                                                                                         width="1">
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    10.10.1.68
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    34:36:3b:74:c5:be
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    38
+                                                                                                    Minutes,
+                                                                                                    52
+                                                                                                    Seconds
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    <a href='javascript:removeLine("10.10.1.68")'><img
+                                                                                                            src="dhcp_status_files/trash.html"
+                                                                                                            title="Delete"
+                                                                                                            border="0"
+                                                                                                            height="16"
+                                                                                                            width="20"></a>
+                                                                                                </td>
+                                                                                                <td class="tdContentC">
+                                                                                                    <img src="dhcp_status_files/_blank.html"
+                                                                                                         border="0"
+                                                                                                         height="1"
+                                                                                                         width="10">
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                            <tr class="OddRow">
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    Jennis-Air
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    <img src="dhcp_status_files/_blank.html"
+                                                                                                         border="0"
+                                                                                                         height="1"
+                                                                                                         width="1">
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    10.10.1.70
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    d0:e1:40:8c:93:dc
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    52
+                                                                                                    Minutes,
+                                                                                                    57
+                                                                                                    Seconds
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    <a href='javascript:removeLine("10.10.1.70")'><img
+                                                                                                            src="dhcp_status_files/trash.html"
+                                                                                                            title="Delete"
+                                                                                                            border="0"
+                                                                                                            height="16"
+                                                                                                            width="20"></a>
+                                                                                                </td>
+                                                                                                <td class="tdContentC">
+                                                                                                    <img src="dhcp_status_files/_blank.html"
+                                                                                                         border="0"
+                                                                                                         height="1"
+                                                                                                         width="10">
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                            <tr class="EvenRow">
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    Hannahs-iPhone
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    <img src="dhcp_status_files/_blank.html"
+                                                                                                         border="0"
+                                                                                                         height="1"
+                                                                                                         width="1">
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    10.10.1.146
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    38:71:de:14:4d:02
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    58
+                                                                                                    Minutes,
+                                                                                                    27
+                                                                                                    Seconds
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    <a href='javascript:removeLine("10.10.1.146")'><img
+                                                                                                            src="dhcp_status_files/trash.html"
+                                                                                                            title="Delete"
+                                                                                                            border="0"
+                                                                                                            height="16"
+                                                                                                            width="20"></a>
+                                                                                                </td>
+                                                                                                <td class="tdContentC">
+                                                                                                    <img src="dhcp_status_files/_blank.html"
+                                                                                                         border="0"
+                                                                                                         height="1"
+                                                                                                         width="10">
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                            <tr class="OddRow">
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    DESKTOP-OF5RR90
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    <img src="dhcp_status_files/_blank.html"
+                                                                                                         border="0"
+                                                                                                         height="1"
+                                                                                                         width="1">
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    10.10.1.165
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    60:6d:c7:d9:f3:cf
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    30
+                                                                                                    Minutes,
+                                                                                                    51
+                                                                                                    Seconds
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    <a href='javascript:removeLine("10.10.1.165")'><img
+                                                                                                            src="dhcp_status_files/trash.html"
+                                                                                                            title="Delete"
+                                                                                                            border="0"
+                                                                                                            height="16"
+                                                                                                            width="20"></a>
+                                                                                                </td>
+                                                                                                <td class="tdContentC">
+                                                                                                    <img src="dhcp_status_files/_blank.html"
+                                                                                                         border="0"
+                                                                                                         height="1"
+                                                                                                         width="10">
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                            <tr class="EvenRow">
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    GearS2-16EE
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    <img src="dhcp_status_files/_blank.html"
+                                                                                                         border="0"
+                                                                                                         height="1"
+                                                                                                         width="1">
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    10.10.1.167
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    ec:9b:f3:b0:fb:d8
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    33
+                                                                                                    Minutes,
+                                                                                                    28
+                                                                                                    Seconds
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    <a href='javascript:removeLine("10.10.1.167")'><img
+                                                                                                            src="dhcp_status_files/trash.html"
+                                                                                                            title="Delete"
+                                                                                                            border="0"
+                                                                                                            height="16"
+                                                                                                            width="20"></a>
+                                                                                                </td>
+                                                                                                <td class="tdContentC">
+                                                                                                    <img src="dhcp_status_files/_blank.html"
+                                                                                                         border="0"
+                                                                                                         height="1"
+                                                                                                         width="10">
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                            <tr class="OddRow">
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    MacBooks-Air
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    <img src="dhcp_status_files/_blank.html"
+                                                                                                         border="0"
+                                                                                                         height="1"
+                                                                                                         width="1">
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    10.10.1.225
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    98:e0:d9:99:9f:79
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    34
+                                                                                                    Minutes,
+                                                                                                    44
+                                                                                                    Seconds
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    <a href='javascript:removeLine("10.10.1.225")'><img
+                                                                                                            src="dhcp_status_files/trash.html"
+                                                                                                            title="Delete"
+                                                                                                            border="0"
+                                                                                                            height="16"
+                                                                                                            width="20"></a>
+                                                                                                </td>
+                                                                                                <td class="tdContentC">
+                                                                                                    <img src="dhcp_status_files/_blank.html"
+                                                                                                         border="0"
+                                                                                                         height="1"
+                                                                                                         width="10">
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                            <tr class="EvenRow">
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    Michaels-MBP-2
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    <img src="dhcp_status_files/_blank.html"
+                                                                                                         border="0"
+                                                                                                         height="1"
+                                                                                                         width="1">
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    10.10.1.227
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    e4:ce:8f:13:bc:d4
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    55
+                                                                                                    Minutes,
+                                                                                                    7
+                                                                                                    Seconds
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    <a href='javascript:removeLine("10.10.1.227")'><img
+                                                                                                            src="dhcp_status_files/trash.html"
+                                                                                                            title="Delete"
+                                                                                                            border="0"
+                                                                                                            height="16"
+                                                                                                            width="20"></a>
+                                                                                                </td>
+                                                                                                <td class="tdContentC">
+                                                                                                    <img src="dhcp_status_files/_blank.html"
+                                                                                                         border="0"
+                                                                                                         height="1"
+                                                                                                         width="10">
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                            <tr class="OddRow">
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    Richards-MBP-2
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    <img src="dhcp_status_files/_blank.html"
+                                                                                                         border="0"
+                                                                                                         height="1"
+                                                                                                         width="1">
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    10.10.1.230
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    c0:ce:cd:eb:f6:bd
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    59
+                                                                                                    Minutes,
+                                                                                                    36
+                                                                                                    Seconds
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    <a href='javascript:removeLine("10.10.1.230")'><img
+                                                                                                            src="dhcp_status_files/trash.html"
+                                                                                                            title="Delete"
+                                                                                                            border="0"
+                                                                                                            height="16"
+                                                                                                            width="20"></a>
+                                                                                                </td>
+                                                                                                <td class="tdContentC">
+                                                                                                    <img src="dhcp_status_files/_blank.html"
+                                                                                                         border="0"
+                                                                                                         height="1"
+                                                                                                         width="10">
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                            <tr class="EvenRow">
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    Jimmys-iPhone
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    <img src="dhcp_status_files/_blank.html"
+                                                                                                         border="0"
+                                                                                                         height="1"
+                                                                                                         width="1">
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    10.10.1.242
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    04:db:56:07:e6:00
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    54
+                                                                                                    Minutes,
+                                                                                                    6
+                                                                                                    Seconds
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    <a href='javascript:removeLine("10.10.1.242")'><img
+                                                                                                            src="dhcp_status_files/trash.html"
+                                                                                                            title="Delete"
+                                                                                                            border="0"
+                                                                                                            height="16"
+                                                                                                            width="20"></a>
+                                                                                                </td>
+                                                                                                <td class="tdContentC">
+                                                                                                    <img src="dhcp_status_files/_blank.html"
+                                                                                                         border="0"
+                                                                                                         height="1"
+                                                                                                         width="10">
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                            <tr class="OddRow">
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    Jeans-Air
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    <img src="dhcp_status_files/_blank.html"
+                                                                                                         border="0"
+                                                                                                         height="1"
+                                                                                                         width="1">
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    10.10.1.252
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    e0:ac:cb:82:46:6e
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    45
+                                                                                                    Minutes,
+                                                                                                    22
+                                                                                                    Seconds
+                                                                                                </td>
+                                                                                                <td class="tdContentBorderRight tdContentC">
+                                                                                                    <a href='javascript:removeLine("10.10.1.252")'><img
+                                                                                                            src="dhcp_status_files/trash.html"
+                                                                                                            title="Delete"
+                                                                                                            border="0"
+                                                                                                            height="16"
+                                                                                                            width="20"></a>
+                                                                                                </td>
+                                                                                                <td class="tdContentC">
+                                                                                                    <img src="dhcp_status_files/_blank.html"
+                                                                                                         border="0"
+                                                                                                         height="1"
+                                                                                                         width="10">
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                            </tbody>
+                                                                                        </table>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </td>
+                                                                    </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                                <table style="display: none;"
+                                                                       id="ClientTableV6"
+                                                                       border="0"
+                                                                       width="100%">
+                                                                    <tbody>
+                                                                    <tr>
+                                                                        <td></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <table style="border-bottom:2px solid #7d7d7d;"
+                                                                                   cellpadding="0"
+                                                                                   cellspacing="0"
+                                                                                   width="100%">
+                                                                                <tbody>
+                                                                                <tr>
+                                                                                    <td width="8">
+                                                                                        <img src="dhcp_status_files/_blank.html"
+                                                                                             border="0"
+                                                                                             height="15"
+                                                                                             width="1">
+                                                                                    </td>
+                                                                                    <td class="ipvxtabinactive"
+                                                                                        onclick="chChangeIPmode(1);">
+                                                                                        IPv4
+                                                                                    </td>
+                                                                                    <td class="ipvxtabactive"
+                                                                                        onclick="">
+                                                                                        IPv6
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <img src="dhcp_status_files/_blank.html"
+                                                                                             border="0"
+                                                                                             height="15"
+                                                                                             width="1">
+                                                                                    </td>
+                                                                                </tr>
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td class="ipvxtabtable"
+                                                                            style="background:#f9f9f9;">
+                                                                            <table cellpadding="0"
+                                                                                   cellspacing="0"
+                                                                                   width="100%">
+                                                                                <tbody>
+                                                                                <tr>
+                                                                                    <td>
+                                                                                        <table class="SpecialTable"
+                                                                                               cellpadding="0"
+                                                                                               cellspacing="0"
+                                                                                               border="0"
+                                                                                               width="100%">
+                                                                                            <tbody>
+                                                                                            <tr height="20">
+                                                                                                <th class="firstth tdContentC">
+                                                                                                    <img src="dhcp_status_files/_blank.html"
+                                                                                                         border="0"
+                                                                                                         height="1"
+                                                                                                         width="10">Client
+                                                                                                    Host
+                                                                                                    Name<img
+                                                                                                        src="dhcp_status_files/_blank.html"
+                                                                                                        border="0"
+                                                                                                        height="1"
+                                                                                                        width="10">
+                                                                                                </th>
+                                                                                                <th class="middleth tdContentC">
+                                                                                                    <img src="dhcp_status_files/_blank.html"
+                                                                                                         border="0"
+                                                                                                         height="1"
+                                                                                                         width="10">IP
+                                                                                                    Address<img
+                                                                                                        src="dhcp_status_files/_blank.html"
+                                                                                                        border="0"
+                                                                                                        height="1"
+                                                                                                        width="10">
+                                                                                                </th>
+                                                                                                <th class="middleth tdContentC">
+                                                                                                    <img src="dhcp_status_files/_blank.html"
+                                                                                                         border="0"
+                                                                                                         height="1"
+                                                                                                         width="10">Client
+                                                                                                    Lease
+                                                                                                    Time<img
+                                                                                                        src="dhcp_status_files/_blank.html"
+                                                                                                        border="0"
+                                                                                                        height="1"
+                                                                                                        width="10">
+                                                                                                </th>
+                                                                                                <th class="lastth tdContentC">
+                                                                                                    <img src="dhcp_status_files/_blank.html"
+                                                                                                         border="0"
+                                                                                                         height="1"
+                                                                                                         width="10">
+                                                                                                </th>
+                                                                                            </tr>
+                                                                                            </tbody>
+                                                                                        </table>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </td>
+                                                                    </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                        <table border="0" width="85%">
+                                            <tbody>
+                                            <tr>
+                                                <td height="5"></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding-top:0px; padding-bottom:0px;">
+                                                    <table valign="bottom"
+                                                           id="AutoNumber15"
+                                                           cellpadding="0"
+                                                           cellspacing="0"
+                                                           border="0"
+                                                           height="21">
+                                                        <tbody>
+                                                        <tr>
+                                                            <td height="26">
+                                                                <input class="STbutton"
+                                                                       name="Refresh"
+                                                                       id="Refresh"
+                                                                       value="Refresh"
+                                                                       onmouseover="ChangeButtonStyle('Refresh',this,'mouseover')"
+                                                                       onmouseout="ChangeButtonStyle('Refresh',this,'mouseout')"
+                                                                       onmousedown="ChangeButtonStyle('Refresh',this,'mousedown')"
+                                                                       onmouseup="ChangeButtonStyle('Refresh',this,'mouseup')"
+                                                                       onclick="javascript: location.reload();"
+                                                                       style="width:75px;border-width:1px;border-style:outset;"
+                                                                       type="button">
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td height="8"></td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </td>
+                            </tr>
+                            <script>PrintRight();</script>
+                            <script>PrintBottom();</script>
+                            <tr align="right">
+                                <td class="bottomfont" colspan="3"
+                                    style="vertical-align:middle;" align="right"
+                                    height="35px" valign="top" width="100%">©
+                                    2013 Belkin International, Inc. and/or its
+                                    subsidiaries and affiliates, including
+                                    Linksys, LLC. All rights reserved.
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

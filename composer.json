@@ -1,0 +1,18 @@
+{
+    "autoload": {
+        "psr-4": {
+            "Codeup\\": "src/"
+        }
+    },
+    "config": {
+        "bin-dir": "bin/"
+    },
+    "require": {
+        "slim/slim": "^3.1",
+        "fabpot/goutte": "^3.1",
+        "beberlei/assert": "^2.4"
+    },
+    "require-dev": {
+        "phpspec/phpspec": "^2.4"
+    }
+}
