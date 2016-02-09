@@ -6,9 +6,9 @@
  */
 namespace Codeup\DataBuilders;
 
-use Codeup\Bootcamp;
-use Codeup\MacAddress;
-use Codeup\Student;
+use Codeup\Bootcamps\Bootcamp;
+use Codeup\Bootcamps\MacAddress;
+use Codeup\Bootcamps\Student;
 use Faker\Factory;
 
 class StudentBuilder
@@ -30,6 +30,9 @@ class StudentBuilder
         $this->reset();
     }
 
+    /**
+     * @return Student
+     */
     public function build()
     {
         return Student::attend($this->bootcamp, $this->name, $this->macAddress);

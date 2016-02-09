@@ -4,9 +4,9 @@
  *
  * This source file is subject to the license that is bundled with this package in the file LICENSE.
  */
-namespace specs\Codeup;
+namespace specs\Codeup\Bootcamps;
 
-use Codeup\MacAddress;
+use Codeup\Bootcamps\MacAddress;
 use PhpSpec\ObjectBehavior;
 
 class MacAddressSpec extends ObjectBehavior
