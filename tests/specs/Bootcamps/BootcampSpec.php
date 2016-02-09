@@ -6,6 +6,7 @@
  */
 namespace specs\Codeup\Bootcamps;
 
+use Codeup\Bootcamps\BootcampSchedule;
 use DateTime;
 use PhpSpec\ObjectBehavior;
 
@@ -13,7 +14,14 @@ class BootcampSpec extends ObjectBehavior
 {
     function it_should_have_a_name()
     {
-        $this->beConstructedThrough('start', [new DateTime(), 'Hampton']);
+        $this->beConstructedThrough('start', [
+            new DateTime(),
+            'Hampton',
+            BootcampSchedule::withClassTimeBetween(
+                new DateTime('-6 hour'),
+                new DateTime('now')
+            )
+        ]);
         $this->cohortName()->shouldBe('Hampton');
     }
 }

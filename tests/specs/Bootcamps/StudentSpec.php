@@ -7,6 +7,7 @@
 namespace specs\Codeup\Bootcamps;
 
 use Codeup\Bootcamps\Bootcamp;
+use Codeup\Bootcamps\BootcampSchedule;
 use Codeup\Bootcamps\MacAddress;
 use DateTime;
 use PhpSpec\ObjectBehavior;
@@ -17,7 +18,14 @@ class StudentSpec extends ObjectBehavior
     function let()
     {
         $this->beConstructedThrough('attend', [
-            Bootcamp::start(new DateTime(), 'Hampton'),
+            Bootcamp::start(
+                new DateTime(),
+                'Hampton',
+                BootcampSchedule::withClassTimeBetween(
+                    new DateTime('-6 hour'),
+                    new DateTime('now')
+                )
+            ),
             'Luis Montealegre',
             MacAddress::withValue('00-80-C8-E3-4C-BD'),
         ]);

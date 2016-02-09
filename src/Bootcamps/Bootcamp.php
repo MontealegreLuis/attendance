@@ -16,24 +16,36 @@ class Bootcamp
     /** @var string */
     private $cohortName;
 
+    /** @var BootcampSchedule */
+    private $schedule;
+
     /**
      * @param DateTime $startDate
      * @param string $cohortName
+     * @param BootcampSchedule $schedule
      */
-    private function __construct(DateTime $startDate, $cohortName)
-    {
+    private function __construct(
+        DateTime $startDate,
+        $cohortName,
+        BootcampSchedule $schedule
+    ) {
         $this->setCohortName($cohortName);
         $this->startDate = $startDate;
+        $this->schedule = $schedule;
     }
 
     /**
      * @param DateTime $onDate
      * @param string $cohortName
+     * @param BootcampSchedule $schedule
      * @return Bootcamp
      */
-    public static function start(Datetime $onDate, $cohortName)
-    {
-        return new Bootcamp($onDate, $cohortName);
+    public static function start(
+        Datetime $onDate,
+        $cohortName,
+        BootcampSchedule $schedule
+    ) {
+        return new Bootcamp($onDate, $cohortName, $schedule);
     }
 
     /**
