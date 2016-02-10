@@ -29,18 +29,25 @@ class PerformRollCall
         $this->students = $students;
     }
 
+    /**
+     * @return Student[]
+     */
     public function rollCall()
     {
         $today = new DateTime();
         $addresses = $this->checker->whoIsConnected();
         $students = $this->students->attending($today, $addresses);
+        $studentsInClass = [];
 
         /** @var Student $student */
         foreach ($students as $student) {
             if (!$student->hasCheckedIn($today)) {
                 $student->checkIn($today);
+                $studentsInClass[] = $student;
                 $this->students->update($student);
             }
         }
+
+        return $studentsInClass;
     }
 }

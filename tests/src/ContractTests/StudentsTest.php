@@ -12,6 +12,7 @@ use Codeup\DataBuilders\A;
 use DateTime;
 use PHPUnit_Framework_TestCase as TestCase;
 
+//TODO: add test case with students from a bootcamp that has already finished
 abstract class StudentsTest extends TestCase
 {
     /** @var Students */

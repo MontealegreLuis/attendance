@@ -64,6 +64,14 @@ class Student
     }
 
     /**
+     * @return string
+     */
+    public function address()
+    {
+        return $this->macAddress->value();
+    }
+
+    /**
      * @param DateTime $now
      */
     public function checkIn(DateTime $now)
