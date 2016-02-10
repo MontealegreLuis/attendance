@@ -60,6 +60,6 @@ class Attendance
      */
     public function occurredOn(DateTime $aDate)
     {
-        return $this->date === $aDate;
+        return $this->date->format('Y-m-d') === $aDate->format('Y-m-d');
     }
 }

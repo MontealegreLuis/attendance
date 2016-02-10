@@ -8,8 +8,19 @@ namespace Codeup\DataBuilders;
 
 class A
 {
+    /**
+     * @return StudentBuilder
+     */
     public static function student()
     {
         return new StudentBuilder();
+    }
+
+    /**
+     * @return MacAddressBuilder
+     */
+    public static function macAddress()
+    {
+        return new MacAddressBuilder();
     }
 }

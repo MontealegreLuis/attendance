@@ -12,6 +12,7 @@ use Codeup\Bootcamps\Duration;
 use Codeup\Bootcamps\MacAddress;
 use Codeup\Bootcamps\Student;
 use Faker\Factory;
+use DateTime;
 
 class StudentBuilder
 {
@@ -26,6 +27,9 @@ class StudentBuilder
     /** @var MacAddress */
     private $macAddress;
 
+    /** @var Attendance */
+    private $checkIn;
+
     public function __construct()
     {
         $this->factory = Factory::create();
@@ -37,7 +41,35 @@ class StudentBuilder
      */
     public function build()
     {
-        return Student::attend($this->bootcamp, $this->name, $this->macAddress);
+        $student = Student::attend($this->bootcamp, $this->name, $this->macAddress);
+        if ($this->checkIn) {
+            $student->checkIn($this->checkIn);
+        }
+        $this->reset();
+
+        return $student;
+    }
+
+    /**
+     * @param MacAddress $address
+     * @return StudentBuilder
+     */
+    public function withMacAddress(MacAddress $address)
+    {
+        $this->macAddress = $address;
+
+        return $this;
+    }
+
+    /**
+     * @param DateTime $time
+     * @return StudentBuilder
+     */
+    public function whoCheckedInAt(DateTime $time)
+    {
+        $this->checkIn = $time;
+
+        return $this;
     }
 
     private function reset()
@@ -55,5 +87,6 @@ class StudentBuilder
         );
         $this->name = $this->factory->name;
         $this->macAddress = MacAddress::withValue($this->factory->macAddress);
+        $this->checkIn = null;
     }
 }

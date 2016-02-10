@@ -37,7 +37,7 @@ class PerformRollCall
 
         /** @var Student $student */
         foreach ($students as $student) {
-            if ($student->isInClass($today) && !$student->hasCheckedIn($today)) {
+            if (!$student->hasCheckedIn($today)) {
                 $student->checkIn($today);
                 $this->students->update($student);
             }

@@ -71,14 +71,30 @@ class Student
         $this->checkIn = Attendance::checkIn($now, $this);
     }
 
+    /**
+     * @param DateTime $today
+     * @return bool
+     */
     public function hasCheckedIn(DateTime $today)
     {
         return !is_null($this->checkIn) && $this->checkIn->occurredOn($today);
     }
 
+    /**
+     * @param DateTime $today
+     * @return bool
+     */
     public function isInClass(DateTime $today)
     {
         return $this->bootcamp->isInProgress($today);
+    }
+
+    /**
+     * @param MacAddress $macAddress
+     */
+    public function has(MacAddress $macAddress)
+    {
+        $this->macAddress->equals($macAddress);
     }
 
     public function checkOut(DateTime $now)
