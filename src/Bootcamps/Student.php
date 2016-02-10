@@ -19,6 +19,9 @@ class Student
     /** @var MacAddress */
     private $macAddress;
 
+    /** @var Attendance */
+    private $checkIn;
+
     /**
      * @param Bootcamp $bootcamp
      * @param string $name
@@ -52,24 +55,35 @@ class Student
         $this->name = $name;
     }
 
+    /**
+     * @return string
+     */
     public function name()
     {
         return $this->name;
     }
 
+    /**
+     * @param DateTime $now
+     */
     public function checkIn(DateTime $now)
     {
-        // TODO: write logic here
+        $this->checkIn = Attendance::checkIn($now, $this);
+    }
+
+    public function hasCheckedIn(DateTime $today)
+    {
+        return !is_null($this->checkIn) && $this->checkIn->occurredOn($today);
+    }
+
+    public function isInClass(DateTime $today)
+    {
+        return $this->bootcamp->isInProgress($today);
     }
 
     public function checkOut(DateTime $now)
     {
         // TODO: write logic here
-    }
-
-    public function hasCheckedIn()
-    {
-        return true;
     }
 
     public function hasCheckedOut()

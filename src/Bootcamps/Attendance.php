@@ -55,10 +55,11 @@ class Attendance
     }
 
     /**
-     * @return DateTime
+     * @param DateTime $aDate
+     * @return bool
      */
-    public function onDate()
+    public function occurredOn(DateTime $aDate)
     {
-        return $this->date;
+        return $this->date === $aDate;
     }
 }

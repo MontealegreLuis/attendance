@@ -8,6 +8,7 @@ namespace Codeup\DataBuilders;
 
 use Codeup\Bootcamps\Bootcamp;
 use Codeup\Bootcamps\BootcampSchedule;
+use Codeup\Bootcamps\Duration;
 use Codeup\Bootcamps\MacAddress;
 use Codeup\Bootcamps\Student;
 use Faker\Factory;
@@ -42,7 +43,10 @@ class StudentBuilder
     private function reset()
     {
         $this->bootcamp = Bootcamp::start(
-            $this->factory->dateTime,
+            Duration::between(
+                $this->factory->dateTimeBetween('-7 day', '-1 day'),
+                $this->factory->dateTimeBetween('1 day', '7 day')
+            ),
             $this->factory->word,
             BootcampSchedule::withClassTimeBetween(
                 $this->factory->dateTimeBetween('-7 day'),

@@ -7,23 +7,40 @@
 namespace Codeup\Attendance;
 
 use Codeup\Bootcamps\AttendanceChecker;
+use Codeup\Bootcamps\Student;
+use Codeup\Bootcamps\Students;
 use DateTime;
 
 class PerformRollCall
 {
+    /** @var AttendanceChecker */
     private $checker;
 
-    public function __construct(AttendanceChecker $checker)
+    /** @var Students */
+    private $students;
+
+    /**
+     * @param AttendanceChecker $checker
+     * @param Students $students
+     */
+    public function __construct(AttendanceChecker $checker, Students $students)
     {
         $this->checker = $checker;
+        $this->students = $students;
     }
 
     public function rollCall()
     {
-        $addresses = $this->checker->whoIsConnected();
         $today = new DateTime();
-        // Check if the bootcamp has not ended yet
-        // Check if the student have already checked in
-        // If not save the record.
+        $addresses = $this->checker->whoIsConnected();
+        $students = $this->students->attending($today, $addresses);
+
+        /** @var Student $student */
+        foreach ($students as $student) {
+            if ($student->isInClass($today) && !$student->hasCheckedIn($today)) {
+                $student->checkIn($today);
+                $this->students->update($student);
+            }
+        }
     }
 }

@@ -18,7 +18,7 @@ class AttendanceSpec extends ObjectBehavior
             $date = new DateTime(),
             A::student()->build(),
         ]);
-        $this->onDate()->shouldBe($date);
+        $this->occurredOn($date)->shouldBe(true);
     }
 
     function it_should_be_created_as_a_check_out_entry()
@@ -27,6 +27,15 @@ class AttendanceSpec extends ObjectBehavior
             $date = new DateTime(),
             A::student()->build(),
         ]);
-        $this->onDate()->shouldBe($date);
+        $this->occurredOn($date)->shouldBe(true);
+    }
+
+    function it_should_know_when_it_occurred_on_a_different_day()
+    {
+        $this->beConstructedThrough('checkOut', [
+            new DateTime(),
+            A::student()->build(),
+        ]);
+        $this->occurredOn(new DateTime('1 day'))->shouldBe(false);
     }
 }

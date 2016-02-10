@@ -8,6 +8,7 @@ namespace specs\Codeup\Bootcamps;
 
 use Codeup\Bootcamps\Bootcamp;
 use Codeup\Bootcamps\BootcampSchedule;
+use Codeup\Bootcamps\Duration;
 use Codeup\Bootcamps\MacAddress;
 use DateTime;
 use PhpSpec\ObjectBehavior;
@@ -19,7 +20,7 @@ class StudentSpec extends ObjectBehavior
     {
         $this->beConstructedThrough('attend', [
             Bootcamp::start(
-                new DateTime(),
+                Duration::between(new DateTime('-30 day'), new DateTime('30 day')),
                 'Hampton',
                 BootcampSchedule::withClassTimeBetween(
                     new DateTime('-6 hour'),
@@ -36,15 +37,25 @@ class StudentSpec extends ObjectBehavior
         $this->name()->shouldBe('Luis Montealegre');
     }
 
+    function it_should_know_when_a_bootcamp_has_ended()
+    {
+        $this->isInClass(new DateTime('31 days'))->shouldBe(false);
+    }
+
+    function it_should_know_when_a_bootcamp_is_in_progress()
+    {
+        $this->isInClass(new DateTime('10 days'))->shouldBe(true);
+    }
+
     function it_should_be_able_to_check_in()
     {
-        $this->checkIn(new DateTime());
-        $this->hasCheckedIn()->shouldBe(true);
+        $this->checkIn($today = new DateTime());
+        $this->hasCheckedIn($today)->shouldBe(true);
     }
 
     function it_should_be_able_to_check_out()
     {
-        $this->checkOut(new DateTime());
-        $this->hasCheckedOut()->shouldBe(true);
+        $this->checkOut($today = new DateTime());
+        $this->hasCheckedOut($today)->shouldBe(true);
     }
 }
