@@ -6,8 +6,8 @@
  */
 namespace Codeup\Goutte;
 
-use Codeup\AttendanceChecker;
-use Codeup\MacAddress;
+use Codeup\Bootcamps\AttendanceChecker;
+use Codeup\Bootcamps\MacAddress;
 use Goutte\Client;
 use Symfony\Component\DomCrawler\Crawler;
 

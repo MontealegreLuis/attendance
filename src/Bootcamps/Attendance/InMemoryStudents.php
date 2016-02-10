@@ -25,6 +25,14 @@ class InMemoryStudents implements Students
     /**
      * @param Student $student
      */
+    public function add(Student $student)
+    {
+        $this->students->attach($student);
+    }
+
+    /**
+     * @param Student $student
+     */
     public function update(Student $student)
     {
         $this->students->attach($student);
@@ -41,7 +49,7 @@ class InMemoryStudents implements Students
 
         /** @var Student $student */
         foreach ($this->students as $student) {
-            if ($this->isStudentPresent($student)) {
+            if ($this->isStudentPresent($student, $today, $addresses)) {
                 $students[] = $student;
             }
         }

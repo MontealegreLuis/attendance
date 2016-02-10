@@ -91,10 +91,11 @@ class Student
 
     /**
      * @param MacAddress $macAddress
+     * @return bool
      */
     public function has(MacAddress $macAddress)
     {
-        $this->macAddress->equals($macAddress);
+        return $this->macAddress->equals($macAddress);
     }
 
     public function checkOut(DateTime $now)

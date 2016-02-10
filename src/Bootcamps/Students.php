@@ -20,5 +20,10 @@ interface Students
     /**
      * @param Student $student
      */
+    public function add(Student $student);
+
+    /**
+     * @param Student $student
+     */
     public function update(Student $student);
 }
