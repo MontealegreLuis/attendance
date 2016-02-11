@@ -11,12 +11,16 @@ use Codeup\Bootcamps\Schedule;
 use Codeup\Bootcamps\Duration;
 use Codeup\Bootcamps\MacAddress;
 use Codeup\Bootcamps\Student;
+use Codeup\Bootcamps\StudentId;
 use Faker\Factory;
 use DateTime;
 
 class StudentBuilder
 {
     private $factory;
+
+    /** @var int */
+    private $nextId = 0;
 
     /** @var Bootcamp */
     private $bootcamp;
@@ -42,6 +46,7 @@ class StudentBuilder
     public function build()
     {
         $student = Student::attend(
+            StudentId::fromLiteral($this->nextId),
             $this->bootcamp,
             $this->name,
             $this->macAddress
@@ -111,6 +116,7 @@ class StudentBuilder
         );
         $this->name = $this->factory->name;
         $this->macAddress = MacAddress::withValue($this->factory->macAddress);
+        $this->nextId++;
         $this->checkIn = null;
     }
 }

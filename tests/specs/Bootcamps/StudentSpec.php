@@ -10,6 +10,7 @@ use Codeup\Bootcamps\Bootcamp;
 use Codeup\Bootcamps\Schedule;
 use Codeup\Bootcamps\Duration;
 use Codeup\Bootcamps\MacAddress;
+use Codeup\Bootcamps\StudentId;
 use DateTime;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
@@ -19,6 +20,7 @@ class StudentSpec extends ObjectBehavior
     function let()
     {
         $this->beConstructedThrough('attend', [
+            StudentId::fromLiteral(1),
             Bootcamp::start(
                 Duration::between(new DateTime('-30 day'), new DateTime('30 day')),
                 'Hampton',

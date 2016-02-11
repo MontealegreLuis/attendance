@@ -10,6 +10,9 @@ use DateTime;
 
 class Student
 {
+    /** @var StudentId */
+    private $studentId;
+
     /** @var Bootcamp */
     private $bootcamp;
 
@@ -23,26 +26,37 @@ class Student
     private $checkIn;
 
     /**
+     * @param StudentId $studentId
      * @param Bootcamp $bootcamp
      * @param string $name
      * @param MacAddress $macAddress
      */
-    private function __construct(Bootcamp $bootcamp, $name, MacAddress $macAddress)
-    {
+    private function __construct(
+        StudentId $studentId,
+        Bootcamp $bootcamp,
+        $name,
+        MacAddress $macAddress
+    ) {
         $this->bootcamp = $bootcamp;
         $this->setName($name);
         $this->macAddress = $macAddress;
+        $this->studentId = $studentId;
     }
 
     /**
+     * @param StudentId $studentId
      * @param Bootcamp $bootcamp
      * @param string $name
      * @param MacAddress $macAddress
      * @return Student
      */
-    public static function attend(Bootcamp $bootcamp, $name, MacAddress $macAddress)
-    {
-        return new Student($bootcamp, $name, $macAddress);
+    public static function attend(
+        StudentId $studentId,
+        Bootcamp $bootcamp,
+        $name,
+        MacAddress $macAddress
+    ) {
+        return new Student($studentId, $bootcamp, $name, $macAddress);
     }
 
     /**
@@ -53,6 +67,14 @@ class Student
         AssertValueIs::string($name);
         AssertValueIs::notEmpty(trim($name));
         $this->name = $name;
+    }
+
+    /**
+     * @return StudentId
+     */
+    public function id()
+    {
+        return $this->studentId;
     }
 
     /**
