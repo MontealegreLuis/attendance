@@ -6,7 +6,7 @@
  */
 require __DIR__ . '/../vendor/autoload.php';
 
-use Codeup\Attendance\PerformRollCall;
+use Codeup\Attendance\DoRollCall;
 use Codeup\Bootcamps\Attendance\InMemoryStudents;
 use Codeup\Bootcamps\MacAddress;
 use Codeup\Console\Command\RollCallCommand;
@@ -15,7 +15,7 @@ use Codeup\Goutte\GoutteAttendanceChecker;
 use Symfony\Component\Console\Application;
 
 $application = new Application();
-$application->add(new RollCallCommand( new PerformRollCall(
+$application->add(new RollCallCommand( new DoRollCall(
     new GoutteAttendanceChecker('http://localhost:8000/dhcp_status.html'),
     $students = new InMemoryStudents()
 )));

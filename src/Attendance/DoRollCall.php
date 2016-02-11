@@ -11,7 +11,7 @@ use Codeup\Bootcamps\Student;
 use Codeup\Bootcamps\Students;
 use DateTime;
 
-class PerformRollCall
+class DoRollCall
 {
     /** @var AttendanceChecker */
     private $checker;
@@ -30,11 +30,11 @@ class PerformRollCall
     }
 
     /**
-     * @return Student[]
+     * @param DateTime $today
+     * @return \Codeup\Bootcamps\Student[]
      */
-    public function rollCall()
+    public function rollCall(DateTime $today)
     {
-        $today = new DateTime();
         $addresses = $this->checker->whoIsConnected();
         $students = $this->students->attending($today, $addresses);
         $studentsInClass = [];

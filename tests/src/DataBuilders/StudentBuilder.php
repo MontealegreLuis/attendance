@@ -41,7 +41,11 @@ class StudentBuilder
      */
     public function build()
     {
-        $student = Student::attend($this->bootcamp, $this->name, $this->macAddress);
+        $student = Student::attend(
+            $this->bootcamp,
+            $this->name,
+            $this->macAddress
+        );
         if ($this->checkIn) {
             $student->checkIn($this->checkIn);
         }

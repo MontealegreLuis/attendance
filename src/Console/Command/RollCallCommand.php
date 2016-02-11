@@ -6,7 +6,7 @@
  */
 namespace Codeup\Console\Command;
 
-use Codeup\Attendance\PerformRollCall;
+use Codeup\Attendance\DoRollCall;
 use Codeup\Bootcamps\Student;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
@@ -17,7 +17,7 @@ class RollCallCommand extends Command
 {
     private $useCase;
 
-    public function __construct(PerformRollCall $rollCall)
+    public function __construct(DoRollCall $rollCall)
     {
         parent::__construct();
         $this->useCase = $rollCall;

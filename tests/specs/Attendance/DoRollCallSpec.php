@@ -1,17 +1,30 @@
 <?php
-
+/**
+ * PHP version 5.6
+ *
+ * This source file is subject to the license that is bundled with this package in the file LICENSE.
+ */
 namespace specs\Codeup\Attendance;
 
 use Codeup\Bootcamps\AttendanceChecker;
 use Codeup\Bootcamps\Student;
 use Codeup\Bootcamps\Students;
 use Codeup\DataBuilders\A;
+use DateInterval;
 use DateTime;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
-class PerformRollCallSpec extends ObjectBehavior
+class DoRollCallSpec extends ObjectBehavior
 {
+    /** @var DateTime */
+    private $now;
+
+    function let()
+    {
+        $this->now = (new DateTime('now'))->setTime(12, 0, 0);
+    }
+
     function it_should_update_all_students_who_have_arrived_now(
         AttendanceChecker $checker,
         Students $students
@@ -23,7 +36,7 @@ class PerformRollCallSpec extends ObjectBehavior
             $address3 = A::macAddress()->build(),
         ];
         $checker->whoIsConnected()->willReturn($addresses);
-        $students->attending(new DateTime(), $addresses)->willReturn([
+        $students->attending($this->now, $addresses)->willReturn([
             $student1 = A::student()->withMacAddress($address1)->build(),
             $student2 = A::student()->withMacAddress($address2)->build(),
             $student3 = A::student()->withMacAddress($address3)->build(),
@@ -37,7 +50,7 @@ class PerformRollCallSpec extends ObjectBehavior
         $this->beConstructedWith($checker, $students);
 
         // When
-        $this->rollCall();
+        $this->rollCall($this->now);
     }
 
     function it_should_update_only_the_students_who_have_not_already_checked_in(
@@ -51,10 +64,10 @@ class PerformRollCallSpec extends ObjectBehavior
             $address3 = A::macAddress()->build(),
         ];
         $checker->whoIsConnected()->willReturn($addresses);
-        $students->attending(new DateTime(), $addresses)->willReturn([
+        $students->attending($this->now, $addresses)->willReturn([
             $student1 = A::student()->withMacAddress($address1)->build(),
             $student2 = A::student()
-                ->whoCheckedInAt(new DateTime('-1 hour'))
+                ->whoCheckedInAt($this->now->sub(new DateInterval('PT1H')))
                 ->withMacAddress($address2)
                 ->build(),
             $student3 = A::student()->withMacAddress($address3)->build(),
@@ -67,7 +80,7 @@ class PerformRollCallSpec extends ObjectBehavior
         $this->beConstructedWith($checker, $students);
 
         // When
-        $this->rollCall();
+        $this->rollCall($this->now);
     }
 
     function it_should_not_update_students_who_have_already_checked_in(
@@ -81,17 +94,17 @@ class PerformRollCallSpec extends ObjectBehavior
             $address3 = A::macAddress()->build(),
         ];
         $checker->whoIsConnected()->willReturn($addresses);
-        $students->attending(new DateTime(), $addresses)->willReturn([
+        $students->attending($this->now, $addresses)->willReturn([
             $student1 = A::student()
-                ->whoCheckedInAt(new DateTime('-2 hour'))
+                ->whoCheckedInAt($this->now->sub(new DateInterval('PT2H')))
                 ->withMacAddress($address1)
                 ->build(),
             $student2 = A::student()
-                ->whoCheckedInAt(new DateTime('-1 hour'))
+                ->whoCheckedInAt($this->now->sub(new DateInterval('PT1H')))
                 ->withMacAddress($address2)
                 ->build(),
             $student3 = A::student()
-                ->whoCheckedInAt(new DateTime('-3 hour'))
+                ->whoCheckedInAt($this->now->sub(new DateInterval('PT3H')))
                 ->withMacAddress($address3)->build(),
         ]);
 
@@ -103,6 +116,6 @@ class PerformRollCallSpec extends ObjectBehavior
         $this->beConstructedWith($checker, $students);
 
         // When
-        $this->rollCall();
+        $this->rollCall($this->now);
     }
 }
