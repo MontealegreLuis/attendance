@@ -7,7 +7,7 @@
 namespace Codeup\DataBuilders;
 
 use Codeup\Bootcamps\Bootcamp;
-use Codeup\Bootcamps\BootcampSchedule;
+use Codeup\Bootcamps\Schedule;
 use Codeup\Bootcamps\Duration;
 use Codeup\Bootcamps\MacAddress;
 use Codeup\Bootcamps\Student;
@@ -66,6 +66,26 @@ class StudentBuilder
     }
 
     /**
+     * @return StudentBuilder
+     */
+    public function enrrolledInABootcampAlreadyFinished()
+    {
+        $this->bootcamp = Bootcamp::start(
+            Duration::between(
+                $this->factory->dateTimeBetween('-7 day', '-3 day'),
+                $this->factory->dateTimeBetween('-2 day', '-1 day')
+            ),
+            $this->factory->word,
+            Schedule::withClassTimeBetween(
+                $this->factory->dateTimeBetween('-7 day'),
+                $this->factory->dateTimeBetween('1 day', '7 day')
+            )
+        );
+
+        return $this;
+    }
+
+    /**
      * @param DateTime $time
      * @return StudentBuilder
      */
@@ -84,7 +104,7 @@ class StudentBuilder
                 $this->factory->dateTimeBetween('1 day', '7 day')
             ),
             $this->factory->word,
-            BootcampSchedule::withClassTimeBetween(
+            Schedule::withClassTimeBetween(
                 $this->factory->dateTimeBetween('-7 day'),
                 $this->factory->dateTimeBetween('1 day', '7 day')
             )

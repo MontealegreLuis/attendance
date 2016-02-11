@@ -12,7 +12,6 @@ use Codeup\DataBuilders\A;
 use DateTime;
 use PHPUnit_Framework_TestCase as TestCase;
 
-//TODO: add test case with students from a bootcamp that has already finished
 abstract class StudentsTest extends TestCase
 {
     /** @var Students */
@@ -64,6 +63,22 @@ abstract class StudentsTest extends TestCase
     /** @test */
     function it_should_find_students_that_match_with_a_known_mac_address()
     {
+        $students = $this->students->attending(
+            $today = new DateTime(),
+            array_merge($this->unknownAddresses, $this->knownAddresses)
+        );
+
+        $this->assertCount(3, $students);
+    }
+
+    /** @test */
+    function it_should_not_find_students_if_bootcamp_is_over()
+    {
+        $this->students->add(A::student()
+            ->enrrolledInABootcampAlreadyFinished()
+            ->withMacAddress($this->knownAddresses[0])
+            ->build()
+        );
         $students = $this->students->attending(
             $today = new DateTime(),
             array_merge($this->unknownAddresses, $this->knownAddresses)

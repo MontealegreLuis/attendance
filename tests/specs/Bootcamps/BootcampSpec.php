@@ -6,7 +6,7 @@
  */
 namespace specs\Codeup\Bootcamps;
 
-use Codeup\Bootcamps\BootcampSchedule;
+use Codeup\Bootcamps\Schedule;
 use Codeup\Bootcamps\Duration;
 use DateTime;
 use PhpSpec\ObjectBehavior;
@@ -18,7 +18,7 @@ class BootcampSpec extends ObjectBehavior
         $this->beConstructedThrough('start', [
             Duration::between(new DateTime('-30 day'), new DateTime('30 day')),
             'Hampton',
-            BootcampSchedule::withClassTimeBetween(
+            Schedule::withClassTimeBetween(
                 new DateTime('-6 hour'),
                 new DateTime('now')
             )

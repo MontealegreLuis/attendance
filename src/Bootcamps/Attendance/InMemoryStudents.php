@@ -58,6 +58,9 @@ class InMemoryStudents implements Students
     }
 
     /**
+     * Filter students first by checking if they're enrolled in a bootcamp now,
+     * then check if one of the registered MAC addresses belong to one of them.
+     *
      * @param Student $student
      * @param DateTime $today
      * @param MacAddress[] $addresses

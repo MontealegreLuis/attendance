@@ -16,18 +16,18 @@ class Bootcamp
     /** @var string */
     private $cohortName;
 
-    /** @var BootcampSchedule */
+    /** @var Schedule */
     private $schedule;
 
     /**
      * @param Duration $duration
      * @param string $cohortName
-     * @param BootcampSchedule $schedule
+     * @param Schedule $schedule
      */
     private function __construct(
         Duration $duration,
         $cohortName,
-        BootcampSchedule $schedule
+        Schedule $schedule
     ) {
         $this->setCohortName($cohortName);
         $this->duration = $duration;
@@ -37,13 +37,13 @@ class Bootcamp
     /**
      * @param Duration $duration
      * @param string $cohortName
-     * @param BootcampSchedule $schedule
+     * @param Schedule $schedule
      * @return Bootcamp
      */
     public static function start(
         Duration $duration,
         $cohortName,
-        BootcampSchedule $schedule
+        Schedule $schedule
     ) {
         return new Bootcamp($duration, $cohortName, $schedule);
     }

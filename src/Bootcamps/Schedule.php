@@ -8,7 +8,7 @@ namespace Codeup\Bootcamps;
 
 use DateTime;
 
-class BootcampSchedule
+class Schedule
 {
     /** @var DateTime */
     private $startTime;
@@ -30,13 +30,13 @@ class BootcampSchedule
     /**
      * @param DateTime $startTime
      * @param DateTime $stopTime
-     * @return BootcampSchedule
+     * @return Schedule
      */
     public static function withClassTimeBetween(
         DateTime $startTime,
         DateTime $stopTime
     ) {
-        return new BootcampSchedule($startTime, $stopTime);
+        return new Schedule($startTime, $stopTime);
     }
 
     /**

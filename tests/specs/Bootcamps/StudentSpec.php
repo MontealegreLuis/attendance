@@ -7,7 +7,7 @@
 namespace specs\Codeup\Bootcamps;
 
 use Codeup\Bootcamps\Bootcamp;
-use Codeup\Bootcamps\BootcampSchedule;
+use Codeup\Bootcamps\Schedule;
 use Codeup\Bootcamps\Duration;
 use Codeup\Bootcamps\MacAddress;
 use DateTime;
@@ -22,7 +22,7 @@ class StudentSpec extends ObjectBehavior
             Bootcamp::start(
                 Duration::between(new DateTime('-30 day'), new DateTime('30 day')),
                 'Hampton',
-                BootcampSchedule::withClassTimeBetween(
+                Schedule::withClassTimeBetween(
                     new DateTime('-6 hour'),
                     new DateTime('now')
                 )

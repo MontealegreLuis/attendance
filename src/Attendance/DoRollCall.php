@@ -11,6 +11,11 @@ use Codeup\Bootcamps\Student;
 use Codeup\Bootcamps\Students;
 use DateTime;
 
+/**
+ * Poll the router's DHCP status page to see who is connected, if the MAC
+ * addresses belong to a student check if it has already checked in for the day.
+ * If not, then check the student in and persist that information.
+ */
 class DoRollCall
 {
     /** @var AttendanceChecker */
