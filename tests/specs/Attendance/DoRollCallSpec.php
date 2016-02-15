@@ -10,6 +10,7 @@ use Codeup\Bootcamps\AttendanceChecker;
 use Codeup\Bootcamps\Student;
 use Codeup\Bootcamps\Students;
 use Codeup\DataBuilders\A;
+use Codeup\DomainEvents\EventPublisher;
 use DateInterval;
 use DateTime;
 use PhpSpec\ObjectBehavior;
@@ -41,13 +42,13 @@ class DoRollCallSpec extends ObjectBehavior
             $student2 = A::student()->withMacAddress($address2)->build(),
             $student3 = A::student()->withMacAddress($address3)->build(),
         ]);
+        $this->beConstructedWith($checker, $students);
+        $this->setPublisher(new EventPublisher());
 
         // Then
         $students->update($student1)->shouldBeCalled();
         $students->update($student2)->shouldBeCalled();
         $students->update($student3)->shouldBeCalled();
-
-        $this->beConstructedWith($checker, $students);
 
         // When
         $this->rollCall($this->now);
@@ -72,12 +73,12 @@ class DoRollCallSpec extends ObjectBehavior
                 ->build(),
             $student3 = A::student()->withMacAddress($address3)->build(),
         ]);
+        $this->beConstructedWith($checker, $students);
+        $this->setPublisher(new EventPublisher());
 
         // Then
         $students->update($student1)->shouldBeCalled();
         $students->update($student3)->shouldBeCalled();
-
-        $this->beConstructedWith($checker, $students);
 
         // When
         $this->rollCall($this->now);
@@ -107,13 +108,12 @@ class DoRollCallSpec extends ObjectBehavior
                 ->whoCheckedInAt($this->now->sub(new DateInterval('PT3H')))
                 ->withMacAddress($address3)->build(),
         ]);
+        $this->beConstructedWith($checker, $students);
 
         // Then
         $students->update($student1)->shouldNotBeCalled();
         $students->update($student2)->shouldNotBeCalled();
         $students->update($student3)->shouldNotBeCalled();
-
-        $this->beConstructedWith($checker, $students);
 
         // When
         $this->rollCall($this->now);

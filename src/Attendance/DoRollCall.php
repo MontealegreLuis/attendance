@@ -9,6 +9,7 @@ namespace Codeup\Attendance;
 use Codeup\Bootcamps\AttendanceChecker;
 use Codeup\Bootcamps\Student;
 use Codeup\Bootcamps\Students;
+use Codeup\DomainEvents\PublishesEvents;
 use DateTime;
 
 /**
@@ -18,6 +19,8 @@ use DateTime;
  */
 class DoRollCall
 {
+    use PublishesEvents;
+
     /** @var AttendanceChecker */
     private $checker;
 
@@ -46,13 +49,27 @@ class DoRollCall
 
         /** @var Student $student */
         foreach ($students as $student) {
-            if (!$student->hasCheckedIn($today)) {
-                $student->checkIn($today);
-                $studentsInClass[] = $student;
-                $this->students->update($student);
-            }
+            $this->registerStudentCheckIn($today, $student, $studentsInClass);
         }
 
         return $studentsInClass;
+    }
+
+    /**
+     * @param DateTime $today
+     * @param Student $student
+     * @param array $students
+     */
+    private function registerStudentCheckIn(
+        DateTime $today,
+        Student $student,
+        array $students
+    ) {
+        if (!$student->hasCheckedIn($today)) {
+            $student->checkIn($today);
+            $this->students->update($student);
+            $students[] = $student;
+            $this->publisher()->publish($student->events());
+        }
     }
 }

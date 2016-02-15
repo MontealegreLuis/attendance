@@ -7,12 +7,39 @@
 namespace Codeup\Bootcamps;
 
 use DateTime;
+use Codeup\DomainEvents\Event;
 
-class StudentHasCheckedIn
+class StudentHasCheckedIn implements Event
 {
     /** @var DateTime */
-    private $date;
+    private $occurredOn;
 
     /** @var StudentId */
     private $studentId;
+
+    /**
+     * @param StudentId $studentId
+     * @param DateTime $when
+     */
+    public function __construct(StudentId $studentId, DateTime $when)
+    {
+        $this->studentId = $studentId;
+        $this->occurredOn = $when;
+    }
+
+    /**
+     * @return StudentId
+     */
+    public function studentId()
+    {
+        return $this->studentId;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function occurredOn()
+    {
+        return $this->occurredOn;
+    }
 }

@@ -7,9 +7,13 @@
 namespace Codeup\Bootcamps;
 
 use DateTime;
+use Codeup\DomainEvents\CanRecordEvents;
+use Codeup\DomainEvents\RecordsEvents;
 
-class Student
+class Student implements CanRecordEvents
 {
+    use RecordsEvents;
+
     /** @var StudentId */
     private $studentId;
 
@@ -99,6 +103,7 @@ class Student
     public function checkIn(DateTime $now)
     {
         $this->checkIn = Attendance::checkIn($now, $this);
+        $this->recordThat(new StudentHasCheckedIn($this->studentId, $now));
     }
 
     /**
