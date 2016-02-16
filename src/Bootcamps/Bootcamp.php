@@ -10,6 +10,7 @@ use DateTime;
 
 class Bootcamp
 {
+    /** @var BootcampId */
     private $bootcampId;
 
     /** @var Duration */
