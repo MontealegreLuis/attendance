@@ -10,6 +10,8 @@ use DateTime;
 
 class Bootcamp
 {
+    private $bootcampId;
+
     /** @var Duration */
     private $duration;
 
@@ -20,11 +22,13 @@ class Bootcamp
     private $schedule;
 
     /**
+     * @param BootcampId $bootcampId
      * @param Duration $duration
      * @param string $cohortName
      * @param Schedule $schedule
      */
     private function __construct(
+        BootcampId $bootcampId,
         Duration $duration,
         $cohortName,
         Schedule $schedule
@@ -32,20 +36,23 @@ class Bootcamp
         $this->setCohortName($cohortName);
         $this->duration = $duration;
         $this->schedule = $schedule;
+        $this->bootcampId = $bootcampId;
     }
 
     /**
+     * @param BootcampId $bootcampId
      * @param Duration $duration
      * @param string $cohortName
      * @param Schedule $schedule
      * @return Bootcamp
      */
     public static function start(
+        BootcampId $bootcampId,
         Duration $duration,
         $cohortName,
         Schedule $schedule
     ) {
-        return new Bootcamp($duration, $cohortName, $schedule);
+        return new Bootcamp($bootcampId, $duration, $cohortName, $schedule);
     }
 
     /**
@@ -55,14 +62,6 @@ class Bootcamp
     public function isInProgress(DateTime $aDate)
     {
         return $this->duration->contains($aDate);
-    }
-
-    /**
-     * @return string
-     */
-    public function cohortName()
-    {
-        return $this->cohortName;
     }
 
     /**

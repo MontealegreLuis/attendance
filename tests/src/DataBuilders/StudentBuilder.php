@@ -7,6 +7,7 @@
 namespace Codeup\DataBuilders;
 
 use Codeup\Bootcamps\Bootcamp;
+use Codeup\Bootcamps\BootcampId;
 use Codeup\Bootcamps\Schedule;
 use Codeup\Bootcamps\Duration;
 use Codeup\Bootcamps\MacAddress;
@@ -21,6 +22,9 @@ class StudentBuilder
 
     /** @var int */
     private $nextId = 0;
+
+    /** @var int */
+    private $nextBootcampId = 0;
 
     /** @var Bootcamp */
     private $bootcamp;
@@ -103,7 +107,9 @@ class StudentBuilder
 
     private function reset()
     {
+        $this->nextBootcampId++;
         $this->bootcamp = Bootcamp::start(
+            BootcampId::fromLiteral($this->nextBootcampId),
             Duration::between(
                 $this->factory->dateTimeBetween('-7 day', '-1 day'),
                 $this->factory->dateTimeBetween('1 day', '7 day')

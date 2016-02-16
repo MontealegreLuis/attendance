@@ -7,6 +7,7 @@
 namespace specs\Codeup\Bootcamps;
 
 use Codeup\Bootcamps\Bootcamp;
+use Codeup\Bootcamps\BootcampId;
 use Codeup\Bootcamps\Schedule;
 use Codeup\Bootcamps\Duration;
 use Codeup\Bootcamps\MacAddress;
@@ -22,6 +23,7 @@ class StudentSpec extends ObjectBehavior
         $this->beConstructedThrough('attend', [
             StudentId::fromLiteral(1),
             Bootcamp::start(
+                BootcampId::fromLiteral(1),
                 Duration::between(new DateTime('-30 day'), new DateTime('30 day')),
                 'Hampton',
                 Schedule::withClassTimeBetween(

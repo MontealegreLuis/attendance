@@ -23,8 +23,8 @@ class Schedule
     private function __construct(DateTime $startTime, DateTime $stopTime)
     {
         AssertValueIs::greaterThan($stopTime, $startTime);
-        $this->startTime = $startTime;
-        $this->stopTime = $stopTime;
+        $this->startTime = $startTime->setDate(0, 1, 1);
+        $this->stopTime = $stopTime->setDate(0, 1, 1);
     }
 
     /**

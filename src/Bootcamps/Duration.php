@@ -23,8 +23,8 @@ class Duration
     private function __construct(DateTime $startDate, DateTime $stopDate)
     {
         AssertValueIs::greaterThan($stopDate, $startDate);
-        $this->startDate = $startDate;
-        $this->stopDate = $stopDate;
+        $this->startDate = $startDate->setTime(0, 0, 0);
+        $this->stopDate = $stopDate->setTime(0, 0, 0);
     }
 
     /**
@@ -44,5 +44,21 @@ class Duration
     public function contains(DateTime $aDate)
     {
         return $aDate >= $this->startDate && $aDate <= $this->stopDate;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function startDate()
+    {
+        return $this->startDate;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function stopDate()
+    {
+        return $this->stopDate;
     }
 }

@@ -6,12 +6,12 @@
  */
 namespace specs\Codeup\Bootcamps;
 
-use Codeup\Bootcamps\StudentId;
+use Codeup\Bootcamps\BootcampId;
 
-class StudentIdSpec extends IdentifierSpec
+class BootcampIdSpec extends IdentifierSpec
 {
     function anotherIdentifier($value)
     {
-        return StudentId::fromLiteral($value);
+        return BootcampId::fromLiteral($value);
     }
 }
