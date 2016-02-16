@@ -6,6 +6,7 @@
  */
 namespace Codeup\Bootcamps;
 
+use Bootcamps\BootcampInformation;
 use DateTime;
 
 class Bootcamp
@@ -63,6 +64,20 @@ class Bootcamp
     public function isInProgress(DateTime $aDate)
     {
         return $this->duration->contains($aDate);
+    }
+
+    /**
+     * @return BootcampInformation
+     */
+    public function information()
+    {
+        return new BootcampInformation(
+            $this->cohortName,
+            $this->duration->startDate(),
+            $this->duration->stopDate(),
+            $this->schedule->startTime(),
+            $this->schedule->stopTime()
+        );
     }
 
     /**

@@ -4,9 +4,8 @@
  *
  * This source file is subject to the license that is bundled with this package in the file LICENSE.
  */
-namespace Bootcamps;
+namespace Codeup\Bootcamps;
 
-use Codeup\Bootcamps\Bootcamp;
 use DateTime;
 
 class BootcampInformation
@@ -26,9 +25,18 @@ class BootcampInformation
     /** @var DateTime */
     private $stopTime;
 
-    public static function of()
-    {
-
+    public function __construct(
+        $cohortName,
+        DateTime $startDate,
+        DateTime $stopDate,
+        DateTime $startTime,
+        DateTime $stopTime
+    ) {
+        $this->cohortName;
+        $this->startDate;
+        $this->stopDate;
+        $this->startTime;
+        $this->stopTime;
     }
 
     /**

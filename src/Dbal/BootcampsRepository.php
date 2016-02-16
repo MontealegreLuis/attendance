@@ -24,8 +24,13 @@ class BootcampsRepository implements Bootcamps
 
     public function add(Bootcamp $bootcamp)
     {
+        $information = $bootcamp->information();
         $this->connection->insert('bootcamps', [
-            $bootcamp->cohortName(),
+            'cohort_name' => $information->cohortName(),
+            'start_date' => $information->startDate()->format('Y-m-d'),
+            'stop_date' => $information->stopDate()->format('Y-m-d'),
+            'start_time' => $information->startTime()->format('Y-m-d H:m:i'),
+            'stop_time' => $information->stopTime()->format('Y-m-d H:m:i'),
         ]);
     }
 }
