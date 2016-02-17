@@ -10,6 +10,9 @@ use DateTime;
 
 class BootcampInformation
 {
+    /** @var BootcampId */
+    private $bootcampId;
+
     /** @var string */
     private $cohortName;
 
@@ -25,18 +28,36 @@ class BootcampInformation
     /** @var DateTime */
     private $stopTime;
 
+    /**
+     * @param BootcampId $bootcampId
+     * @param $cohortName
+     * @param DateTime $startDate
+     * @param DateTime $stopDate
+     * @param DateTime $startTime
+     * @param DateTime $stopTime
+     */
     public function __construct(
+        BootcampId $bootcampId,
         $cohortName,
         DateTime $startDate,
         DateTime $stopDate,
         DateTime $startTime,
         DateTime $stopTime
     ) {
-        $this->cohortName;
-        $this->startDate;
-        $this->stopDate;
-        $this->startTime;
-        $this->stopTime;
+        $this->bootcampId = $bootcampId;
+        $this->cohortName = $cohortName;
+        $this->startDate = $startDate;
+        $this->stopDate = $stopDate;
+        $this->startTime = $startTime;
+        $this->stopTime = $stopTime;
+    }
+
+    /**
+     * @return BootcampId
+     */
+    public function id()
+    {
+        return $this->bootcampId;
     }
 
     /**

@@ -26,6 +26,7 @@ class BootcampsRepository implements Bootcamps
     {
         $information = $bootcamp->information();
         $this->connection->insert('bootcamps', [
+            'bootcamp_id' => $information->id()->value(),
             'cohort_name' => $information->cohortName(),
             'start_date' => $information->startDate()->format('Y-m-d'),
             'stop_date' => $information->stopDate()->format('Y-m-d'),

@@ -74,27 +74,16 @@ class Student implements CanRecordEvents
     }
 
     /**
-     * @return StudentId
+     * @return StudentInformation
      */
-    public function id()
+    public function information()
     {
-        return $this->studentId;
-    }
-
-    /**
-     * @return string
-     */
-    public function name()
-    {
-        return $this->name;
-    }
-
-    /**
-     * @return string
-     */
-    public function address()
-    {
-        return $this->macAddress->value();
+        return new StudentInformation(
+            $this->studentId,
+            $this->bootcamp->information(),
+            $this->name,
+            $this->macAddress
+        );
     }
 
     /**

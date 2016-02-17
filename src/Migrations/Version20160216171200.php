@@ -10,7 +10,7 @@ use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
- * Generate Bootcamp table
+ * Generate tables for Bootcamp and Student entities.
  */
 class Version20160216171200 extends AbstractMigration
 {
@@ -27,6 +27,18 @@ class Version20160216171200 extends AbstractMigration
         $bootcamps->addColumn('start_time', 'datetime');
         $bootcamps->addColumn('stop_time', 'datetime');
         $bootcamps->setPrimaryKey(['bootcamp_id']);
+
+        $students = $schema->createTable('students');
+        $students->addColumn('student_id', 'integer', ['unsigned' => true]);
+        $students->addColumn('name', 'string');
+        $students->addColumn('mac_address', 'string');
+        $students->addColumn('bootcamp_id', 'integer', ['unsigned' => true]);
+        $students->setPrimaryKey(['student_id']);
+        $students->addForeignKeyConstraint(
+            $bootcamps,
+            ['bootcamp_id'], // Local column
+            ['bootcamp_id']  // Foreign column
+        );
     }
 
     /**
@@ -35,5 +47,6 @@ class Version20160216171200 extends AbstractMigration
     public function down(Schema $schema)
     {
         $schema->dropTable('bootcamps');
+        $schema->dropTable('students');
     }
 }

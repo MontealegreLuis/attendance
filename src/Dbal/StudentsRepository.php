@@ -31,7 +31,13 @@ class StudentsRepository implements Students
 
     public function add(Student $student)
     {
-        // TODO: Implement add() method.
+        $information = $student->information();
+        $this->connection->insert('students', [
+            'student_id' => $information->id()->value(),
+            'name' => $information->name(),
+            'mac_address' => $information->macAddress()->value(),
+            'bootcamp_id' => $information->bootcamp()->id(),
+        ]);
     }
 
     public function update(Student $student)

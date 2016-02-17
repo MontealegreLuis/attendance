@@ -80,6 +80,7 @@ class StudentBuilder
     public function enrrolledInABootcampAlreadyFinished()
     {
         $this->bootcamp = Bootcamp::start(
+            BootcampId::fromLiteral($this->nextBootcampId),
             Duration::between(
                 $this->factory->dateTimeBetween('-7 day', '-3 day'),
                 $this->factory->dateTimeBetween('-2 day', '-1 day')

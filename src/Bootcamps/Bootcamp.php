@@ -6,7 +6,6 @@
  */
 namespace Codeup\Bootcamps;
 
-use Bootcamps\BootcampInformation;
 use DateTime;
 
 class Bootcamp
@@ -72,6 +71,7 @@ class Bootcamp
     public function information()
     {
         return new BootcampInformation(
+            $this->bootcampId,
             $this->cohortName,
             $this->duration->startDate(),
             $this->duration->stopDate(),

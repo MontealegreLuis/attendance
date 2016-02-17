@@ -36,11 +36,6 @@ class StudentSpec extends ObjectBehavior
         ]);
     }
 
-    function it_should_start_attending_a_bootcamp()
-    {
-        $this->name()->shouldBe('Luis Montealegre');
-    }
-
     function it_should_know_when_a_bootcamp_has_ended()
     {
         $this->isInClass(new DateTime('31 days'))->shouldBe(false);
