@@ -6,6 +6,7 @@
  */
 namespace Codeup\ContractTests;
 
+use Codeup\Bootcamps\Bootcamps;
 use Codeup\Bootcamps\MacAddress;
 use Codeup\Bootcamps\Students;
 use Codeup\DataBuilders\A;
@@ -17,18 +18,28 @@ abstract class StudentsTest extends TestCase
     /** @var Students */
     private $students;
 
+    /** @var Bootcamps */
+    private $bootcamps;
+
     /** @var MacAddress[] */
     private $knownAddresses;
 
     /** @var MacAddress */
     private $unknownAddresses;
 
+    /**
+     * @return Students
+     */
     abstract public function studentsInstance();
+
+    abstract public function bootcampsInstance();
 
     /** @before */
     function generateFixtures()
     {
         $this->students = $this->studentsInstance();
+        $this->bootcamps = $this->bootcampsInstance();
+        $this->bootcamps->add($bootcamp = A::bootcamp()->build());
         $this->knownAddresses = [
             $address1 = A::macAddress()->build(),
             $address2 = A::macAddress()->build(),
@@ -39,14 +50,22 @@ abstract class StudentsTest extends TestCase
             A::macAddress()->build(),
             A::macAddress()->build(),
         ];
-        $this->students->add(A::student()->withMacAddress($address1)->build());
-        $this->students->add(
-            A::student()
-                ->whoCheckedInAt(new DateTime('-1 hour'))
-                ->withMacAddress($address2)
-                ->build()
+        $this->students->add(A::student()
+            ->enrolledOn($bootcamp)
+            ->withMacAddress($address1)
+            ->build()
         );
-        $this->students->add(A::student()->withMacAddress($address3)->build());
+        $this->students->add(A::student()
+            ->enrolledOn($bootcamp)
+            ->whoCheckedInAt(new DateTime('-1 hour'))
+            ->withMacAddress($address2)
+            ->build()
+        );
+        $this->students->add(A::student()
+            ->enrolledOn($bootcamp)
+            ->withMacAddress($address3)
+            ->build()
+        );
     }
 
     /** @test */

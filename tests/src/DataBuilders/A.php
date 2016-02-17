@@ -23,4 +23,12 @@ class A
     {
         return new MacAddressBuilder();
     }
+
+    /**
+     * @return BootcampBuilder
+     */
+    public static function bootcamp()
+    {
+        return new BootcampBuilder();
+    }
 }

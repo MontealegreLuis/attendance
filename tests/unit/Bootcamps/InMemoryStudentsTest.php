@@ -15,4 +15,9 @@ class InMemoryStudentsTest extends StudentsTest
     {
         return new InMemoryStudents();
     }
+
+    public function bootcampsInstance()
+    {
+        return new InMemoryBootcamps();
+    }
 }

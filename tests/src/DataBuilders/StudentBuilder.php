@@ -18,13 +18,14 @@ use DateTime;
 
 class StudentBuilder
 {
+    /** @var \Faker\Generator */
     private $factory;
 
-    /** @var int */
-    private $nextId = 0;
+    /** @var  BootcampBuilder */
+    private $bootcampBuilder;
 
     /** @var int */
-    private $nextBootcampId = 0;
+    private static $nextId = 0;
 
     /** @var Bootcamp */
     private $bootcamp;
@@ -41,6 +42,7 @@ class StudentBuilder
     public function __construct()
     {
         $this->factory = Factory::create();
+        $this->bootcampBuilder = new BootcampBuilder();
         $this->reset();
     }
 
@@ -50,7 +52,7 @@ class StudentBuilder
     public function build()
     {
         $student = Student::attend(
-            StudentId::fromLiteral($this->nextId),
+            StudentId::fromLiteral(static::$nextId),
             $this->bootcamp,
             $this->name,
             $this->macAddress
@@ -61,6 +63,17 @@ class StudentBuilder
         $this->reset();
 
         return $student;
+    }
+
+    /**
+     * @param Bootcamp $bootcamp
+     * @return BootcampBuilder
+     */
+    public function enrolledOn(Bootcamp $bootcamp)
+    {
+        $this->bootcamp = $bootcamp;
+
+        return $this;
     }
 
     /**
@@ -79,18 +92,7 @@ class StudentBuilder
      */
     public function enrrolledInABootcampAlreadyFinished()
     {
-        $this->bootcamp = Bootcamp::start(
-            BootcampId::fromLiteral($this->nextBootcampId),
-            Duration::between(
-                $this->factory->dateTimeBetween('-7 day', '-3 day'),
-                $this->factory->dateTimeBetween('-2 day', '-1 day')
-            ),
-            $this->factory->word,
-            Schedule::withClassTimeBetween(
-                $this->factory->dateTimeBetween('-7 day'),
-                $this->factory->dateTimeBetween('1 day', '7 day')
-            )
-        );
+        $this->bootcamp = $this->bootcampBuilder->alreadyFinished()->build();
 
         return $this;
     }
@@ -108,22 +110,10 @@ class StudentBuilder
 
     private function reset()
     {
-        $this->nextBootcampId++;
-        $this->bootcamp = Bootcamp::start(
-            BootcampId::fromLiteral($this->nextBootcampId),
-            Duration::between(
-                $this->factory->dateTimeBetween('-7 day', '-1 day'),
-                $this->factory->dateTimeBetween('1 day', '7 day')
-            ),
-            $this->factory->word,
-            Schedule::withClassTimeBetween(
-                $this->factory->dateTimeBetween('-7 day'),
-                $this->factory->dateTimeBetween('1 day', '7 day')
-            )
-        );
+        $this->bootcamp = $this->bootcampBuilder->build();
         $this->name = $this->factory->name;
         $this->macAddress = MacAddress::withValue($this->factory->macAddress);
-        $this->nextId++;
+        static::$nextId++;
         $this->checkIn = null;
     }
 }
