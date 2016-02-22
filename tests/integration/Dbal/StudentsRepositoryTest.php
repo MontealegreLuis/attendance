@@ -7,12 +7,11 @@
 namespace Codeup\Dbal;
 
 use Codeup\ContractTests\StudentsTest;
-use Doctrine\DBAL\DriverManager;
+use Codeup\TestHelpers\SetupDatabaseConnection;
 
 class StudentsRepositoryTest extends StudentsTest
 {
-    /** @var \Doctrine\DBAL\Connection */
-    private $connection;
+    use SetupDatabaseConnection;
 
     /**
      * @return StudentsRepository
@@ -20,7 +19,7 @@ class StudentsRepositoryTest extends StudentsTest
      */
     public function studentsInstance()
     {
-        $connection = $this->connection();
+        $connection = $this->connection(require __DIR__ . '/../../../config.php');
         $connection->query('DELETE FROM students');
 
         return new StudentsRepository($connection);
@@ -28,24 +27,9 @@ class StudentsRepositoryTest extends StudentsTest
 
     public function bootcampsInstance()
     {
-        $connection = $this->connection();
+        $connection = $this->connection(require __DIR__ . '/../../../config.php');
         $connection->query('DELETE FROM bootcamps');
 
         return new BootcampsRepository($connection);
-    }
-
-    /**
-     * @return \Doctrine\DBAL\Connection
-     * @throws \Doctrine\DBAL\DBALException
-     */
-    private function connection()
-    {
-        if (!$this->connection) {
-            $options = require __DIR__ . '/../../../config.php';
-
-            $this->connection = DriverManager::getConnection($options['dbal']);
-        }
-
-        return $this->connection;
     }
 }

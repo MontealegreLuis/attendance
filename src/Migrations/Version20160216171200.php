@@ -51,6 +51,11 @@ class Version20160216171200 extends AbstractMigration
             ['student_id'], // Local column
             ['student_id']  // Foreign column
         );
+
+        $attendanceSequence = $schema->createTable('attendances_seq');
+        $attendanceSequence->addColumn('next_val', 'integer', [
+            'unsigned' => true
+        ]);
     }
 
     /**
@@ -61,5 +66,6 @@ class Version20160216171200 extends AbstractMigration
         $schema->dropTable('bootcamps');
         $schema->dropTable('students');
         $schema->dropTable('attendances');
+        $schema->dropTable('attendances_seq');
     }
 }
