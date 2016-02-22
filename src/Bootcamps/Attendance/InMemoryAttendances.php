@@ -7,6 +7,7 @@
 namespace Codeup\Bootcamps\Attendance;
 
 use Codeup\Bootcamps\Attendance;
+use Codeup\Bootcamps\AttendanceId;
 use Codeup\Bootcamps\Attendances;
 use SplObjectStorage;
 
@@ -26,5 +27,13 @@ class InMemoryAttendances implements Attendances
     public function add(Attendance $attendance)
     {
         $this->attendances->attach($attendance);
+    }
+
+    /**
+     * @return \Codeup\Bootcamps\Identifier
+     */
+    public function nextAttendanceId()
+    {
+        return AttendanceId::fromLiteral($this->attendances->count() + 1);
     }
 }
