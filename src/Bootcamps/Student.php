@@ -74,6 +74,14 @@ class Student implements CanRecordEvents
     }
 
     /**
+     * @return StudentId
+     */
+    public function id()
+    {
+        return $this->studentId;
+    }
+
+    /**
      * @return StudentInformation
      */
     public function information()
@@ -87,12 +95,16 @@ class Student implements CanRecordEvents
     }
 
     /**
-     * @param DateTime $now
+     * @param Attendance $attendance
+     * @return Attendance
      */
-    public function checkIn(DateTime $now)
+    public function register(Attendance $attendance)
     {
-        $this->checkIn = Attendance::checkIn($now, $this);
-        $this->recordThat(new StudentHasCheckedIn($this->studentId, $now));
+        if ($attendance->isCheckIn()) {
+            $this->checkIn = $attendance;
+            $this->recordThat(new StudentHasCheckedIn($attendance->id()));
+            return $this->checkIn;
+        }
     }
 
     /**

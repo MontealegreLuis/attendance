@@ -15,24 +15,24 @@ class StudentHasCheckedIn implements Event
     private $occurredOn;
 
     /** @var StudentId */
-    private $studentId;
+    private $attendanceId;
 
     /**
      * @param StudentId $studentId
      * @param DateTime $when
      */
-    public function __construct(StudentId $studentId, DateTime $when)
+    public function __construct(AttendanceId $attendanceId)
     {
-        $this->studentId = $studentId;
-        $this->occurredOn = $when;
+        $this->attendanceId = $attendanceId;
+        $this->occurredOn = new DateTime('now');
     }
 
     /**
      * @return StudentId
      */
-    public function studentId()
+    public function attendanceId()
     {
-        return $this->studentId;
+        return $this->attendanceId;
     }
 
     /**

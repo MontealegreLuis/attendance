@@ -13,45 +13,88 @@ class Attendance
     const CHECK_IN = 0;
     const CHECK_OUT = 1;
 
+    /** @var AttendanceId */
+    private $attendanceId;
+
     /** @var DateTime */
     private $date;
 
     /** @var int */
     private $type;
 
-    /** @var Student */
-    private $student;
+    /** @var StudentId */
+    private $studentId;
 
     /**
+     * @param AttendanceId $attendanceId
      * @param DateTime $date
      * @param int $type
-     * @param Student $student
+     * @param StudentId $studentId
      */
-    private function __construct(DateTime $date, $type, Student $student)
-    {
+    private function __construct(
+        AttendanceId $attendanceId,
+        DateTime $date,
+        $type,
+        StudentId $studentId
+    ) {
         $this->date = $date;
         $this->type = $type;
-        $this->student = $student;
+        $this->studentId = $studentId;
+        $this->attendanceId = $attendanceId;
     }
 
     /**
+     * @param AttendanceId $attendanceId
      * @param DateTime $aDate
-     * @param Student $student
+     * @param StudentId $studentId
      * @return Attendance
      */
-    public static function checkOut(DateTime $aDate, Student $student)
-    {
-        return new Attendance($aDate, self::CHECK_OUT, $student);
+    public static function checkOut(
+        AttendanceId $attendanceId,
+        DateTime $aDate,
+        StudentId $studentId
+    ) {
+        return new Attendance(
+            $attendanceId,
+            $aDate,
+            self::CHECK_OUT,
+            $studentId
+        );
     }
 
     /**
+     * @param AttendanceId $attendanceId
      * @param DateTime $aDate
-     * @param Student $student
+     * @param StudentId $studentId
      * @return Attendance
      */
-    public static function checkIn(DateTime $aDate, Student $student)
+    public static function checkIn(
+        AttendanceId $attendanceId,
+        DateTime $aDate,
+        StudentId $studentId
+    ) {
+        return new Attendance(
+            $attendanceId,
+            $aDate,
+            self::CHECK_IN,
+            $studentId
+        );
+    }
+
+    /**
+     * @return AttendanceId
+     */
+    public function id()
     {
-        return new Attendance($aDate, self::CHECK_IN, $student);
+        return $this->attendanceId;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCheckIn()
+    {
+        return $this->type === static::CHECK_IN;
     }
 
     /**
@@ -61,5 +104,17 @@ class Attendance
     public function occurredOn(DateTime $aDate)
     {
         return $this->date->format('Y-m-d') === $aDate->format('Y-m-d');
+    }
+
+    /**
+     * @return AttendanceInformation
+     */
+    public function information()
+    {
+        return new AttendanceInformation(
+            $this->date,
+            $this->type,
+            $this->student
+        );
     }
 }

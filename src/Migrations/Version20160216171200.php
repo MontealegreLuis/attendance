@@ -39,6 +39,18 @@ class Version20160216171200 extends AbstractMigration
             ['bootcamp_id'], // Local column
             ['bootcamp_id']  // Foreign column
         );
+
+        $attendance = $schema->createTable('attendances');
+        $attendance->addColumn('attendance_id', 'integer', ['unsigned' => true]);
+        $attendance->addColumn('date', 'datetime');
+        $attendance->addColumn('type', 'boolean');
+        $attendance->addColumn('student_id', 'integer', ['unsigned' => true]);
+        $attendance->setPrimaryKey(['attendance_id']);
+        $attendance->addForeignKeyConstraint(
+            $students,
+            ['student_id'], // Local column
+            ['student_id']  // Foreign column
+        );
     }
 
     /**
@@ -48,5 +60,6 @@ class Version20160216171200 extends AbstractMigration
     {
         $schema->dropTable('bootcamps');
         $schema->dropTable('students');
+        $schema->dropTable('attendances');
     }
 }

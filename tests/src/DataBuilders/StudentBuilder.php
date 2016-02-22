@@ -6,6 +6,8 @@
  */
 namespace Codeup\DataBuilders;
 
+use Codeup\Bootcamps\Attendance;
+use Codeup\Bootcamps\AttendanceId;
 use Codeup\Bootcamps\Bootcamp;
 use Codeup\Bootcamps\BootcampId;
 use Codeup\Bootcamps\Schedule;
@@ -26,6 +28,9 @@ class StudentBuilder
 
     /** @var int */
     private static $nextId = 0;
+
+    /** @var StudentId */
+    private $studentId;
 
     /** @var Bootcamp */
     private $bootcamp;
@@ -52,13 +57,13 @@ class StudentBuilder
     public function build()
     {
         $student = Student::attend(
-            StudentId::fromLiteral(static::$nextId),
+            $this->studentId,
             $this->bootcamp,
             $this->name,
             $this->macAddress
         );
         if ($this->checkIn) {
-            $student->checkIn($this->checkIn);
+            $student->register($this->checkIn);
         }
         $this->reset();
 
@@ -103,7 +108,11 @@ class StudentBuilder
      */
     public function whoCheckedInAt(DateTime $time)
     {
-        $this->checkIn = $time;
+        $this->checkIn = Attendance::checkIn(
+            AttendanceId::fromLiteral(static::$nextId),
+            $time,
+            $this->studentId
+        );
 
         return $this;
     }
@@ -114,6 +123,7 @@ class StudentBuilder
         $this->name = $this->factory->name;
         $this->macAddress = MacAddress::withValue($this->factory->macAddress);
         static::$nextId++;
+        $this->studentId = StudentId::fromLiteral(static::$nextId);
         $this->checkIn = null;
     }
 }

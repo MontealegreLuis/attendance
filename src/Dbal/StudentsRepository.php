@@ -6,6 +6,7 @@
  */
 namespace Codeup\Dbal;
 
+use Codeup\Bootcamps\Attendance;
 use Codeup\Bootcamps\MacAddress;
 use Codeup\Bootcamps\Student;
 use Codeup\Bootcamps\Students;
@@ -38,13 +39,20 @@ class StudentsRepository implements Students
             ->select('*')
             ->from('students', 's')
             ->innerJoin('s', 'bootcamps', 'b', 's.bootcamp_id = b.bootcamp_id')
+            ->leftJoin(
+                's',
+                'attendances',
+                'a',
+                'a.student_id = s.student_id AND a.date = :today AND a.type = :type'
+            )
             ->where('b.start_date <= :today AND b.stop_date >= :today')
             ->andWhere("s.mac_address IN ({$this->buildParameters($addresses)})")
             ->setParameter('today', $today->format('Y-m-d'))
+            ->setParameter('type', Attendance::CHECK_IN)
         ;
 
         $students = $builder->execute()->fetchAll();
-        //var_dump($students); //Not students instances
+        //Not students instances
 
         return $students;
     }
@@ -75,12 +83,22 @@ class StudentsRepository implements Students
             'student_id' => $information->id()->value(),
             'name' => $information->name(),
             'mac_address' => $information->macAddress()->value(),
-            'bootcamp_id' => $information->bootcamp()->id(),
+            'bootcamp_id' => $information->bootcamp()->id()->value(),
         ]);
     }
 
     public function update(Student $student)
     {
-        // TODO: Implement update() method.
+        $information = $student->information();
+        $this->connection->update('students', [
+            'student_id' => $information->id()->value(),
+            'name' => $information->name(),
+            'mac_address' => $information->macAddress()->value(),
+            'bootcamp_id' => $information->bootcamp()->id()->value(),
+        ], [
+            'student_id' => $information->id()->value()
+        ]);
+
+        // insert attendance record
     }
 }

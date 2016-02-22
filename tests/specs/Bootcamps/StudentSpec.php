@@ -6,6 +6,8 @@
  */
 namespace specs\Codeup\Bootcamps;
 
+use Codeup\Bootcamps\Attendance;
+use Codeup\Bootcamps\AttendanceId;
 use Codeup\Bootcamps\Bootcamp;
 use Codeup\Bootcamps\BootcampId;
 use Codeup\Bootcamps\Schedule;
@@ -48,13 +50,21 @@ class StudentSpec extends ObjectBehavior
 
     function it_should_be_able_to_check_in()
     {
-        $this->checkIn($today = new DateTime());
+        $this->register(Attendance::checkIn(
+            AttendanceId::fromLiteral(1),
+            $today = new DateTime(),
+            StudentId::fromLiteral(1)
+        ));
         $this->hasCheckedIn($today)->shouldBe(true);
     }
 
     function it_should_be_able_to_check_out()
     {
-        $this->checkOut($today = new DateTime());
+        $this->register(Attendance::checkOut(
+            AttendanceId::fromLiteral(1),
+            $today = new DateTime(),
+            StudentId::fromLiteral(1)
+        ));
         $this->hasCheckedOut($today)->shouldBe(true);
     }
 }

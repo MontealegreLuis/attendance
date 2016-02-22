@@ -6,7 +6,10 @@
  */
 namespace specs\Codeup\Attendance;
 
+use Codeup\Bootcamps\Attendance;
 use Codeup\Bootcamps\AttendanceChecker;
+use Codeup\Bootcamps\AttendanceId;
+use Codeup\Bootcamps\Attendances;
 use Codeup\Bootcamps\Student;
 use Codeup\Bootcamps\Students;
 use Codeup\DataBuilders\A;
@@ -28,7 +31,8 @@ class DoRollCallSpec extends ObjectBehavior
 
     function it_should_update_all_students_who_have_arrived_now(
         AttendanceChecker $checker,
-        Students $students
+        Students $students,
+        Attendances $attendances
     ) {
         // Given
         $addresses = [
@@ -42,13 +46,22 @@ class DoRollCallSpec extends ObjectBehavior
             $student2 = A::student()->withMacAddress($address2)->build(),
             $student3 = A::student()->withMacAddress($address3)->build(),
         ]);
-        $this->beConstructedWith($checker, $students);
+        $this->beConstructedWith($checker, $students, $attendances);
         $this->setPublisher(new EventPublisher());
 
         // Then
-        $students->update($student1)->shouldBeCalled();
-        $students->update($student2)->shouldBeCalled();
-        $students->update($student3)->shouldBeCalled();
+        $attendances
+            ->nextAttendanceId()
+            ->willReturn(
+                AttendanceId::fromLiteral(1),
+                AttendanceId::fromLiteral(2),
+                AttendanceId::fromLiteral(3)
+            )
+        ;
+        $attendances
+            ->add(Argument::type(Attendance::class))
+            ->shouldBeCalledTimes(3)
+        ;
 
         // When
         $this->rollCall($this->now);
@@ -56,7 +69,8 @@ class DoRollCallSpec extends ObjectBehavior
 
     function it_should_update_only_the_students_who_have_not_already_checked_in(
         AttendanceChecker $checker,
-        Students $students
+        Students $students,
+        Attendances $attendances
     ) {
         // Given
         $addresses = [
@@ -73,12 +87,21 @@ class DoRollCallSpec extends ObjectBehavior
                 ->build(),
             $student3 = A::student()->withMacAddress($address3)->build(),
         ]);
-        $this->beConstructedWith($checker, $students);
+        $this->beConstructedWith($checker, $students, $attendances);
         $this->setPublisher(new EventPublisher());
 
         // Then
-        $students->update($student1)->shouldBeCalled();
-        $students->update($student3)->shouldBeCalled();
+        $attendances
+            ->nextAttendanceId()
+            ->willReturn(
+                AttendanceId::fromLiteral(1),
+                AttendanceId::fromLiteral(2)
+            )
+        ;
+        $attendances
+            ->add(Argument::type(Attendance::class))
+            ->shouldBeCalledTimes(2)
+        ;
 
         // When
         $this->rollCall($this->now);
@@ -86,7 +109,8 @@ class DoRollCallSpec extends ObjectBehavior
 
     function it_should_not_update_students_who_have_already_checked_in(
         AttendanceChecker $checker,
-        Students $students
+        Students $students,
+        Attendances $attendances
     ) {
         // Given
         $addresses = [
@@ -108,14 +132,15 @@ class DoRollCallSpec extends ObjectBehavior
                 ->whoCheckedInAt($this->now->sub(new DateInterval('PT3H')))
                 ->withMacAddress($address3)->build(),
         ]);
-        $this->beConstructedWith($checker, $students);
-
-        // Then
-        $students->update($student1)->shouldNotBeCalled();
-        $students->update($student2)->shouldNotBeCalled();
-        $students->update($student3)->shouldNotBeCalled();
+        $this->beConstructedWith($checker, $students, $attendances);
 
         // When
         $this->rollCall($this->now);
+
+        // Then
+        $attendances
+            ->add(Argument::type(Attendance::class))
+            ->shouldNotHaveBeenCalled()
+        ;
     }
 }

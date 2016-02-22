@@ -6,7 +6,9 @@
  */
 namespace Codeup\Attendance;
 
+use Codeup\Bootcamps\Attendance;
 use Codeup\Bootcamps\AttendanceChecker;
+use Codeup\Bootcamps\Attendances;
 use Codeup\Bootcamps\Student;
 use Codeup\Bootcamps\Students;
 use Codeup\DomainEvents\PublishesEvents;
@@ -27,14 +29,22 @@ class DoRollCall
     /** @var Students */
     private $students;
 
+    /** @var Attendances */
+    private $attendances;
+
     /**
      * @param AttendanceChecker $checker
      * @param Students $students
+     * @param Attendances $attendances
      */
-    public function __construct(AttendanceChecker $checker, Students $students)
-    {
+    public function __construct(
+        AttendanceChecker $checker,
+        Students $students,
+        Attendances $attendances
+    ) {
         $this->checker = $checker;
         $this->students = $students;
+        $this->attendances = $attendances;
     }
 
     /**
@@ -66,10 +76,13 @@ class DoRollCall
         array $students
     ) {
         if (!$student->hasCheckedIn($today)) {
-            $student->checkIn($today);
-            $this->students->update($student);
-            $students[] = $student;
+            $this->attendances->add($student->register(Attendance::checkIn(
+                $this->attendances->nextAttendanceId(),
+                $today,
+                $student->id()
+            )));
             $this->publisher()->publish($student->events());
+            $students[] = $student;
         }
     }
 }

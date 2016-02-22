@@ -24,8 +24,12 @@ abstract class Identifier
      */
     private function set($value)
     {
-        AssertValueIs::integer((int) $value, "Identifiers should be integers");
-        AssertValueIs::greaterThan((int) $value, 0);
+        AssertValueIs::integer((int) $value, 'Identifiers should be integers');
+        AssertValueIs::greaterThan(
+            (int) $value,
+            0,
+            'An identifier value should be greater than 0 ' . get_called_class()
+        );
         $this->value = (int) $value;
     }
 
