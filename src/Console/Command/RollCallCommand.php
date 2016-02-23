@@ -8,6 +8,7 @@ namespace Codeup\Console\Command;
 
 use Codeup\Attendance\DoRollCall;
 use Codeup\Bootcamps\Student;
+use DateTime;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
@@ -15,14 +16,17 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class RollCallCommand extends Command
 {
+    /** @var DoRollCall */
     private $useCase;
 
+    /**
+     * @param DoRollCall $rollCall
+     */
     public function __construct(DoRollCall $rollCall)
     {
         parent::__construct();
         $this->useCase = $rollCall;
     }
-
 
     protected function configure()
     {
@@ -32,9 +36,14 @@ class RollCallCommand extends Command
         ;
     }
 
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return void
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $students = $this->useCase->rollCall();
+        $students = $this->useCase->rollCall(new DateTime('now'));
         $output->writeln(sprintf(
             '<info>%d new student(s) found.</info>', count($students)
         ));
@@ -43,12 +52,11 @@ class RollCallCommand extends Command
             ->setHeaders(['Student'])
             ->setRows([
                 array_map(function(Student $student) {
-                    return "{$student->name()} - {$student->address()}";
+                    $information = $student->information();
+                    return "{$information->name()} - {$information->macAddress()->value()}";
                 }, $students)
             ])
         ;
         $table->render();
     }
-
-
 }

@@ -112,9 +112,10 @@ class Attendance
     public function information()
     {
         return new AttendanceInformation(
+            $this->attendanceId,
             $this->date,
             $this->type,
-            $this->student
+            $this->studentId
         );
     }
 }

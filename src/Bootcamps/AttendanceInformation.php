@@ -10,25 +10,34 @@ use DateTime;
 
 class AttendanceInformation
 {
+    /** @var AttendanceId */
+    private $attendanceId;
+
     /** @var DateTime */
     private $date;
 
     /** @var int */
     private $type;
 
-    /** @var Student */
-    private $student;
+    /** @var StudentId */
+    private $studentId;
 
     /**
+     * @param AttendanceId $attendanceId
      * @param DateTime $date
      * @param int $type
-     * @param Student $student
+     * @param StudentId $studentId
      */
-    public function __construct(DateTime $date, $type, Student $student)
-    {
+    public function __construct(
+        AttendanceId $attendanceId,
+        DateTime $date,
+        $type,
+        StudentId $studentId
+    ) {
         $this->date = $date;
         $this->type = $type;
-        $this->student = $student;
+        $this->studentId = $studentId;
+        $this->attendanceId = $attendanceId;
     }
 
     /**
@@ -48,10 +57,18 @@ class AttendanceInformation
     }
 
     /**
-     * @return StudentInformation
+     * @return StudentId
      */
-    public function student()
+    public function studentId()
     {
-        return $this->student->information();
+        return $this->studentId;
+    }
+
+    /**
+     * @return AttendanceId
+     */
+    public function id()
+    {
+        return $this->attendanceId;
     }
 }

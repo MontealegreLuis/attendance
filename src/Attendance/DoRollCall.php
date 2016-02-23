@@ -59,7 +59,7 @@ class DoRollCall
 
         /** @var Student $student */
         foreach ($students as $student) {
-            $this->registerStudentCheckIn($today, $student, $studentsInClass);
+            $studentsInClass = $this->registerStudentCheckIn($today, $student, $studentsInClass);
         }
 
         return $studentsInClass;
@@ -69,6 +69,7 @@ class DoRollCall
      * @param DateTime $today
      * @param Student $student
      * @param array $students
+     * @return Student[]
      */
     private function registerStudentCheckIn(
         DateTime $today,
@@ -84,5 +85,6 @@ class DoRollCall
             $this->publisher()->publish($student->events());
             $students[] = $student;
         }
+        return $students;
     }
 }

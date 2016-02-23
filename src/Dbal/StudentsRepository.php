@@ -36,7 +36,20 @@ class StudentsRepository implements Students
     {
         $builder = $this->connection->createQueryBuilder();
         $builder
-            ->select('*')
+            ->select('
+                s.student_id,
+                s.name,
+                s.mac_address,
+                b.bootcamp_id,
+                b.cohort_name,
+                b.start_date,
+                b.stop_date,
+                b.start_time,
+                b.stop_time,
+                a.attendance_id,
+                a.date,
+                a.type
+            ')
             ->from('students', 's')
             ->innerJoin('s', 'bootcamps', 'b', 's.bootcamp_id = b.bootcamp_id')
             ->leftJoin(
@@ -51,10 +64,9 @@ class StudentsRepository implements Students
             ->setParameter('type', Attendance::CHECK_IN)
         ;
 
-        $students = $builder->execute()->fetchAll();
-        //Not students instances
-
-        return $students;
+        return array_map(function (array $values) {
+            return Student::from($values);
+        }, $builder->execute()->fetchAll());
     }
 
     /**
@@ -76,6 +88,9 @@ class StudentsRepository implements Students
         return implode(', ', $values);
     }
 
+    /**
+     * @param Student $student
+     */
     public function add(Student $student)
     {
         $information = $student->information();
@@ -87,6 +102,9 @@ class StudentsRepository implements Students
         ]);
     }
 
+    /**
+     * @param Student $student
+     */
     public function update(Student $student)
     {
         $information = $student->information();
@@ -98,7 +116,5 @@ class StudentsRepository implements Students
         ], [
             'student_id' => $information->id()->value()
         ]);
-
-        // insert attendance record
     }
 }

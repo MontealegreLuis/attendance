@@ -37,6 +37,7 @@ class EventStoreRepository implements EventStore
 
     /**
      * @param Event $anEvent
+     * @return StoredEvent
      */
     public function append(Event $anEvent)
     {

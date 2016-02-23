@@ -7,21 +7,19 @@
 require __DIR__ . '/../vendor/autoload.php';
 
 use Codeup\Attendance\DoRollCall;
-use Codeup\Bootcamps\Attendance\InMemoryStudents;
-use Codeup\Bootcamps\MacAddress;
 use Codeup\Console\Command\RollCallCommand;
-use Codeup\DataBuilders\A;
+use Codeup\Dbal\AttendancesRepository;
+use Codeup\Dbal\StudentsRepository;
 use Codeup\Goutte\GoutteAttendanceChecker;
+use Doctrine\DBAL\DriverManager;
 use Symfony\Component\Console\Application;
 
+$options = require __DIR__ . '/../config.php';
+$connection = DriverManager::getConnection($options['dbal']);
 $application = new Application();
 $application->add(new RollCallCommand( new DoRollCall(
-    new GoutteAttendanceChecker('http://localhost:8000/dhcp_status.html'),
-    $students = new InMemoryStudents()
+    new GoutteAttendanceChecker($options['dhcp']['page']),
+    new StudentsRepository($connection),
+    new AttendancesRepository($connection)
 )));
-$student = A::student()
-    ->withMacAddress(MacAddress::withValue('e0:ac:cb:82:46:6e'))
-    ->build()
-;
-$students->add($student);
 $application->run();

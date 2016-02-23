@@ -9,4 +9,7 @@ return [
         'path' => 'var/attendance.sq3',
         'driver' => 'pdo_sqlite',
     ],
+    'dhcp' => [
+        'page' => 'http://localhost:8000/dhcp_status.html',
+    ],
 ];

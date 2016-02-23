@@ -22,7 +22,11 @@ class Duration
      */
     private function __construct(DateTime $startDate, DateTime $stopDate)
     {
-        AssertValueIs::greaterThan($stopDate, $startDate);
+        AssertValueIs::greaterThan(
+            $stopDate,
+            $startDate,
+            "{$startDate->format('Y-m-d')} is greater than {$stopDate->format('Y-m-d')}"
+        );
         $this->startDate = $startDate->setTime(0, 0, 0);
         $this->stopDate = $stopDate->setTime(0, 0, 0);
     }

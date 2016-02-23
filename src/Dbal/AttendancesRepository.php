@@ -43,7 +43,7 @@ class AttendancesRepository implements Attendances
             'attendance_id' => $information->id()->value(),
             'type' => $information->type(),
             'date' => $information->onDate()->format('Y-m-d H:i:s'),
-            'student_id' => $information->student()->id()->value(),
+            'student_id' => $information->studentId()->value(),
         ]);
     }
 }
