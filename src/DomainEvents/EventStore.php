@@ -9,9 +9,9 @@ namespace Codeup\DomainEvents;
 interface EventStore
 {
     /**
-     * @param StoredEvent $anEvent
+     * @param Event $anEvent
      */
-    public function append(StoredEvent $anEvent);
+    public function append(Event $anEvent);
 
     /**
      * @param $lastStoredEventId

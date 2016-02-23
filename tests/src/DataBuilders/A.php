@@ -31,4 +31,12 @@ class A
     {
         return new BootcampBuilder();
     }
+
+    /**
+     * @return StudentHasCheckedInBuilder
+     */
+    public static function studentHasCheckedIn()
+    {
+        return new StudentHasCheckedInBuilder();
+    }
 }

@@ -7,9 +7,13 @@
 namespace Codeup\JmsSerializer;
 
 use Codeup\Bootcamps\Identifier;
+use Codeup\DomainEvents\Event;
+use Codeup\DomainEvents\EventSerializer;
 use DateTime;
+use JMS\Serializer\Handler\HandlerRegistry;
+use JMS\Serializer\SerializerBuilder;
 
-class JsonSerializer
+class JsonSerializer implements EventSerializer
 {
     /** @var \JMS\Serializer\Serializer */
     private $serializer;

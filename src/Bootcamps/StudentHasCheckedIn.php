@@ -14,12 +14,11 @@ class StudentHasCheckedIn implements Event
     /** @var DateTime */
     private $occurredOn;
 
-    /** @var StudentId */
+    /** @var AttendanceId */
     private $attendanceId;
 
     /**
-     * @param StudentId $studentId
-     * @param DateTime $when
+     * @param AttendanceId $attendanceId
      */
     public function __construct(AttendanceId $attendanceId)
     {
@@ -28,7 +27,7 @@ class StudentHasCheckedIn implements Event
     }
 
     /**
-     * @return StudentId
+     * @return AttendanceId
      */
     public function attendanceId()
     {

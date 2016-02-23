@@ -13,6 +13,8 @@ use Doctrine\DBAL\Connection;
 
 class AttendancesRepository implements Attendances
 {
+    use ProvidesIdentifiers;
+
     /** @var Connection */
     private $connection;
 
@@ -29,16 +31,9 @@ class AttendancesRepository implements Attendances
      */
     public function nextAttendanceId()
     {
-        $this->updateNextIdentityValue();
-
-        $builder = $this->connection->createQueryBuilder();
-        $builder
-            ->select('next_val')
-            ->from('attendances_seq')
-            ->setMaxResults(1)
-        ;
-
-        return AttendanceId::fromLiteral($builder->execute()->fetchColumn());
+        return AttendanceId::fromLiteral(
+            $this->nextIdentifierValue($this->connection, 'attendances_seq')
+        );
     }
 
     public function add(Attendance $attendance)
@@ -50,20 +45,5 @@ class AttendancesRepository implements Attendances
             'date' => $information->onDate()->format('Y-m-d H:i:s'),
             'student_id' => $information->student()->id()->value(),
         ]);
-    }
-
-    private function updateNextIdentityValue()
-    {
-        $platform = $this->connection->getDatabasePlatform()->getName();
-        if ($platform === 'mysql') {
-            return $this->connection->executeQuery(
-                'UPDATE attendances_seq SET next_val = LAST_INSERT_ID(next_val + 1)'
-            );
-        } elseif ($platform === 'sqlite') {
-            return $this->connection->executeQuery(
-                'UPDATE attendances_seq SET next_val = next_val + 1'
-            );
-        }
-        throw InvalidPlatform::named($platform);
     }
 }

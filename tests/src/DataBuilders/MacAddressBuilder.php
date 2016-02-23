@@ -11,7 +11,10 @@ use Faker\Factory;
 
 class MacAddressBuilder
 {
+    /** @var \Faker\Generator */
     private $factory;
+
+    /** @var string */
     private $value;
 
     public function __construct()

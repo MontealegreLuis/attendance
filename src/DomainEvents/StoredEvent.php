@@ -13,7 +13,7 @@ use DateTime;
  */
 class StoredEvent implements Event
 {
-    /** @var integer */
+    /** @var StoredEventId */
     private $id;
 
     /** @var string */
@@ -26,19 +26,25 @@ class StoredEvent implements Event
     private $occurredOn;
 
     /**
+     * @param StoredEventId $storedEventId
      * @param string $body
      * @param string $type
      * @param DateTime $occurredOn
      */
-    public function __construct($body, $type, DateTime $occurredOn)
-    {
+    public function __construct(
+        StoredEventId $storedEventId,
+        $body,
+        $type,
+        DateTime $occurredOn
+    ) {
         $this->body = $body;
         $this->type = $type;
         $this->occurredOn = $occurredOn;
+        $this->id = $storedEventId;
     }
 
     /**
-     * @return integer
+     * @return StoredEventId
      */
     public function id()
     {

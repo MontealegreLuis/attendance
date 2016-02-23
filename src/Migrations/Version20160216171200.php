@@ -56,6 +56,18 @@ class Version20160216171200 extends AbstractMigration
         $attendanceSequence->addColumn('next_val', 'integer', [
             'unsigned' => true
         ]);
+
+        $events = $schema->createTable('events');
+        $events->addColumn('event_id', 'integer', ['unsigned' => true]);
+        $events->addColumn('body', 'string');
+        $events->addColumn('type', 'string');
+        $events->addColumn('occurred_on', 'datetime');
+        $events->setPrimaryKey(['event_id']);
+
+        $eventsSequence = $schema->createTable('events_seq');
+        $eventsSequence->addColumn('next_val', 'integer', [
+            'unsigned' => true
+        ]);
     }
 
     /**
@@ -67,5 +79,7 @@ class Version20160216171200 extends AbstractMigration
         $schema->dropTable('students');
         $schema->dropTable('attendances');
         $schema->dropTable('attendances_seq');
+        $schema->dropTable('events');
+        $schema->dropTable('events_seq');
     }
 }
