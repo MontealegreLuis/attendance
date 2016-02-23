@@ -6,24 +6,17 @@
  */
 namespace Codeup\DomainEvents;
 
-class PersistEventSubscriber
+class PersistEventSubscriber implements EventSubscriber
 {
     /** @var EventStore */
     private $eventStore;
 
-    /** @var StoredEventFactory */
-    private $eventFactory;
-
     /**
      * @param EventStore $eventStore
-     * @param StoredEventFactory $eventFactory
      */
-    public function __construct(
-        EventStore $eventStore,
-        StoredEventFactory $eventFactory
-    ) {
+    public function __construct(EventStore $eventStore)
+    {
         $this->eventStore = $eventStore;
-        $this->eventFactory = $eventFactory;
     }
 
     /**
@@ -41,6 +34,6 @@ class PersistEventSubscriber
      */
     public function handle(Event $event)
     {
-        $this->eventStore->append($this->eventFactory->from($event));
+        $this->eventStore->append($event);
     }
 }

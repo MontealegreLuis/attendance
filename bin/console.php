@@ -10,6 +10,10 @@ use Codeup\Attendance\DoRollCall;
 use Codeup\Console\Command\RollCallCommand;
 use Codeup\Dbal\AttendancesRepository;
 use Codeup\Dbal\StudentsRepository;
+use Codeup\Dbal\EventStoreRepository;
+use Codeup\DomainEvents\EventPublisher;
+use Codeup\DomainEvents\PersistEventSubscriber;
+use Codeup\JmsSerializer\JsonSerializer;
 use Codeup\Goutte\GoutteAttendanceChecker;
 use Doctrine\DBAL\DriverManager;
 use Symfony\Component\Console\Application;
@@ -17,9 +21,15 @@ use Symfony\Component\Console\Application;
 $options = require __DIR__ . '/../config.php';
 $connection = DriverManager::getConnection($options['dbal']);
 $application = new Application();
-$application->add(new RollCallCommand( new DoRollCall(
+$publisher = new EventPublisher();
+$publisher->subscribe(new PersistEventSubscriber(
+    new EventStoreRepository($connection, new JsonSerializer())
+));
+$useCase = new DoRollCall(
     new GoutteAttendanceChecker($options['dhcp']['page']),
     new StudentsRepository($connection),
     new AttendancesRepository($connection)
-)));
+);
+$useCase->setPublisher($publisher);
+$application->add(new RollCallCommand($useCase));
 $application->run();
