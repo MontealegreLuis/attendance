@@ -4,16 +4,18 @@
  *
  * This source file is subject to the license that is bundled with this package in the file LICENSE.
  */
-namespace Codeup\Goutte;
+namespace Codeup\WebDriver;
 
 use PHPUnit_Framework_TestCase as TestCase;
 
-class GoutteAttendaceCheckerTest extends TestCase
+class WebDriverAttendanceCheckerTest extends TestCase
 {
     /** @test */
     function it_should_find_mac_addresses_entries()
     {
-        $checker = new GoutteAttendanceChecker('http://localhost:8000/dhcp_status.html');
+        $checker = new WebDriverAttendanceChecker(
+            require __DIR__ . '/../../../config.php'
+        );
         $addresses = $checker->whoIsConnected();
 
         $this->assertCount(18, $addresses);

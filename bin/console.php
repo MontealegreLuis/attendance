@@ -14,7 +14,7 @@ use Codeup\Dbal\EventStoreRepository;
 use Codeup\DomainEvents\EventPublisher;
 use Codeup\DomainEvents\PersistEventSubscriber;
 use Codeup\JmsSerializer\JsonSerializer;
-use Codeup\Goutte\GoutteAttendanceChecker;
+use Codeup\WebDriver\WebDriverAttendanceChecker;
 use Doctrine\DBAL\DriverManager;
 use Symfony\Component\Console\Application;
 
@@ -26,7 +26,7 @@ $publisher->subscribe(new PersistEventSubscriber(
     new EventStoreRepository($connection, new JsonSerializer())
 ));
 $useCase = new DoRollCall(
-    new GoutteAttendanceChecker($options['dhcp']['page']),
+    new WebDriverAttendanceChecker($options['dhcp']),
     new StudentsRepository($connection),
     new AttendancesRepository($connection)
 );
