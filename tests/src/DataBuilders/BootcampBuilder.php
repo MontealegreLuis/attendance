@@ -10,10 +10,13 @@ use Codeup\Bootcamps\Bootcamp;
 use Codeup\Bootcamps\BootcampId;
 use Codeup\Bootcamps\Duration;
 use Codeup\Bootcamps\Schedule;
+use DateInterval;
+use DateTimeImmutable;
 use Faker\Factory;
 
 class BootcampBuilder
 {
+    /** @var \Faker\Generator */
     private $factory;
 
     /** @var int */
@@ -37,7 +40,9 @@ class BootcampBuilder
         $this->reset();
     }
 
-
+    /**
+     * @return Bootcamp
+     */
     public function build()
     {
         return Bootcamp::start(
@@ -69,9 +74,11 @@ class BootcampBuilder
             $this->factory->dateTimeBetween('1 day', '7 day')
         );
         $this->cohortName = $this->factory->word;
+        $aDate = (new DateTimeImmutable())->setTime(12, 0, 0);
+        $hours = $this->factory->numberBetween(1,10);
         $this->schedule = Schedule::withClassTimeBetween(
-            $this->factory->dateTimeBetween('-7 day'),
-            $this->factory->dateTimeBetween('1 day', '7 day')
+            $aDate->sub(new DateInterval("PT{$hours}H")),
+            $aDate
         );
     }
 }

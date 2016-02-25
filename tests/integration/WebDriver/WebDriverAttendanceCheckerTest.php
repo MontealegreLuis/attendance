@@ -6,6 +6,7 @@
  */
 namespace Codeup\WebDriver;
 
+use Facebook\WebDriver\Remote\RemoteWebDriver;
 use PHPUnit_Framework_TestCase as TestCase;
 
 class WebDriverAttendanceCheckerTest extends TestCase
@@ -13,8 +14,14 @@ class WebDriverAttendanceCheckerTest extends TestCase
     /** @test */
     function it_should_find_mac_addresses_entries()
     {
+        $options = require __DIR__ . '/../../../config.php';
         $checker = new WebDriverAttendanceChecker(
-            require __DIR__ . '/../../../config.php'
+            RemoteWebDriver::create(
+                $options['webdriver']['host'],
+                $options['webdriver']['capabilities'],
+                $options['webdriver']['timeout']
+            ),
+            $options['dhcp']
         );
         $addresses = $checker->whoIsConnected();
 

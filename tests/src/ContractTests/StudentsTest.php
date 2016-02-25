@@ -10,11 +10,15 @@ use Codeup\Bootcamps\Bootcamps;
 use Codeup\Bootcamps\MacAddress;
 use Codeup\Bootcamps\Students;
 use Codeup\DataBuilders\A;
+use DateInterval;
 use DateTime;
 use PHPUnit_Framework_TestCase as TestCase;
 
 abstract class StudentsTest extends TestCase
 {
+    /** @var DateTime */
+    private $now;
+
     /** @var Students */
     private $students;
 
@@ -37,6 +41,7 @@ abstract class StudentsTest extends TestCase
     /** @before */
     function generateFixtures()
     {
+        $this->now = (new DateTime('now'))->setTime(12, 0, 0);
         $this->students = $this->studentsInstance();
         $this->bootcamps = $this->bootcampsInstance();
         $this->bootcamps->add($bootcamp = A::bootcamp()->build());
@@ -57,7 +62,7 @@ abstract class StudentsTest extends TestCase
         );
         $this->students->add(A::student()
             ->enrolledOn($bootcamp)
-            ->whoCheckedInAt(new DateTime('-1 hour'))
+            ->whoCheckedInAt($this->now->sub(new DateInterval('PT1H')))
             ->withMacAddress($address2)
             ->build()
         );
@@ -72,7 +77,7 @@ abstract class StudentsTest extends TestCase
     function it_should_not_find_students_if_mac_addresses_are_unknown()
     {
         $students = $this->students->attending(
-            $today = new DateTime(),
+            $this->now,
             $this->unknownAddresses
         );
 
@@ -83,7 +88,7 @@ abstract class StudentsTest extends TestCase
     function it_should_find_students_that_match_with_a_known_mac_address()
     {
         $students = $this->students->attending(
-            $today = new DateTime(),
+            $this->now,
             array_merge($this->unknownAddresses, $this->knownAddresses)
         );
 

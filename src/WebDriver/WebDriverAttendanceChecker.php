@@ -14,16 +14,20 @@ use Facebook\WebDriver\WebDriverBy;
 
 class WebDriverAttendanceChecker implements AttendanceChecker
 {
-    /** @var string */
+    /** @var array */
     private $options;
 
+    /** @var RemoteWebDriver */
+    private $driver;
+
     /**
+     * @param RemoteWebDriver $driver
      * @param string $options
      */
-    public function __construct($options)
+    public function __construct(RemoteWebDriver $driver, $options)
     {
-        parent::__construct();
         $this->options = $options;
+        $this->driver = $driver;
     }
 
     /**
@@ -33,27 +37,21 @@ class WebDriverAttendanceChecker implements AttendanceChecker
     {
         $addresses = [];
 
-        $driver = RemoteWebDriver::create(
-            $this->options['webdriver']['host'],
-            $this->options['webdriver']['capabilities'],
-            $this->options['webdriver']['timeout']
-        );
-
-        $driver->get($this->options['login']);
-        $driver->wait(3);
-        $driver
+        $this->driver->get($this->options['login']);
+        $this->driver->wait(3);
+        $this->driver
             ->findElement(WebDriverBy::name('username'))
             ->sendKeys($this->options['credentials']['username'])
         ;
-        $driver
+        $this->driver
             ->findElement(WebDriverBy::name('password'))
             ->sendKeys($this->options['credentials']['password'])
         ;
-        $driver->executeScript('SendPassword();');
-        $driver->findElement(WebDriverBy::name('form_contents'))->submit();
-        $driver->get($this->options['page']);
-        $driver->wait(3);
-        $elements = $driver->findElements(WebDriverBy::cssSelector(
+        $this->driver->executeScript('SendPassword();');
+        $this->driver->findElement(WebDriverBy::name('form_contents'))->submit();
+        $this->driver->get($this->options['page']);
+        $this->driver->wait(3);
+        $elements = $this->driver->findElements(WebDriverBy::cssSelector(
             '.ipvxtabtable .SpecialTable tr td.tdContentC'
         ));
 

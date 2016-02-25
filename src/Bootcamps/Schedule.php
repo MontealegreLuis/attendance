@@ -6,25 +6,27 @@
  */
 namespace Codeup\Bootcamps;
 
-use DateTime;
+use DateTimeInterface;
 
 class Schedule
 {
-    /** @var DateTime */
+    /** @var DateTimeInterface */
     private $startTime;
 
-    /** @var DateTime */
+    /** @var DateTimeInterface */
     private $stopTime;
 
     /**
-     * @param DateTime $startTime
-     * @param DateTime $stopTime
+     * @param DateTimeInterface $startTime
+     * @param DateTimeInterface $stopTime
      */
-    private function __construct(DateTime $startTime, DateTime $stopTime)
-    {
+    private function __construct(
+        DateTimeInterface $startTime,
+        DateTimeInterface $stopTime
+    ) {
         AssertValueIs::greaterThan(
-            $stopTime,
-            $startTime,
+            $stopTime->setDate(0, 1, 1),
+            $startTime->setDate(0, 1, 1),
             "{$startTime->format('H:i:s')} is greater than {$stopTime->format('H:i:s')}"
         );
         $this->startTime = $startTime->setDate(0, 1, 1);
@@ -32,19 +34,19 @@ class Schedule
     }
 
     /**
-     * @param DateTime $startTime
-     * @param DateTime $stopTime
+     * @param DateTimeInterface $startTime
+     * @param DateTimeInterface $stopTime
      * @return Schedule
      */
     public static function withClassTimeBetween(
-        DateTime $startTime,
-        DateTime $stopTime
+        DateTimeInterface $startTime,
+        DateTimeInterface $stopTime
     ) {
         return new Schedule($startTime, $stopTime);
     }
 
     /**
-     * @return DateTime
+     * @return DateTimeInterface
      */
     public function startTime()
     {
@@ -52,7 +54,7 @@ class Schedule
     }
 
     /**
-     * @return DateTime
+     * @return DateTimeInterface
      */
     public function stopTime()
     {

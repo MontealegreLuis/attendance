@@ -8,8 +8,13 @@ require __DIR__ . '/../vendor/autoload.php';
 
 $output = [];
 exec('php -S localhost:8000 -t tests/fixtures >/dev/null 2>&1 & echo $!', $output);
-$pid = (int) $output[0];
+$pidServer = (int) $output[0];
 
-register_shutdown_function(function() use ($pid) {
-    exec('kill ' . $pid);
+$output = [];
+exec('phantomjs --webdriver=127.0.0.1:8910 >/dev/null 2>&1 & echo $!', $output);
+$pidPhantom = (int) $output[0];
+
+register_shutdown_function(function() use ($pidServer, $pidPhantom) {
+    exec('kill ' . $pidServer);
+    exec('kill ' . $pidPhantom);
 });

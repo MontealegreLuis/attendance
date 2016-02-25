@@ -6,7 +6,7 @@
  */
 namespace Codeup\Bootcamps;
 
-use DateTime;
+use DateTimeInterface;
 
 class Bootcamp
 {
@@ -57,10 +57,10 @@ class Bootcamp
     }
 
     /**
-     * @param DateTime $aDate
+     * @param DateTimeInterface $aDate
      * @return bool
      */
-    public function isInProgress(DateTime $aDate)
+    public function isInProgress(DateTimeInterface $aDate)
     {
         return $this->duration->contains($aDate);
     }

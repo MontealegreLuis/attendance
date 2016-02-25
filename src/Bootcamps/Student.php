@@ -7,6 +7,7 @@
 namespace Codeup\Bootcamps;
 
 use DateTime;
+use DateTimeInterface;
 use Codeup\DomainEvents\CanRecordEvents;
 use Codeup\DomainEvents\RecordsEvents;
 
@@ -108,19 +109,19 @@ class Student implements CanRecordEvents
     }
 
     /**
-     * @param DateTime $today
+     * @param DateTimeInterface $today
      * @return bool
      */
-    public function hasCheckedIn(DateTime $today)
+    public function hasCheckedIn(DateTimeInterface $today)
     {
         return !is_null($this->checkIn) && $this->checkIn->occurredOn($today);
     }
 
     /**
-     * @param DateTime $today
+     * @param DateTimeInterface $today
      * @return bool
      */
-    public function isInClass(DateTime $today)
+    public function isInClass(DateTimeInterface $today)
     {
         return $this->bootcamp->isInProgress($today);
     }
@@ -159,7 +160,7 @@ class Student implements CanRecordEvents
         );
     }
 
-    public function checkOut(DateTime $now)
+    public function checkOut(DateTimeInterface $now)
     {
         // TODO: write logic here
     }

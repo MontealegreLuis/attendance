@@ -6,7 +6,7 @@
  */
 namespace Codeup\Bootcamps;
 
-use DateTime;
+use DateTimeInterface;
 
 class BootcampInformation
 {
@@ -16,33 +16,33 @@ class BootcampInformation
     /** @var string */
     private $cohortName;
 
-    /** @var DateTime */
+    /** @var DateTimeInterface */
     private $startDate;
 
-    /** @var DateTime */
+    /** @var DateTimeInterface */
     private $stopDate;
 
-    /** @var DateTime */
+    /** @var DateTimeInterface */
     private $startTime;
 
-    /** @var DateTime */
+    /** @var DateTimeInterface */
     private $stopTime;
 
     /**
      * @param BootcampId $bootcampId
      * @param $cohortName
-     * @param DateTime $startDate
-     * @param DateTime $stopDate
-     * @param DateTime $startTime
-     * @param DateTime $stopTime
+     * @param DateTimeInterface $startDate
+     * @param DateTimeInterface $stopDate
+     * @param DateTimeInterface $startTime
+     * @param DateTimeInterface $stopTime
      */
     public function __construct(
         BootcampId $bootcampId,
         $cohortName,
-        DateTime $startDate,
-        DateTime $stopDate,
-        DateTime $startTime,
-        DateTime $stopTime
+        DateTimeInterface $startDate,
+        DateTimeInterface $stopDate,
+        DateTimeInterface $startTime,
+        DateTimeInterface $stopTime
     ) {
         $this->bootcampId = $bootcampId;
         $this->cohortName = $cohortName;
@@ -61,7 +61,7 @@ class BootcampInformation
     }
 
     /**
-     * @return DateTime
+     * @return DateTimeInterface
      */
     public function startDate()
     {
@@ -69,7 +69,7 @@ class BootcampInformation
     }
 
     /**
-     * @return DateTime
+     * @return DateTimeInterface
      */
     public function stopDate()
     {
@@ -77,7 +77,7 @@ class BootcampInformation
     }
 
     /**
-     * @return DateTime
+     * @return DateTimeInterface
      */
     public function startTime()
     {
@@ -85,7 +85,7 @@ class BootcampInformation
     }
 
     /**
-     * @return DateTime
+     * @return DateTimeInterface
      */
     public function stopTime()
     {

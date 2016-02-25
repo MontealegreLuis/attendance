@@ -16,6 +16,7 @@ use Codeup\DomainEvents\PersistEventSubscriber;
 use Codeup\JmsSerializer\JsonSerializer;
 use Codeup\WebDriver\WebDriverAttendanceChecker;
 use Doctrine\DBAL\DriverManager;
+use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Symfony\Component\Console\Application;
 
 $options = require __DIR__ . '/../config.php';
@@ -26,7 +27,14 @@ $publisher->subscribe(new PersistEventSubscriber(
     new EventStoreRepository($connection, new JsonSerializer())
 ));
 $useCase = new DoRollCall(
-    new WebDriverAttendanceChecker($options['dhcp']),
+    new WebDriverAttendanceChecker(
+        RemoteWebDriver::create(
+            $options['webdriver']['host'],
+            $options['webdriver']['capabilities'],
+            $options['webdriver']['timeout']
+        ),
+        $options['dhcp']
+    ),
     new StudentsRepository($connection),
     new AttendancesRepository($connection)
 );
