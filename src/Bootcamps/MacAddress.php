@@ -55,6 +55,20 @@ class MacAddress
         return preg_match('/^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/', trim($address)) === 1;
     }
 
+    public static function addressesFrom($text)
+    {
+        $matches=[];
+        preg_match_all(
+            '/([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})/',
+            trim($text),
+            $matches
+        );
+
+        return array_map(function ($address) {
+            return MacAddress::withValue($address);
+        }, $matches[0]);
+    }
+
     /**
      * @param MacAddress $anAddress
      * @return bool

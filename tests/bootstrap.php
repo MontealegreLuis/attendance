@@ -15,6 +15,6 @@ exec('phantomjs --webdriver=127.0.0.1:8910 >/dev/null 2>&1 & echo $!', $output);
 $pidPhantom = (int) $output[0];
 
 register_shutdown_function(function() use ($pidServer, $pidPhantom) {
-    exec('kill ' . $pidServer);
-    exec('kill ' . $pidPhantom);
+    exec("kill {$pidServer}");
+    exec("kill {$pidPhantom}");
 });

@@ -12,7 +12,7 @@ return [
         'driver' => 'pdo_sqlite',
     ],
     'dhcp' => [
-        'login' => 'http://localhost:8000/cgi-bin/welcome.cgi',
+        'login' => 'http://localhost:8000/Router.html',
         'page' => 'http://localhost:8000/dhcp_status.html',
         'credentials' => [
             'username' => 'admin',

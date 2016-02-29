@@ -35,8 +35,6 @@ class WebDriverAttendanceChecker implements AttendanceChecker
      */
     public function whoIsConnected()
     {
-        $addresses = [];
-
         $this->driver->get($this->options['login']);
         $this->driver->wait(3);
         $this->driver
@@ -48,19 +46,16 @@ class WebDriverAttendanceChecker implements AttendanceChecker
             ->sendKeys($this->options['credentials']['password'])
         ;
         $this->driver->executeScript('SendPassword();');
-        $this->driver->findElement(WebDriverBy::name('form_contents'))->submit();
+        $this->driver
+            ->findElement(WebDriverBy::name('form_contents'))
+            ->submit()
+        ;
         $this->driver->get($this->options['page']);
         $this->driver->wait(3);
-        $elements = $this->driver->findElements(WebDriverBy::cssSelector(
-            '.ipvxtabtable .SpecialTable tr td.tdContentC'
-        ));
+        $elements = $this->driver
+            ->findElements(WebDriverBy::name('DHCPClientStatus'))
+        ;
 
-        array_map(function (RemoteWebElement $element) use (&$addresses) {
-            if (MacAddress::isValid($element->getText())) {
-                $addresses[] = MacAddress::withValue(trim($element->getText()));
-            }
-        }, $elements);
-
-        return $addresses;
+        return MacAddress::addressesFrom($elements[0]->getAttribute('value'));
     }
 }
