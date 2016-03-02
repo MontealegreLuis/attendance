@@ -22,6 +22,8 @@ use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Igorw\EventSource\Stream;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use Slim\Views\Twig;
+use Slim\Views\TwigExtension;
 
 class AttendanceServiceProvider implements ServiceProviderInterface
 {
@@ -84,6 +86,18 @@ class AttendanceServiceProvider implements ServiceProviderInterface
                 new MessageTrackerRepository($container['db.connection']),
                 $container['events.store']
             );
+        };
+        $container['view'] = function () use ($container) {
+            $view = new Twig(__DIR__ . '/../Twig/templates', [
+                'cache' => __DIR__ . '/../../var/cache',
+            ]);
+
+            $view->addExtension(new TwigExtension(
+                $container['router'],
+                $container['request']->getUri()
+            ));
+
+            return $view;
         };
     }
 }
