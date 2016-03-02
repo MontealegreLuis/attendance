@@ -22,8 +22,10 @@ class Version20160222150816 extends AbstractMigration
         $this->connection->insert('attendances_seq', [
             'next_val' => 0,
         ]);
-
         $this->connection->insert('events_seq', [
+            'next_val' => 0,
+        ]);
+        $this->connection->insert('messages_seq', [
             'next_val' => 0,
         ]);
     }
@@ -35,5 +37,6 @@ class Version20160222150816 extends AbstractMigration
     {
         $this->connection->executeQuery('DELETE FROM attendances_seq');
         $this->connection->executeQuery('DELETE FROM events_seq');
+        $this->connection->executeQuery('DELETE FROM messages_seq');
     }
 }

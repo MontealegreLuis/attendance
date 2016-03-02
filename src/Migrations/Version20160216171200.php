@@ -68,6 +68,15 @@ class Version20160216171200 extends AbstractMigration
         $eventsSequence->addColumn('next_val', 'integer', [
             'unsigned' => true
         ]);
+
+        $messages = $schema->createTable('published_messages');
+        $messages->addColumn('message_id', 'integer', ['unsigned' => true]);
+        $messages->addColumn('most_recent_message_id', 'integer', ['unsigned' => true]);
+
+        $messagesSequence = $schema->createTable('messages_seq');
+        $messagesSequence->addColumn('next_val', 'integer', [
+            'unsigned' => true
+        ]);
     }
 
     /**
@@ -81,5 +90,7 @@ class Version20160216171200 extends AbstractMigration
         $schema->dropTable('attendances_seq');
         $schema->dropTable('events');
         $schema->dropTable('events_seq');
+        $schema->dropTable('published_messages');
+        $schema->dropTable('messages_seq');
     }
 }
