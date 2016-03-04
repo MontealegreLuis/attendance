@@ -5,17 +5,17 @@
  * This source file is subject to the license that is bundled with this package in the file LICENSE.
  */
 use Codeup\Pimple\AttendanceServiceProvider;
+use Igorw\EventSource\Stream;
 use Slim\App;
 
 require __DIR__ . '/../vendor/autoload.php';
 
 $app = new App();
-$provider = new AttendanceServiceProvider(
-    require __DIR__ . '/../config.php'
-);
-$provider->register($app->getContainer());
+(new AttendanceServiceProvider(require __DIR__ . '/../config.php'))
+    ->register($app->getContainer())
+;
 
-$app->get('/', function ($request, $response) {
+$app->get('/', function ($_, $response) {
     return $response->write($this->view->fetch('attendance.html.twig'));
 });
 

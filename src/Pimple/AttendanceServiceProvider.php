@@ -7,8 +7,8 @@
 namespace Codeup\Pimple;
 
 use Codeup\Attendance\DoRollCall;
+use Codeup\Attendance\UpdateAttendanceList;
 use Codeup\Console\Command\RollCallCommand;
-use Codeup\Console\Command\UpdateAttendanceListCommand;
 use Codeup\Dbal\AttendancesRepository;
 use Codeup\Dbal\EventStoreRepository;
 use Codeup\Dbal\MessageTrackerRepository;
@@ -77,15 +77,15 @@ class AttendanceServiceProvider implements ServiceProviderInterface
 
             return $useCase;
         };
-        $container['command.roll_call'] = function () use ($container) {
-            return new RollCallCommand($container['attendance.do_roll_call']);
-        };
-        $container['command.update_attendance'] = function () use ($container) {
-            return new UpdateAttendanceListCommand(
+        $container['attendance.update_attendance'] = function () use ($container) {
+            return new UpdateAttendanceList(
                 new Stream(),
                 new MessageTrackerRepository($container['db.connection']),
                 $container['events.store']
             );
+        };
+        $container['command.roll_call'] = function () use ($container) {
+            return new RollCallCommand($container['attendance.do_roll_call']);
         };
         $container['view'] = function () use ($container) {
             $view = new Twig(__DIR__ . '/../Twig/templates', [

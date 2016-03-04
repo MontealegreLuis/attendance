@@ -44,6 +44,20 @@ class StoredEvent implements Event
     }
 
     /**
+     * @param array $values
+     * @return StoredEvent
+     */
+    public static function from(array $values)
+    {
+        return new StoredEvent(
+            StoredEventId::fromLiteral($values['event_id']),
+            $values['body'],
+            $values['type'],
+            DateTime::createFromFormat('Y-m-d H:i:s', $values['occurred_on'])
+        );
+    }
+
+    /**
      * @return StoredEventId
      */
     public function id()

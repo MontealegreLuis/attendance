@@ -83,7 +83,9 @@ class EventStoreRepository implements EventStore
             ->orderBy('e.event_id')
         ;
 
-        return $builder->execute()->fetchAll();
+        return array_map(function (array $values) {
+            return StoredEvent::from($values);
+        }, $builder->execute()->fetchAll());
     }
 
     /**
@@ -97,7 +99,8 @@ class EventStoreRepository implements EventStore
             ->from('events', 'e')
             ->orderBy('e.event_id')
         ;
-
-        return $builder->execute()->fetchAll();
+        return array_map(function (array $values) {
+            return StoredEvent::from($values);
+        }, $builder->execute()->fetchAll());
     }
 }

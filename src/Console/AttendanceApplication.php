@@ -19,7 +19,6 @@ class AttendanceApplication extends Application
         parent::__construct('Codeup attendance application', '1.0.0');
         $this->addCommands([
             $container['command.roll_call'],
-            $container['command.update_attendance'],
         ]);
     }
 }

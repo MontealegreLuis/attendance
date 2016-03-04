@@ -34,11 +34,11 @@ class MessageTrackerRepository implements MessageTracker
         $builder = $this->connection->createQueryBuilder();
 
         $builder
-            ->select('COUNT(*) AS messages_count')
+            ->select('COUNT(*)')
             ->from('published_messages', 'm')
         ;
 
-        return $builder->execute()->fetchColumn('messages_count') > 0;
+        return $builder->execute()->fetchColumn(0) > 0;
     }
 
     /**

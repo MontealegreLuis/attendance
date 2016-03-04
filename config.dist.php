@@ -8,7 +8,7 @@ use Facebook\WebDriver\Remote\WebDriverCapabilityType;
 
 return [
     'dbal' => [
-        'path' => 'var/attendance.sq3',
+        'path' => __DIR__ . '/var/attendance.sq3',
         'driver' => 'pdo_sqlite',
     ],
     'dhcp' => [
