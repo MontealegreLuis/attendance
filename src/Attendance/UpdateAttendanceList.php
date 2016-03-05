@@ -6,71 +6,34 @@
  */
 namespace Codeup\Attendance;
 
-use Codeup\DomainEvents\EventStore;
-use Codeup\Messaging\MessageTracker;
-use Codeup\Messaging\PublishedMessage;
+use Codeup\DomainEvents\StoredEvent;
+use Codeup\Messaging\MessageConsumer;
 use Igorw\EventSource\Stream;
 
-class UpdateAttendanceList
+class UpdateAttendanceList implements MessageConsumer
 {
     /** @var Stream */
     private $stream;
 
-    /** @var MessageTracker */
-    private $tracker;
-
-    /** @var EventStore */
-    private $store;
-
     /**
      * @param Stream $stream
-     * @param MessageTracker $tracker
-     * @param EventStore $store
      */
-    public function __construct(
-        Stream $stream,
-        MessageTracker $tracker,
-        EventStore $store
-    ) {
+    public function __construct(Stream $stream)
+    {
         $this->stream = $stream;
-        $this->tracker = $tracker;
-        $this->store = $store;
     }
 
-    public function updateList()
+    /**
+     * @param StoredEvent $event
+     */
+    public function consume(StoredEvent $event)
     {
-        if (!$this->tracker->hasPublishedMessages()) {
-            $mostRecentMessage = null;
-            $events = $this->store->allEvents();
-        } else {
-            $mostRecentMessage = $this->tracker->mostRecentMessage();
-            $events = $this->store->eventsStoredAfter(
-                $mostRecentMessage->mostRecentId()
-            );
-        }
-
-        foreach ($events as $event) {
-            $this
-                ->stream
-                   ->event()
-                        ->setData($event->body())
-                    ->end()
-                ->flush()
-            ;
-            $lastPublishedEvent = $event;
-        }
-
-        if (!$mostRecentMessage) {
-            $mostRecentMessage = new PublishedMessage(
-                $this->tracker->nextMessageId(),
-                $lastPublishedEvent->id()->value()
-            );
-        } else {
-            $mostRecentMessage->updateMostRecentId(
-                $lastPublishedEvent->id()->value()
-            );
-        }
-
-        $this->tracker->track($mostRecentMessage);
+        $this
+            ->stream
+               ->event()
+                    ->setData($event->body())
+                ->end()
+            ->flush()
+        ;
     }
 }

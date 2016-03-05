@@ -10,11 +10,14 @@ require __DIR__ . '/../vendor/autoload.php';
     ->register($container = new Container())
 ;
 
-/** @var \Codeup\Attendance\UpdateAttendanceList $useCase */
-$useCase = $container['attendance.update_attendance'];
+/** @var \Codeup\Messaging\MessagePublisher $publisher */
+$publisher = $container['messages.publisher'];
 
-$response = new StreamedResponse(function () use ($useCase) {
-    $useCase->updateList();
+/** @var \Codeup\Attendance\UpdateAttendanceList $consumer */
+$consumer = $container['attendance.update_attendance'];
+
+$response = new StreamedResponse(function () use ($publisher, $consumer) {
+    $publisher->publishTo($consumer);
     sleep(3);
 });
 

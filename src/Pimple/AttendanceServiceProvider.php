@@ -16,6 +16,7 @@ use Codeup\Dbal\StudentsRepository;
 use Codeup\DomainEvents\EventPublisher;
 use Codeup\DomainEvents\PersistEventSubscriber;
 use Codeup\JmsSerializer\JsonSerializer;
+use Codeup\Messaging\MessagePublisher;
 use Codeup\WebDriver\WebDriverAttendanceChecker;
 use Doctrine\DBAL\DriverManager;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
@@ -60,6 +61,12 @@ class AttendanceServiceProvider implements ServiceProviderInterface
 
             return $publisher;
         };
+        $container['messages.publisher'] = function() use ($container) {
+            return new MessagePublisher(
+                new MessageTrackerRepository($container['db.connection']),
+                $container['events.store']
+            );
+        };
         $container['attendance.do_roll_call'] = function () use ($container) {
             $useCase = new DoRollCall(
                 new WebDriverAttendanceChecker(
@@ -78,11 +85,7 @@ class AttendanceServiceProvider implements ServiceProviderInterface
             return $useCase;
         };
         $container['attendance.update_attendance'] = function () use ($container) {
-            return new UpdateAttendanceList(
-                new Stream(),
-                new MessageTrackerRepository($container['db.connection']),
-                $container['events.store']
-            );
+            return new UpdateAttendanceList(new Stream());
         };
         $container['command.roll_call'] = function () use ($container) {
             return new RollCallCommand($container['attendance.do_roll_call']);

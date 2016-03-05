@@ -10,7 +10,7 @@ use Codeup\Console\AttendanceApplication;
 use Codeup\Pimple\AttendanceServiceProvider;
 use Pimple\Container;
 
-$provider = new AttendanceServiceProvider(require __DIR__ . '/../config.php');
+$provider = new AttendanceServiceProvider(require __DIR__ . '/../config.dist.php');
 $provider->register($container = new Container());
 $application = new AttendanceApplication($container);
 $application->run();
