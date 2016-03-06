@@ -50,7 +50,7 @@ class RollCallCommand extends Command
         $table = new Table($output);
         $table
             ->setHeaders(['Student'])
-            ->setRows(array_map(function(Student $student) {
+            ->setRows(array_map(function (Student $student) {
                 $information = $student->information();
                 return ["{$information->name()} - {$information->macAddress()->value()}"];
             }, $students))

@@ -9,7 +9,6 @@ namespace Codeup\WebDriver;
 use Codeup\Bootcamps\AttendanceChecker;
 use Codeup\Bootcamps\MacAddress;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
-use Facebook\WebDriver\Remote\RemoteWebElement;
 use Facebook\WebDriver\WebDriverBy;
 
 class WebDriverAttendanceChecker implements AttendanceChecker

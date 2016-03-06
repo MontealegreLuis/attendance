@@ -6,7 +6,6 @@
  */
 namespace Codeup\Dbal;
 
-use Codeup\Messaging\EmptyExchange;
 use Codeup\Messaging\MessageTracker;
 use Codeup\Messaging\PublishedMessage;
 use Doctrine\DBAL\Connection;

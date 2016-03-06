@@ -61,7 +61,7 @@ class AttendanceServiceProvider implements ServiceProviderInterface
 
             return $publisher;
         };
-        $container['messages.publisher'] = function() use ($container) {
+        $container['messages.publisher'] = function () use ($container) {
             return new MessagePublisher(
                 new MessageTrackerRepository($container['db.connection']),
                 $container['events.store']
