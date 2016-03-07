@@ -7,6 +7,7 @@
 namespace Codeup\Dbal;
 
 use Codeup\Bootcamps\Bootcamp;
+use Codeup\Bootcamps\BootcampId;
 use Codeup\Bootcamps\Bootcamps;
 use Doctrine\DBAL\Connection;
 
@@ -33,5 +34,23 @@ class BootcampsRepository implements Bootcamps
             'start_time' => $information->startTime()->format('Y-m-d H:m:i'),
             'stop_time' => $information->stopTime()->format('Y-m-d H:m:i'),
         ]);
+    }
+
+    /**
+     * @param BootcampId $bootcampId
+     * @return Bootcamp
+     */
+    public function with(BootcampId $bootcampId)
+    {
+        $builder = $this->connection->createQueryBuilder();
+        $builder
+            ->select('*')
+            ->from('bootcamps', 'b')
+            ->where('bootcamp_id = :bootcampId')
+            ->setParameter('bootcampId', $bootcampId->value())
+            ->setMaxResults(1)
+        ;
+
+        return Bootcamp::from($builder->execute()->fetch());
     }
 }

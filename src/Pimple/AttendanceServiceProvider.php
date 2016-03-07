@@ -6,10 +6,13 @@
  */
 namespace Codeup\Pimple;
 
+use Codeup\Alice\DbalPersister;
 use Codeup\Attendance\DoRollCall;
 use Codeup\Attendance\UpdateAttendanceList;
 use Codeup\Console\Command\RollCallCommand;
+use Codeup\Console\Command\SeedDatabaseCommand;
 use Codeup\Dbal\AttendancesRepository;
+use Codeup\Dbal\BootcampsRepository;
 use Codeup\Dbal\EventStoreRepository;
 use Codeup\Dbal\MessageTrackerRepository;
 use Codeup\Dbal\StudentsRepository;
@@ -46,6 +49,11 @@ class AttendanceServiceProvider implements ServiceProviderInterface
     {
         $container['db.connection'] = function () {
             return DriverManager::getConnection($this->options['dbal']);
+        };
+        $container['db.persister'] = function () use ($container) {
+            return new DbalPersister(new BootcampsRepository(
+                $container['db.connection']
+            ));
         };
         $container['events.store'] = function () use ($container) {
             return new EventStoreRepository(
@@ -89,6 +97,9 @@ class AttendanceServiceProvider implements ServiceProviderInterface
         };
         $container['command.roll_call'] = function () use ($container) {
             return new RollCallCommand($container['attendance.do_roll_call']);
+        };
+        $container['command.db_seeder'] = function () use ($container) {
+            return new SeedDatabaseCommand($container['db.persister']);
         };
         $container['view'] = function () use ($container) {
             $view = new Twig(__DIR__ . '/../Twig/templates', [

@@ -8,5 +8,14 @@ namespace Codeup\Bootcamps;
 
 interface Bootcamps
 {
+    /**
+     * @param Bootcamp $bootcamp
+     */
     public function add(Bootcamp $bootcamp);
+
+    /**
+     * @param BootcampId $bootcampId
+     * @return Bootcamp
+     */
+    public function with(BootcampId $bootcampId);
 }

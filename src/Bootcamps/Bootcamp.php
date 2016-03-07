@@ -7,6 +7,7 @@
 namespace Codeup\Bootcamps;
 
 use DateTimeInterface;
+use DateTime;
 
 class Bootcamp
 {
@@ -54,6 +55,26 @@ class Bootcamp
         Schedule $schedule
     ) {
         return new Bootcamp($bootcampId, $duration, $cohortName, $schedule);
+    }
+
+    /**
+     * @param array $storedValues
+     * @return Bootcamp
+     */
+    public static function from(array $storedValues)
+    {
+        return new Bootcamp(
+            BootcampId::fromLiteral($storedValues['bootcamp_id']),
+            Duration::between(
+                DateTime::createFromFormat('Y-m-d', $storedValues['start_date']),
+                DateTime::createFromFormat('Y-m-d', $storedValues['stop_date'])
+            ),
+            $storedValues['cohort_name'],
+            Schedule::withClassTimeBetween(
+                DateTime::createFromFormat('Y-m-d H:i:s', $storedValues['start_time']),
+                DateTime::createFromFormat('Y-m-d H:i:s', $storedValues['stop_time'])
+            )
+        );
     }
 
     /**
