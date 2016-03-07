@@ -66,6 +66,26 @@ class AttendancesRepository implements Attendances
             ->setParameter('attendanceId', $attendanceId->value())
         ;
 
-        return Student::from($builder->execute()->fetch());
+        return Attendance::from($builder->execute()->fetch());
+    }
+
+    /**
+     * @param AttendanceId $attendanceId
+     * @return array
+     */
+    public function detailsOf(AttendanceId $attendanceId)
+    {
+        $builder = $this->connection->createQueryBuilder();
+        $builder
+            ->select('*')
+            ->from('attendances', 'a')
+            ->innerJoin('a', 'students', 's', 'a.student_id = s.student_id')
+            ->innerJoin('s', 'bootcamps', 'b', 's.bootcamp_id = b.bootcamp_id')
+            ->where('a.attendance_id = :attendanceId')
+            ->setMaxResults(1)
+            ->setParameter('attendanceId', $attendanceId->value())
+        ;
+
+        return $builder->execute()->fetch();
     }
 }

@@ -54,7 +54,7 @@ class AttendanceServiceProvider implements ServiceProviderInterface
             return new DbalPersister(
                 new BootcampsRepository($container['db.connection']),
                 new StudentsRepository($container['db.connection']),
-                new AttendancesRepository($container['db.connection']),
+                $container['attendance.attendances'],
                 $container['events.store']
             );
         };
@@ -78,6 +78,9 @@ class AttendanceServiceProvider implements ServiceProviderInterface
                 $container['events.store']
             );
         };
+        $container['attendance.attendances'] = function () use ($container) {
+            return new AttendancesRepository($container['db.connection']);
+        };
         $container['attendance.do_roll_call'] = function () use ($container) {
             $useCase = new DoRollCall(
                 new WebDriverAttendanceChecker(
@@ -89,14 +92,17 @@ class AttendanceServiceProvider implements ServiceProviderInterface
                     $this->options['dhcp']
                 ),
                 new StudentsRepository($container['db.connection']),
-                new AttendancesRepository($container['db.connection'])
+                $container['attendance.attendances']
             );
             $useCase->setPublisher($container['events.publisher']);
 
             return $useCase;
         };
         $container['attendance.update_attendance'] = function () use ($container) {
-            return new UpdateAttendanceList(new Stream());
+            return new UpdateAttendanceList(
+                new Stream(),
+                $container['attendance.attendances']
+            );
         };
         $container['command.roll_call'] = function () use ($container) {
             return new RollCallCommand($container['attendance.do_roll_call']);

@@ -23,4 +23,10 @@ interface Attendances
      * @return Attendance
      */
     public function with(AttendanceId $attendanceId);
+
+    /**
+     * @param AttendanceId $attendanceId
+     * @return array
+     */
+    public function detailsOf(AttendanceId $attendanceId);
 }
