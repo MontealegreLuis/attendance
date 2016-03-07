@@ -11,6 +11,7 @@ use Codeup\Pimple\AttendanceServiceProvider;
 use Pimple\Container;
 
 $provider = new AttendanceServiceProvider(require __DIR__ . '/../config.dist.php');
+$helperSet = require __DIR__ . '/../cli-config.php';
 $provider->register($container = new Container());
-$application = new AttendanceApplication($container);
+$application = new AttendanceApplication($container, $helperSet);
 $application->run();
