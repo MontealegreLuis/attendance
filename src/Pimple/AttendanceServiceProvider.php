@@ -54,7 +54,8 @@ class AttendanceServiceProvider implements ServiceProviderInterface
             return new DbalPersister(
                 new BootcampsRepository($container['db.connection']),
                 new StudentsRepository($container['db.connection']),
-                new AttendancesRepository($container['db.connection'])
+                new AttendancesRepository($container['db.connection']),
+                $container['events.store']
             );
         };
         $container['events.store'] = function () use ($container) {

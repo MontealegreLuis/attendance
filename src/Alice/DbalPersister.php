@@ -13,8 +13,10 @@ use Codeup\Bootcamps\Bootcamp;
 use Codeup\Bootcamps\BootcampId;
 use Codeup\Bootcamps\Bootcamps;
 use Codeup\Bootcamps\Student;
+use Codeup\Bootcamps\StudentHasCheckedIn;
 use Codeup\Bootcamps\StudentId;
 use Codeup\Bootcamps\Students;
+use Codeup\DomainEvents\EventStore;
 use Nelmio\Alice\PersisterInterface;
 
 class DbalPersister implements PersisterInterface
@@ -28,19 +30,25 @@ class DbalPersister implements PersisterInterface
     /** @var Attendances */
     private $attendances;
 
+    /** @var EventStore */
+    private $store;
+
     /**
      * @param Bootcamps $bootcamps
      * @param Students $students
      * @param Attendances $attendances
+     * @param EventStore $store
      */
     public function __construct(
         Bootcamps $bootcamps,
         Students $students,
-        Attendances $attendances
+        Attendances $attendances,
+        EventStore $store
     ) {
         $this->bootcamps = $bootcamps;
         $this->students = $students;
         $this->attendances = $attendances;
+        $this->store = $store;
     }
 
     public function persist(array $objects)
@@ -69,6 +77,9 @@ class DbalPersister implements PersisterInterface
                 break;
             case Attendance::class:
                 $this->attendances->add($object);
+                break;
+            case StudentHasCheckedIn::class:
+                $this->store->append($object);
         }
     }
 

@@ -49,3 +49,12 @@ Codeup\Bootcamps\Attendance:
         __construct: { checkIn: ['@attendance_id1', '@today', '@student_id1'] }
     attendance2:
         __construct: { checkIn: ['@attendance_id2', '@today', '@student_id2'] }
+Codeup\Bootcamps\StudentHasCheckedIn:
+    checkIn1:
+        __construct: false
+        occurredOn: '@today'
+        attendanceId: '@attendance_id1'
+    checkIn2:
+        __construct: false
+        occurredOn: '@today'
+        attendanceId: '@attendance_id2'
