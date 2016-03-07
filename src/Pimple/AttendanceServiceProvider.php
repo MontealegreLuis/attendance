@@ -51,9 +51,11 @@ class AttendanceServiceProvider implements ServiceProviderInterface
             return DriverManager::getConnection($this->options['dbal']);
         };
         $container['db.persister'] = function () use ($container) {
-            return new DbalPersister(new BootcampsRepository(
-                $container['db.connection']
-            ));
+            return new DbalPersister(
+                new BootcampsRepository($container['db.connection']),
+                new StudentsRepository($container['db.connection']),
+                new AttendancesRepository($container['db.connection'])
+            );
         };
         $container['events.store'] = function () use ($container) {
             return new EventStoreRepository(

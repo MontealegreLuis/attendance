@@ -44,6 +44,20 @@ class Attendance
     }
 
     /**
+     * @param array $storedValues
+     * @return Attendance
+     */
+    public static function from(array $storedValues)
+    {
+        return new Attendance(
+            AttendanceId::fromLiteral($storedValues['attendance_id']),
+            DateTime::createFromFormat('Y-m-d H:i:s', $storedValues['date']),
+            (int) $storedValues['type'],
+            StudentId::fromLiteral($storedValues['student_id'])
+        );
+    }
+
+    /**
      * @param AttendanceId $attendanceId
      * @param DateTime $aDate
      * @param StudentId $studentId

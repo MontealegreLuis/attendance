@@ -26,4 +26,10 @@ interface Students
      * @param Student $student
      */
     public function update(Student $student);
+
+    /**
+     * @param StudentId $studentId
+     * @return Student
+     */
+    public function with(StudentId $studentId);
 }

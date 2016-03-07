@@ -9,6 +9,7 @@ namespace Codeup\Dbal;
 use Codeup\Bootcamps\Attendance;
 use Codeup\Bootcamps\MacAddress;
 use Codeup\Bootcamps\Student;
+use Codeup\Bootcamps\StudentId;
 use Codeup\Bootcamps\Students;
 use DateTime;
 use Doctrine\DBAL\Connection;
@@ -116,5 +117,23 @@ class StudentsRepository implements Students
         ], [
             'student_id' => $information->id()->value()
         ]);
+    }
+
+    /**
+     * @param StudentId $studentId
+     * @return Student
+     */
+    public function with(StudentId $studentId)
+    {
+        $builder = $this->connection->createQueryBuilder();
+        $builder
+            ->select('*')
+            ->from('students', 's')
+            ->where('s.student_id = :studentId')
+            ->setMaxResults(1)
+            ->setParameter('studentId', $studentId->value())
+        ;
+
+        return Student::from($builder->execute()->fetch());
     }
 }

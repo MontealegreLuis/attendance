@@ -1,0 +1,51 @@
+Codeup\Bootcamps\BootcampId (local):
+    bootcamp_id{1..2}:
+        value: <current()>
+Codeup\Bootcamps\Duration (local):
+    duration{1..2}:
+        startDate: <dateTime()>
+        stopDate: <dateTimeBetween('now', '4 months')>
+DateTime (local):
+    start:
+        __construct: { createFromFormat: ['Y-m-d H:i:s', '2016-03-06 09:00:00'] }
+    stop:
+        __construct: { createFromFormat: ['Y-m-d H:i:s', '2016-03-06 16:00:00'] }
+    today:
+        __construct: { createFromFormat: ['Y-m-d H:i:s', '2016-03-06 10:00:00'] }
+Codeup\Bootcamps\Schedule (local):
+    schedule{1..2}:
+        startTime: '@start'
+        stopTime: '@stop'
+Codeup\Bootcamps\Bootcamp:
+    bootcamp{1..2}:
+        bootcampId: '@bootcamp_id<current()>'
+        duration: '@duration<current()>'
+        cohortName: <word()>
+        schedule: '@schedule<current()>'
+Codeup\Bootcamps\StudentId (local):
+    student_id{1..2}:
+        value: <current()>
+Codeup\Bootcamps\MacAddress (local):
+    address1:
+        value: 'ac:bc:32:93:64:29'
+    address2:
+        value: 'b8:e8:56:23:5c:34'
+Codeup\Bootcamps\Student:
+    student1:
+        studentId: '@student_id1'
+        bootcamp: '@bootcamp1'
+        name: <name()>
+        macAddress: '@address1'
+    student2:
+        studentId: '@student_id2'
+        bootcamp: '@bootcamp2'
+        name: <name()>
+        macAddress: '@address2'
+Codeup\Bootcamps\AttendanceId (local):
+    attendance_id{1..2}:
+        value: <current()>
+Codeup\Bootcamps\Attendance:
+    attendance1:
+        __construct: { checkIn: ['@attendance_id1', '@today', '@student_id1'] }
+    attendance2:
+        __construct: { checkIn: ['@attendance_id2', '@today', '@student_id2'] }
