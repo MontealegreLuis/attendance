@@ -7,6 +7,7 @@
 namespace Codeup\Bootcamps\Attendance;
 
 use Codeup\Bootcamps\Bootcamp;
+use Codeup\Bootcamps\BootcampId;
 use Codeup\Bootcamps\Bootcamps;
 use SplObjectStorage;
 
@@ -26,5 +27,19 @@ class InMemoryBootcamps implements Bootcamps
     public function add(Bootcamp $bootcamp)
     {
         $this->bootcamps->attach($bootcamp);
+    }
+
+    /**
+     * @param BootcampId $bootcampId
+     * @return Bootcamp
+     */
+    public function with(BootcampId $bootcampId)
+    {
+        /** @var Bootcamp $bootcamp */
+        foreach ($this->bootcamps as $bootcamp) {
+            if ($bootcamp->id()->equals($bootcampId)) {
+                return $bootcamp;
+            }
+        }
     }
 }

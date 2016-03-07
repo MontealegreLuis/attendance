@@ -78,6 +78,14 @@ class Bootcamp
     }
 
     /**
+     * @return BootcampId
+     */
+    public function id()
+    {
+        return $this->bootcampId;
+    }
+
+    /**
      * @param DateTimeInterface $aDate
      * @return bool
      */

@@ -8,6 +8,7 @@ namespace Codeup\Bootcamps\Attendance;
 
 use Codeup\Bootcamps\MacAddress;
 use Codeup\Bootcamps\Student;
+use Codeup\Bootcamps\StudentId;
 use Codeup\Bootcamps\Students;
 use DateTime;
 use SplObjectStorage;
@@ -36,6 +37,20 @@ class InMemoryStudents implements Students
     public function update(Student $student)
     {
         $this->students->attach($student);
+    }
+
+    /**
+     * @param StudentId $studentId
+     * @return Student
+     */
+    public function with(StudentId $studentId)
+    {
+        /** @var Student $student */
+        foreach ($this->students as $student) {
+            if ($student->id()->equals($studentId)) {
+                return $student;
+            }
+        }
     }
 
     /**
