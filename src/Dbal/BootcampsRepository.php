@@ -10,6 +10,7 @@ use Codeup\Bootcamps\Bootcamp;
 use Codeup\Bootcamps\BootcampId;
 use Codeup\Bootcamps\Bootcamps;
 use Doctrine\DBAL\Connection;
+use Underscore\Types\Arrays;
 
 class BootcampsRepository implements Bootcamps
 {
@@ -52,5 +53,18 @@ class BootcampsRepository implements Bootcamps
         ;
 
         return Bootcamp::from($builder->execute()->fetch());
+    }
+
+    public function attendance()
+    {
+        $builder = $this->connection->createQueryBuilder();
+        $builder
+            ->select('*')
+            ->from('bootcamps', 'b')
+            ->innerJoin('b', 'students', 's', 'b.bootcamp_id = s.bootcamp_id')
+            ->leftJoin('s', 'attendances', 'a', 's.student_id = a.student_id')
+        ;
+
+        return Arrays::group($builder->execute()->fetchAll(), 'bootcamp_id');
     }
 }

@@ -1,18 +1,64 @@
 {% extends 'layouts/main.html.twig' %}
 {% block content %}
-    <h1>Today's attendance</h1>
-    <table class="table table-striped table-bordered table-hover">
-        <thead>
-            <tr>
-                <th>Class</th>
-                <th>Student</th>
-                <th>Time</th>
-            </tr>
-        </thead>
-        <tbody class="js-students">
-        </tbody>
-    </table>
+    <header id="myCarousel" class="carousel slide" data-ride="carousel">
+        <ol class="carousel-indicators">
+            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+            <li data-target="#myCarousel" data-slide-to="1"></li>
+            <li data-target="#myCarousel" data-slide-to="2"></li>
+        </ol>
+        <div class="carousel-inner" role="listbox">
+            <div class="item active">
+                <div class="fill" style="background-image:url('http://placehold.it/1900x1080&text= ');">
+                    <div style="position:relative;z-index:-1;float:left; margin-top: 4em; margin-left: 20em;" class="container">
+                        <p>{{ attendances[0].cohort_name }}</p>
+                        {% for attendance in attendances %}
+                            {% if loop.index0 % 3 == 0 %}<div style="" class="row">{% endif %}
+                            <div class="media col-md-3">
+                                <div class="media-left">
+                                    <img class="media-object" style="width: 32px;height: 32px;" src="/images/student.svg" alt="Student">
+                                </div>
+                                <div class="media-body">
+                                    <p class="media-heading">{{ attendance.name }}</p>
+                                    {% if attendance.date is not empty %}
+                                        <p>
+                                            <span class="text-muted">Arrived at:</span>
+                                            {{ (attendance.date|split(' '))[1] }}
+                                        </p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% if loop.index0 % 3 == 2 %}</div>{% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="item">
+                <!-- Set the second background image using inline CSS below. -->
+                <div class="fill" style="background-image:url('http://placehold.it/1900x1080&text= ');"></div>
+
+            </div>
+            <div class="item">
+                <!-- Set the third background image using inline CSS below. -->
+                <div class="fill" style="background-image:url('http://placehold.it/1900x1080&text= ');"></div>
+
+            </div>
+        </div>
+        <a class="left carousel-control" href="#myCarousel" data-slide="prev" role="button">
+            <span class="icon-prev"></span>
+        </a>
+        <a class="right carousel-control" href="#myCarousel" data-slide="next" role="button">
+            <span class="icon-next"></span>
+        </a>
+    </header>
 {% endblock %}
 {% block scripts %}
-    <script src="/scripts/events.js"></script>
+    {#<script src="/scripts/events.js"></script>#}
+    <script>
+        $('#myCarousel').carousel({
+            interval: 5000 //changes the speed
+        })
+    </script>
+{% endblock %}
+{% block styles %}
+    <link href="/styles/full-slider.css" rel="stylesheet">
 {% endblock %}

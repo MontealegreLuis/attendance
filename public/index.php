@@ -10,13 +10,20 @@ use Slim\App;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-$app = new App();
+$app = new App([
+    'settings' => [
+        'displayErrorDetails' => true
+    ]
+]);
 (new AttendanceServiceProvider(require __DIR__ . '/../config.php'))
-    ->register($app->getContainer())
+    ->register($container = $app->getContainer())
 ;
 
-$app->get('/', function ($_, $response) {
-    return $response->write($this->view->fetch('attendance.html.twig'));
+$app->get('/', function ($_, $response) use ($container) {
+    $attendances = $container['attendance.bootcamps']->attendance();
+    return $response->write($this->view->fetch('attendance.html.twig', [
+        'attendances' => array_shift($attendances),
+    ]));
 });
 
 $app->run();

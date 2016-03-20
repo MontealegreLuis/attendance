@@ -52,7 +52,7 @@ class AttendanceServiceProvider implements ServiceProviderInterface
         };
         $container['db.persister'] = function () use ($container) {
             return new DbalPersister(
-                new BootcampsRepository($container['db.connection']),
+                $container['attendance.bootcamps'],
                 new StudentsRepository($container['db.connection']),
                 $container['attendance.attendances'],
                 $container['events.store']
@@ -80,6 +80,9 @@ class AttendanceServiceProvider implements ServiceProviderInterface
         };
         $container['attendance.attendances'] = function () use ($container) {
             return new AttendancesRepository($container['db.connection']);
+        };
+        $container['attendance.bootcamps'] = function () use ($container) {
+            return new BootcampsRepository($container['db.connection']);
         };
         $container['attendance.do_roll_call'] = function () use ($container) {
             $useCase = new DoRollCall(
