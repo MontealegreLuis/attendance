@@ -6,6 +6,8 @@
  */
 namespace Codeup\Bootcamps;
 
+use DateTime;
+
 interface Bootcamps
 {
     /**
@@ -18,4 +20,16 @@ interface Bootcamps
      * @return Bootcamp
      */
     public function with(BootcampId $bootcampId);
+
+    /**
+     * @param DateTime $onDate
+     * @return array
+     */
+    public function attendance(DateTime $onDate);
+
+    /**
+     * @param DateTime $onDate
+     * @return array
+     */
+    public function onTime(DateTime $onDate);
 }

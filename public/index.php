@@ -20,9 +20,14 @@ $app = new App([
 ;
 
 $app->get('/', function ($_, $response) use ($container) {
-    $attendances = $container['attendance.bootcamps']->attendance();
+    /** @var \Codeup\Bootcamps\Bootcamps $bootcamps */
+    $bootcamps = $container['attendance.bootcamps'];
+
+    $today = new DateTime('2016-03-06');
+
     return $response->write($this->view->fetch('attendance.html.twig', [
-        'attendances' => array_shift($attendances),
+        'todayAttendance' => $bootcamps->attendance($today),
+        'attendanceOnTime' => $bootcamps->onTime($today),
     ]));
 });
 
