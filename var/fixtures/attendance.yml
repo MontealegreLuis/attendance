@@ -3,17 +3,16 @@ Codeup\Bootcamps\BootcampId (local):
         value: <current()>
 Codeup\Bootcamps\Duration (local):
     duration{1..2}:
-        startDate: <dateTime()>
-        stopDate: <dateTimeBetween('now', '4 months')>
+        __construct: { between: ["<dateTimeBetween('-5 days','now')>", "<dateTimeBetween('now', '4 months')>"] }
 DateTime (local):
     start:
         __construct: { createFromFormat: ['Y-m-d H:i:s', '2016-03-06 09:00:00'] }
     stop:
         __construct: { createFromFormat: ['Y-m-d H:i:s', '2016-03-06 16:00:00'] }
     today:
-        __construct: { createFromFormat: ['Y-m-d H:i:s', '2016-03-06 10:00:00'] }
+        __construct: { createFromFormat: ['Y-m-d H:i:s', '2016-03-21 08:58:00'] }
     yesterday:
-        __construct: { createFromFormat: ['Y-m-d H:i:s', '2016-03-05 10:00:00'] }
+        __construct: { createFromFormat: ['Y-m-d H:i:s', '2016-03-21 08:30:00'] }
 Codeup\Bootcamps\Schedule (local):
     schedule{1..2}:
         startTime: '@start'
@@ -58,13 +57,13 @@ Codeup\Bootcamps\Student:
         macAddress: '@address<current()>'
 
 Codeup\Bootcamps\AttendanceId (local):
-    attendance_id{1..2}:
+    attendance_id{1..46}:
         value: <current()>
 Codeup\Bootcamps\Attendance:
-    attendance1:
-        __construct: { checkIn: ['@attendance_id1', '@today', '@student_id1'] }
-    attendance2:
-        __construct: { checkIn: ['@attendance_id2', '@today', '@student_id2'] }
+    attendance{1..25}:
+        __construct: { checkIn: ['@attendance_id<current()>', '@today', '@student_id<current()>'] }
+    attendance2{26..46}:
+        __construct: { checkIn: ['@attendance_id<current()>', '@yesterday', '@student_id<current()>'] }
 Codeup\Bootcamps\StudentHasCheckedIn:
     checkIn1:
         __construct: false

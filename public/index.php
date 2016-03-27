@@ -28,6 +28,7 @@ $app->get('/', function ($_, $response) use ($container) {
     return $response->write($this->view->fetch('attendance.html.twig', [
         'todayAttendance' => $bootcamps->attendance($today),
         'attendanceOnTime' => $bootcamps->onTime($today),
+        'daysWithPerfectAttendance' => $bootcamps->daysWithPerfectAttendance(),
     ]));
 });
 

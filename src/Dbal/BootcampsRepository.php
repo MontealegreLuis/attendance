@@ -14,10 +14,11 @@ use Doctrine\DBAL\Connection;
 
 class BootcampsRepository implements Bootcamps
 {
+    /** @var Connection */
     private $connection;
 
     /**
-     * @param $connection
+     * @param Connection $connection
      */
     public function __construct(Connection $connection)
     {
@@ -63,6 +64,7 @@ class BootcampsRepository implements Bootcamps
     {
         $builder = $this->connection->createQueryBuilder();
         $builder
+            ->addSelect('b.bootcamp_id')
             ->addSelect('b.cohort_name')
             ->addSelect('COUNT(a.attendance_id) * 100.0 /
                 (
@@ -73,12 +75,13 @@ class BootcampsRepository implements Bootcamps
             ')
             ->from('bootcamps', 'b')
             ->innerJoin('b', 'students', 's', 'b.bootcamp_id = s.bootcamp_id')
-            ->innerJoin(
+            ->leftJoin(
                 's', 'attendances', 'a',
                 's.student_id = a.student_id AND DATE(a.date) = :date'
             )
             ->groupBy('b.bootcamp_id')
-            ->setParameter('date', $onDate->format('Y-m-d'));
+            ->setParameter('date', $onDate->format('Y-m-d'))
+        ;
 
         return $builder->execute()->fetchAll();
     }
@@ -91,6 +94,7 @@ class BootcampsRepository implements Bootcamps
     {
         $builder = $this->connection->createQueryBuilder();
         $builder
+            ->addSelect('b.bootcamp_id')
             ->addSelect('b.cohort_name')
             ->addSelect('COUNT(a.attendance_id) * 100.0 /
                 (
@@ -106,7 +110,43 @@ class BootcampsRepository implements Bootcamps
                 's.student_id = a.student_id AND DATE(a.date) = :date AND TIME(a.date) <= TIME(b.start_time)'
             )
             ->groupBy('b.bootcamp_id')
-            ->setParameter('date', $onDate->format('Y-m-d'));
+            ->setParameter('date', $onDate->format('Y-m-d'))
+        ;
+
+        return $builder->execute()->fetchAll();
+    }
+
+    /**
+     * @return array
+     */
+    public function daysWithPerfectAttendance()
+    {
+        $builder = $this->connection->createQueryBuilder();
+        $builder
+            ->addSelect('percentages.bootcamp_id')
+            ->addSelect('percentages.cohort_name')
+            ->addSelect('COUNT(
+                CASE WHEN percentages.attendance_percentage = 100
+                THEN 1
+                ELSE NULL
+                END
+            ) days_with_perfect_attendance')
+            ->from('(SELECT
+                         b.bootcamp_id,
+                         b.cohort_name,
+                         COUNT(a.attendance_id) * 100.0 / (
+                             SELECT COUNT(*)
+                             FROM students
+                             WHERE students.bootcamp_id = b.bootcamp_id
+                         )  AS attendance_percentage
+                     FROM bootcamps b
+                     INNER JOIN students s ON b.bootcamp_id = s.bootcamp_id
+                     LEFT JOIN attendances a
+                        ON s.student_id = a.student_id
+                        AND DATE(a.date) BETWEEN b.start_date AND b.stop_date
+                     GROUP BY b.bootcamp_id)', 'percentages')
+            ->groupBy('percentages.bootcamp_id')
+        ;
 
         return $builder->execute()->fetchAll();
     }

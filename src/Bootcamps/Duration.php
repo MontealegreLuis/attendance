@@ -43,6 +43,18 @@ class Duration
 
     /**
      * @param DateTime $aDate
+     * @return Duration
+     */
+    public static function workWeekContaining(DateTime $aDate)
+    {
+        return new Duration(
+            clone $aDate->modify('monday this week'),
+            $aDate->modify('friday this week')
+        );
+    }
+
+    /**
+     * @param DateTime $aDate
      * @return bool
      */
     public function contains(DateTime $aDate)

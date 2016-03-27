@@ -25,6 +25,10 @@
                                 <dd>
                                     {{ attendanceOnTime[loop.index0].on_time_attendance|number_format(2) }}%
                                 </dd>
+                                <dt># of days with 100% attendance</dt>
+                                <dd>
+                                    {{ daysWithPerfectAttendance[loop.index0].days_with_perfect_attendance|number_format(0) }}
+                                </dd>
                             </dl>
                         </div>
                     </div>
