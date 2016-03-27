@@ -115,7 +115,7 @@ class AttendanceServiceProvider implements ServiceProviderInterface
         };
         $container['view'] = function () use ($container) {
             $view = new Twig(__DIR__ . '/../Twig/templates', [
-                'cache' => __DIR__ . '/../../var/cache',
+                'cache' => __DIR__ . '/../../../var/cache',
                 'debug' => true,
             ]);
 

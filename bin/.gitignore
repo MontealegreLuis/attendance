@@ -4,3 +4,5 @@
 !.gitignore
 !console
 !console.php
+!setup
+!setup.php

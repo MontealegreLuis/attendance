@@ -1,7 +1,12 @@
 {
     "autoload": {
         "psr-4": {
-            "Codeup\\": "src/"
+            "Codeup\\": [
+                "src/application",
+                "src/domain",
+                "src/infrastructure",
+                "src/setup"
+            ]
         }
     },
     "autoload-dev": {
