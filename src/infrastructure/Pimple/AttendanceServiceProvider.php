@@ -114,9 +114,9 @@ class AttendanceServiceProvider implements ServiceProviderInterface
             return new SeedDatabaseCommand($container['db.persister']);
         };
         $container['view'] = function () use ($container) {
-            $view = new Twig(__DIR__ . '/../Twig/templates', [
-                'cache' => __DIR__ . '/../../../var/cache',
-                'debug' => true,
+            $view = new Twig($this->options['twig']['templates'], [
+                'cache' => $this->options['twig']['cache'],
+                'debug' => $this->options['twig']['debug'],
             ]);
 
             $view->addExtension(new TwigExtension(
