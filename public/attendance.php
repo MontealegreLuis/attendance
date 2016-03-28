@@ -1,26 +1,18 @@
 <?php
-use Codeup\Pimple\AttendanceServiceProvider;
+/**
+ * PHP version 5.6
+ *
+ * This source file is subject to the license that is bundled with this package in the file LICENSE.
+ */
+use Codeup\Pimple\MessagingServiceProvider;
 use Pimple\Container;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-(new AttendanceServiceProvider(require __DIR__ . '/../config.php'))
+(new MessagingServiceProvider(require __DIR__ . '/../config.php'))
     ->register($container = new Container())
 ;
 
-/** @var \Codeup\Messaging\MessagePublisher $publisher */
-$publisher = $container['messages.publisher'];
-
-/** @var \Codeup\Attendance\UpdateAttendanceList $consumer */
-$consumer = $container['attendance.update_attendance'];
-
-$response = new StreamedResponse(function () use ($publisher, $consumer) {
-    $publisher->publishTo($consumer);
-    sleep(3);
-});
-
-$response->prepare(Request::createFromGlobals());
-$response->headers->set('Content-Type', 'text/event-stream');
-$response->send();
+/** @var \Codeup\Symfony\UpdateAttendanceController $controller */
+$controller = $container['controllers.update_attendance'];
+$controller->updateListAction();
