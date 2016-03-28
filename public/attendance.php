@@ -6,7 +6,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-(new AttendanceServiceProvider(require __DIR__ . '/../config.dist.php'))
+(new AttendanceServiceProvider(require __DIR__ . '/../config.php'))
     ->register($container = new Container())
 ;
 

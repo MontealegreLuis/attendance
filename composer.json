@@ -29,7 +29,8 @@
         "igorw/event-source": "^1.0",
         "slim/twig-view": "^2.0",
         "symfony/http-foundation": "^3.0",
-        "anahkiasen/underscore-php": "^2.0"
+        "anahkiasen/underscore-php": "^2.0",
+        "ocramius/proxy-manager": "^1.0"
     },
     "require-dev": {
         "phpspec/phpspec": "^2.4",

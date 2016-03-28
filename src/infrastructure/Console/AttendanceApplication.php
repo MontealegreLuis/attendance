@@ -8,18 +8,15 @@ namespace Codeup\Console;
 
 use Pimple\Container;
 use Symfony\Component\Console\Application;
-use Symfony\Component\Console\Helper\HelperSet;
 
 class AttendanceApplication extends Application
 {
     /**
      * @param Container $container
-     * @param HelperSet $helperSet
      */
-    public function __construct(Container $container, HelperSet $helperSet)
+    public function __construct(Container $container)
     {
         parent::__construct('Codeup attendance application', '1.0.0');
-        $this->setHelperSet($helperSet);
         $this->addCommands([
             $container['command.roll_call'],
         ]);

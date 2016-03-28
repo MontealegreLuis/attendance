@@ -7,11 +7,10 @@
 require __DIR__ . '/../vendor/autoload.php';
 
 use Codeup\Console\AttendanceApplication;
-use Codeup\Pimple\AttendanceServiceProvider;
+use Codeup\Pimple\ConsoleServiceProvider;
 use Pimple\Container;
 
-$provider = new AttendanceServiceProvider(require __DIR__ . '/../config.dist.php');
-$helperSet = require __DIR__ . '/../cli-config.php';
+$provider = new ConsoleServiceProvider(require __DIR__ . '/../config.php');
 $provider->register($container = new Container());
-$application = new AttendanceApplication($container, $helperSet);
+$application = new AttendanceApplication($container);
 $application->run();

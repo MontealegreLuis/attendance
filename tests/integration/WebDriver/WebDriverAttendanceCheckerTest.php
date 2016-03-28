@@ -14,7 +14,7 @@ class WebDriverAttendanceCheckerTest extends TestCase
     /** @test */
     function it_should_find_mac_addresses_entries()
     {
-        $options = require __DIR__ . '/../../../config.dist.php';
+        $options = require __DIR__ . '/../../../config.tests.php';
         $checker = new WebDriverAttendanceChecker(
             RemoteWebDriver::create(
                 $options['webdriver']['host'],
