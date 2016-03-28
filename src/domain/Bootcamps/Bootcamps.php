@@ -32,4 +32,9 @@ interface Bootcamps
      * @return array
      */
     public function onTime(DateTime $onDate);
+
+    /**
+     * @return array
+     */
+    public function daysWithPerfectAttendance();
 }

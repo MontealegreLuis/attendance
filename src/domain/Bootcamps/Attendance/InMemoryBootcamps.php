@@ -9,6 +9,7 @@ namespace Codeup\Bootcamps\Attendance;
 use Codeup\Bootcamps\Bootcamp;
 use Codeup\Bootcamps\BootcampId;
 use Codeup\Bootcamps\Bootcamps;
+use DateTime;
 use SplObjectStorage;
 
 class InMemoryBootcamps implements Bootcamps
@@ -42,4 +43,29 @@ class InMemoryBootcamps implements Bootcamps
             }
         }
     }
+
+    /**
+     * @param DateTime $onDate
+     * @return array
+     */
+    public function attendance(DateTime $onDate)
+    {
+        return [];
+    }
+
+    /**
+     * @param DateTime $onDate
+     * @return array
+     */
+    public function onTime(DateTime $onDate)
+    {
+        return [];
+    }
+
+    public function daysWithPerfectAttendance()
+    {
+        return [];
+    }
+
+
 }
