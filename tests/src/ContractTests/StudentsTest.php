@@ -17,7 +17,7 @@ use PHPUnit_Framework_TestCase as TestCase;
 abstract class StudentsTest extends TestCase
 {
     /** @var DateTime */
-    private $now;
+    private $today;
 
     /** @var Students */
     private $students;
@@ -28,7 +28,7 @@ abstract class StudentsTest extends TestCase
     /** @var MacAddress[] */
     private $knownAddresses;
 
-    /** @var MacAddress */
+    /** @var MacAddress[] */
     private $unknownAddresses;
 
     /**
@@ -41,11 +41,11 @@ abstract class StudentsTest extends TestCase
     /** @before */
     function generateFixtures()
     {
-        $this->now = (new DateTime('now'))->setTime(12, 0, 0);
+        $this->today = (new DateTime('now'))->setTime(12, 0, 0);
         $this->students = $this->studentsInstance();
         $this->bootcamps = $this->bootcampsInstance();
         $this->bootcamps->add(
-            $bootcamp = A::bootcamp()->notYetFinished($this->now)->build()
+            $bootcamp = A::bootcamp()->notYetFinished($this->today)->build()
         );
         $this->knownAddresses = [
             $address1 = A::macAddress()->build(),
@@ -64,7 +64,7 @@ abstract class StudentsTest extends TestCase
         );
         $this->students->add(A::student()
             ->enrolledOn($bootcamp)
-            ->whoCheckedInAt($this->now->sub(new DateInterval('PT1H')))
+            ->whoCheckedInAt($this->today->sub(new DateInterval('PT1H')))
             ->withMacAddress($address2)
             ->build()
         );
@@ -76,10 +76,10 @@ abstract class StudentsTest extends TestCase
     }
 
     /** @test */
-    function it_should_not_find_students_if_mac_addresses_are_unknown()
+    function it_does_not_find_students_if_mac_addresses_are_unknown()
     {
         $students = $this->students->attending(
-            $this->now,
+            $this->today,
             $this->unknownAddresses
         );
 
@@ -87,10 +87,10 @@ abstract class StudentsTest extends TestCase
     }
 
     /** @test */
-    function it_should_find_students_with_a_known_mac_address()
+    function it_finds_students_with_a_known_mac_address()
     {
         $students = $this->students->attending(
-            $this->now,
+            $this->today,
             array_merge($this->unknownAddresses, $this->knownAddresses)
         );
 
@@ -98,19 +98,19 @@ abstract class StudentsTest extends TestCase
     }
 
     /** @test */
-    function it_should_not_find_students_if_bootcamp_is_over()
+    function it_does_not_find_students_if_bootcamp_is_over()
     {
         $this->students->add(A::student()
             ->enrolledOn(
                 A::bootcamp()
-                    ->alreadyFinished($this->now)
+                    ->alreadyFinished($this->today)
                     ->build()
             )
             ->withMacAddress($this->knownAddresses[0])
             ->build()
         );
         $students = $this->students->attending(
-            $this->now,
+            $this->today,
             array_merge($this->unknownAddresses, $this->knownAddresses)
         );
         $this->assertCount(3, $students);

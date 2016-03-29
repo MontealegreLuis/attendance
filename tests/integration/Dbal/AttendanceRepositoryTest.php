@@ -15,70 +15,34 @@ class AttendanceRepositoryTest extends AttendancesTest
 {
     use SetupDatabaseConnection;
 
-    /** @var AttendancesRepository */
-    private $attendances;
-
-    /** @var StudentsRepository */
-    private $students;
-
-    /** @var BootcampsRepository */
-    private $bootcamps;
-
     /**
      * @return AttendancesRepository
      * @throws \Doctrine\DBAL\DBALException
      */
     public function attendancesInstance()
     {
-        if ($this->attendances) {
-            return $this->attendances;
-        }
-
-        $this->attendances = new AttendancesRepository(
-            $connection = $this->connection(
-                require __DIR__ . '/../../../config.tests.php'
-            )
-        );
-
+        $connection = $this->connection();
         $connection->query('DELETE FROM attendances');
         $connection->executeQuery('UPDATE attendances_seq SET next_val = 0');
 
-        return $this->attendances;
+        return new AttendancesRepository($connection);
     }
 
     public function studentsInstance()
     {
-        if ($this->students) {
-            return $this->students;
-        }
-
-        $this->students = new StudentsRepository(
-            $connection = $this->connection(
-                require __DIR__ . '/../../../config.tests.php'
-            )
-        );
-
+        $connection = $this->connection();
         $connection->query('DELETE FROM students');
         //$connection->executeQuery('UPDATE students_seq SET next_val = 0');
 
-        return $this->students;
+        return new StudentsRepository($connection);
     }
 
     public function bootcampsInstance()
     {
-        if ($this->bootcamps) {
-            return $this->bootcamps;
-        }
-
-        $this->bootcamps = new BootcampsRepository(
-            $connection = $this->connection(
-                require __DIR__ . '/../../../config.tests.php'
-            )
-        );
-
+        $connection = $this->connection();
         $connection->query('DELETE FROM bootcamps');
         //$connection->executeQuery('UPDATE bootcamps_seq SET next_val = 0');
 
-        return $this->bootcamps;
+        return new BootcampsRepository($connection);
     }
 }

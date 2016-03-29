@@ -66,6 +66,4 @@ class InMemoryBootcamps implements Bootcamps
     {
         return [];
     }
-
-
 }

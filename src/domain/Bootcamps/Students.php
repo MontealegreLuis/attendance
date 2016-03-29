@@ -11,6 +11,12 @@ use DateTime;
 interface Students
 {
     /**
+     * Retrieve all the students who are currently enrolled in a bootcamp that
+     * is not yet finished
+     *
+     * It does not matter if they have checked in/out today yet. The
+     * appropriate action will be taken if needed in a subsequent step.
+     *
      * @param DateTime $today
      * @param array $addresses
      * @return Student[]

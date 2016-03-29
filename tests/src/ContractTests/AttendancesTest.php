@@ -16,7 +16,17 @@ use PHPUnit_Framework_TestCase as TestCase;
 
 abstract class AttendancesTest extends TestCase
 {
-    protected $knownId;
+    /** @var int */
+    private $knownId;
+
+    /** @var Attendances */
+    private $attendances;
+
+    /** @var Students */
+    private $students;
+
+    /** @var Bootcamps */
+    private $bootcamps;
 
     /**
      * @return Attendances
@@ -36,20 +46,20 @@ abstract class AttendancesTest extends TestCase
     /** @before */
     function generateFixtures()
     {
-        $attendances = $this->attendancesInstance();
-        $students = $this->studentsInstance();
-        $bootcamps = $this->bootcampsInstance();
+        $this->attendances = $this->attendancesInstance();
+        $this->students = $this->studentsInstance();
+        $this->bootcamps = $this->bootcampsInstance();
 
         $this->knownId = 4;
-        $bootcamps->add(
+        $this->bootcamps->add(
             $bootcamp = A::bootcamp()
                 ->notYetFinished(new DateTime('now'))
                 ->build()
         );
-        $students->add(
+        $this->students->add(
             $student = A::student()->enrolledOn($bootcamp)->build()
         );
-        $attendances->add(
+        $this->attendances->add(
             $attendance = A::attendance()
                 ->withId($this->knownId)
                 ->withStudentId($student->id())
@@ -60,18 +70,15 @@ abstract class AttendancesTest extends TestCase
     /** @test */
     function it_should_generate_next_identity_value()
     {
-        $attendances = $this->attendancesInstance();
-
-        $this->assertEquals(1, $attendances->nextAttendanceId()->value());
-        $this->assertEquals(2, $attendances->nextAttendanceId()->value());
-        $this->assertEquals(3, $attendances->nextAttendanceId()->value());
+        $this->assertEquals(1, $this->attendances->nextAttendanceId()->value());
+        $this->assertEquals(2, $this->attendances->nextAttendanceId()->value());
+        $this->assertEquals(3, $this->attendances->nextAttendanceId()->value());
     }
 
     /** @test */
     function it_finds_an_attendance_by_its_id()
     {
-        $attendances = $this->attendancesInstance();
-        $attendance = $attendances->with(
+        $attendance = $this->attendances->with(
             AttendanceId::fromLiteral($this->knownId)
         );
 

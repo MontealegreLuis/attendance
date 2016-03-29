@@ -19,19 +19,19 @@ class StudentsRepositoryTest extends StudentsTest
      */
     public function studentsInstance()
     {
-        $connection = $this->connection(
-            require __DIR__ . '/../../../config.tests.php'
-        );
+        $connection = $this->connection();
         $connection->query('DELETE FROM students');
 
         return new StudentsRepository($connection);
     }
 
+    /**
+     * @return BootcampsRepository
+     * @throws \Doctrine\DBAL\DBALException
+     */
     public function bootcampsInstance()
     {
-        $connection = $this->connection(
-            require __DIR__ . '/../../../config.tests.php'
-        );
+        $connection = $this->connection();
         $connection->query('DELETE FROM bootcamps');
 
         return new BootcampsRepository($connection);

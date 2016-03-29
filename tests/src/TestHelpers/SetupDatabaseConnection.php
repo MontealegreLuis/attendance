@@ -14,12 +14,12 @@ trait SetupDatabaseConnection
     private $connection;
 
     /**
-     * @param array $options
      * @return \Doctrine\DBAL\Connection
      */
-    protected function connection(array $options)
+    protected function connection()
     {
         if (!$this->connection) {
+            $options = require __DIR__ . '/../../../config.tests.php';
             $this->connection = DriverManager::getConnection($options['dbal']);
         }
 

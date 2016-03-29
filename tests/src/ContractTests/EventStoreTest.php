@@ -32,13 +32,13 @@ abstract class EventStoreTest extends TestCase
     }
 
     /** @test */
-    function it_should_retrieve_all_stored_events()
+    function it_retrieves_all_stored_events()
     {
         $this->assertCount(4, $this->store->allEvents());
     }
 
     /** @test */
-    function it_should_retrieve_2_out_of_4_events_if_second_event_id_is_provided()
+    function it_retrieves_2_out_of_4_events_if_second_event_id_is_provided()
     {
         $this->assertCount(
             2,
@@ -47,7 +47,7 @@ abstract class EventStoreTest extends TestCase
     }
 
     /** @test */
-    function it_should_retrieve_0_events_if_last_event_id_is_provided()
+    function it_retrieves_0_events_if_last_event_id_is_provided()
     {
         $this->assertCount(
             0,
