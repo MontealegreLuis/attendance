@@ -19,7 +19,9 @@ class StudentsRepositoryTest extends StudentsTest
      */
     public function studentsInstance()
     {
-        $connection = $this->connection(require __DIR__ . '/../../../config.php');
+        $connection = $this->connection(
+            require __DIR__ . '/../../../config.tests.php'
+        );
         $connection->query('DELETE FROM students');
 
         return new StudentsRepository($connection);
@@ -27,7 +29,9 @@ class StudentsRepositoryTest extends StudentsTest
 
     public function bootcampsInstance()
     {
-        $connection = $this->connection(require __DIR__ . '/../../../config.php');
+        $connection = $this->connection(
+            require __DIR__ . '/../../../config.tests.php'
+        );
         $connection->query('DELETE FROM bootcamps');
 
         return new BootcampsRepository($connection);

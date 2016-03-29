@@ -8,12 +8,31 @@ namespace Codeup\DataBuilders;
 
 class A
 {
+    /** @var StudentBuilder */
+    private static $student;
+
+    /** @var MacAddressBuilder */
+    private static $macAddress;
+
+    /** @var BootcampBuilder */
+    private static $bootcamp;
+
+    /** @var StudentHasCheckedInBuilder */
+    private static $studentHasCheckedIn;
+
+    /** @var AttendanceBuilder */
+    private static $attendance;
+
     /**
      * @return StudentBuilder
      */
     public static function student()
     {
-        return new StudentBuilder();
+        if (!self::$student) {
+            self::$student = new StudentBuilder();
+        }
+
+        return self::$student;
     }
 
     /**
@@ -21,7 +40,11 @@ class A
      */
     public static function macAddress()
     {
-        return new MacAddressBuilder();
+        if (!self::$macAddress) {
+            self::$macAddress = new MacAddressBuilder();
+        }
+
+        return self::$macAddress;
     }
 
     /**
@@ -29,7 +52,11 @@ class A
      */
     public static function bootcamp()
     {
-        return new BootcampBuilder();
+        if (!self::$bootcamp) {
+            self::$bootcamp = new BootcampBuilder();
+        }
+
+        return self::$bootcamp;
     }
 
     /**
@@ -37,6 +64,22 @@ class A
      */
     public static function studentHasCheckedIn()
     {
-        return new StudentHasCheckedInBuilder();
+        if (!self::$studentHasCheckedIn) {
+            self::$studentHasCheckedIn = new StudentHasCheckedInBuilder();
+        }
+
+        return self::$studentHasCheckedIn;
+    }
+
+    /**
+     * @return AttendanceBuilder
+     */
+    public static function attendance()
+    {
+        if (!self::$attendance) {
+            self::$attendance = new AttendanceBuilder();
+        }
+
+        return self::$attendance;
     }
 }

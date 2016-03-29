@@ -18,7 +18,7 @@ class EventStoreRepositoryTest extends EventStoreTest
     function storeInstance()
     {
         $store = new EventStoreRepository(
-            $connection =$this->connection(require __DIR__ . '/../../../config.php'),
+            $connection =$this->connection(require __DIR__ . '/../../../config.tests.php'),
             new JsonSerializer()
         );
         $connection->executeQuery('DELETE FROM events');

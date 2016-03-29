@@ -44,7 +44,9 @@ abstract class StudentsTest extends TestCase
         $this->now = (new DateTime('now'))->setTime(12, 0, 0);
         $this->students = $this->studentsInstance();
         $this->bootcamps = $this->bootcampsInstance();
-        $this->bootcamps->add($bootcamp = A::bootcamp()->build());
+        $this->bootcamps->add(
+            $bootcamp = A::bootcamp()->notYetFinished($this->now)->build()
+        );
         $this->knownAddresses = [
             $address1 = A::macAddress()->build(),
             $address2 = A::macAddress()->build(),
@@ -85,7 +87,7 @@ abstract class StudentsTest extends TestCase
     }
 
     /** @test */
-    function it_should_find_students_that_match_with_a_known_mac_address()
+    function it_should_find_students_with_a_known_mac_address()
     {
         $students = $this->students->attending(
             $this->now,
@@ -99,15 +101,18 @@ abstract class StudentsTest extends TestCase
     function it_should_not_find_students_if_bootcamp_is_over()
     {
         $this->students->add(A::student()
-            ->enrrolledInABootcampAlreadyFinished()
+            ->enrolledOn(
+                A::bootcamp()
+                    ->alreadyFinished($this->now)
+                    ->build()
+            )
             ->withMacAddress($this->knownAddresses[0])
             ->build()
         );
         $students = $this->students->attending(
-            $today = new DateTime(),
+            $this->now,
             array_merge($this->unknownAddresses, $this->knownAddresses)
         );
-
         $this->assertCount(3, $students);
     }
 }

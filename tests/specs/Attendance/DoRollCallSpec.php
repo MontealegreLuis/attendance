@@ -40,11 +40,21 @@ class DoRollCallSpec extends ObjectBehavior
             $address2 = A::macAddress()->build(),
             $address3 = A::macAddress()->build(),
         ];
+        $bootcamp = A::bootcamp()->notYetFinished($this->now)->build();
         $checker->whoIsConnected()->willReturn($addresses);
         $students->attending($this->now, $addresses)->willReturn([
-            $student1 = A::student()->withMacAddress($address1)->build(),
-            $student2 = A::student()->withMacAddress($address2)->build(),
-            $student3 = A::student()->withMacAddress($address3)->build(),
+            $student1 = A::student()
+                ->enrolledOn($bootcamp)
+                ->withMacAddress($address1)
+                ->build(),
+            $student2 = A::student()
+                ->enrolledOn($bootcamp)
+                ->withMacAddress($address2)
+                ->build(),
+            $student3 = A::student()
+                ->enrolledOn($bootcamp)
+                ->withMacAddress($address3)
+                ->build(),
         ]);
         $this->beConstructedWith($checker, $students, $attendances);
         $this->setPublisher(new EventPublisher());
@@ -78,14 +88,21 @@ class DoRollCallSpec extends ObjectBehavior
             $address2 = A::macAddress()->build(),
             $address3 = A::macAddress()->build(),
         ];
+        $bootcamp = A::bootcamp()->notYetFinished($this->now)->build();
         $checker->whoIsConnected()->willReturn($addresses);
         $students->attending($this->now, $addresses)->willReturn([
-            $student1 = A::student()->withMacAddress($address1)->build(),
+            $student1 = A::student()
+                ->enrolledOn($bootcamp)
+                ->withMacAddress($address1)->build(),
             $student2 = A::student()
+                ->enrolledOn($bootcamp)
                 ->whoCheckedInAt($this->now->sub(new DateInterval('PT1H')))
                 ->withMacAddress($address2)
                 ->build(),
-            $student3 = A::student()->withMacAddress($address3)->build(),
+            $student3 = A::student()
+                ->enrolledOn($bootcamp)
+                ->withMacAddress($address3)
+                ->build(),
         ]);
         $this->beConstructedWith($checker, $students, $attendances);
         $this->setPublisher(new EventPublisher());
@@ -118,17 +135,21 @@ class DoRollCallSpec extends ObjectBehavior
             $address2 = A::macAddress()->build(),
             $address3 = A::macAddress()->build(),
         ];
+        $bootcamp = A::bootcamp()->notYetFinished($this->now)->build();
         $checker->whoIsConnected()->willReturn($addresses);
         $students->attending($this->now, $addresses)->willReturn([
             $student1 = A::student()
+                ->enrolledOn($bootcamp)
                 ->whoCheckedInAt($this->now->sub(new DateInterval('PT2H')))
                 ->withMacAddress($address1)
                 ->build(),
             $student2 = A::student()
+                ->enrolledOn($bootcamp)
                 ->whoCheckedInAt($this->now->sub(new DateInterval('PT1H')))
                 ->withMacAddress($address2)
                 ->build(),
             $student3 = A::student()
+                ->enrolledOn($bootcamp)
                 ->whoCheckedInAt($this->now->sub(new DateInterval('PT3H')))
                 ->withMacAddress($address3)->build(),
         ]);

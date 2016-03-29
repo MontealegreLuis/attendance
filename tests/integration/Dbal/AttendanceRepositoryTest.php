@@ -6,30 +6,79 @@
  */
 namespace Codeup\Dbal;
 
+use Codeup\Bootcamps\Bootcamps;
+use Codeup\Bootcamps\Students;
+use Codeup\ContractTests\AttendancesTest;
 use Codeup\TestHelpers\SetupDatabaseConnection;
-use PHPUnit_Framework_TestCase as TestCase;
 
-class AttendanceRepositoryTest extends TestCase
+class AttendanceRepositoryTest extends AttendancesTest
 {
     use SetupDatabaseConnection;
 
     /** @var AttendancesRepository */
     private $attendances;
 
-    /** @before */
-    function setupRepository()
+    /** @var StudentsRepository */
+    private $students;
+
+    /** @var BootcampsRepository */
+    private $bootcamps;
+
+    /**
+     * @return AttendancesRepository
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public function attendancesInstance()
     {
+        if ($this->attendances) {
+            return $this->attendances;
+        }
+
         $this->attendances = new AttendancesRepository(
-            $connection =$this->connection(require __DIR__ . '/../../../config.php')
+            $connection = $this->connection(
+                require __DIR__ . '/../../../config.tests.php'
+            )
         );
+
+        $connection->query('DELETE FROM attendances');
         $connection->executeQuery('UPDATE attendances_seq SET next_val = 0');
+
+        return $this->attendances;
     }
 
-    /** @test */
-    function it_should_generate_next_identity_value()
+    public function studentsInstance()
     {
-        $this->assertEquals(1, $this->attendances->nextAttendanceId()->value());
-        $this->assertEquals(2, $this->attendances->nextAttendanceId()->value());
-        $this->assertEquals(3, $this->attendances->nextAttendanceId()->value());
+        if ($this->students) {
+            return $this->students;
+        }
+
+        $this->students = new StudentsRepository(
+            $connection = $this->connection(
+                require __DIR__ . '/../../../config.tests.php'
+            )
+        );
+
+        $connection->query('DELETE FROM students');
+        //$connection->executeQuery('UPDATE students_seq SET next_val = 0');
+
+        return $this->students;
+    }
+
+    public function bootcampsInstance()
+    {
+        if ($this->bootcamps) {
+            return $this->bootcamps;
+        }
+
+        $this->bootcamps = new BootcampsRepository(
+            $connection = $this->connection(
+                require __DIR__ . '/../../../config.tests.php'
+            )
+        );
+
+        $connection->query('DELETE FROM bootcamps');
+        //$connection->executeQuery('UPDATE bootcamps_seq SET next_val = 0');
+
+        return $this->bootcamps;
     }
 }

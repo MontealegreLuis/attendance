@@ -7,19 +7,16 @@
 namespace Codeup\DataBuilders;
 
 use Codeup\Bootcamps\MacAddress;
-use Faker\Factory;
 
 class MacAddressBuilder
 {
-    /** @var \Faker\Generator */
-    private $factory;
+    use ProvidesFakeDataGenerator;
 
     /** @var string */
     private $value;
 
     public function __construct()
     {
-        $this->factory = Factory::create();
         $this->reset();
     }
 
@@ -47,6 +44,6 @@ class MacAddressBuilder
 
     private function reset()
     {
-        $this->value = $this->factory->macAddress;
+        $this->value = $this->generator()->macAddress;
     }
 }

@@ -11,13 +11,12 @@ use Codeup\Bootcamps\BootcampId;
 use Codeup\Bootcamps\Duration;
 use Codeup\Bootcamps\Schedule;
 use DateInterval;
+use DateTime;
 use DateTimeImmutable;
-use Faker\Factory;
 
 class BootcampBuilder
 {
-    /** @var \Faker\Generator */
-    private $factory;
+    use ProvidesFakeDataGenerator;
 
     /** @var int */
     private static $nextId = 0;
@@ -32,11 +31,10 @@ class BootcampBuilder
     private $schedule;
 
     /**
-     * BootcampBuilder constructor.
+     * Set initial random values
      */
     public function __construct()
     {
-        $this->factory = Factory::create();
         $this->reset();
     }
 
@@ -45,23 +43,39 @@ class BootcampBuilder
      */
     public function build()
     {
-        return Bootcamp::start(
+        $bootcamp = Bootcamp::start(
             BootcampId::fromLiteral(static::$nextId),
             $this->duration,
             $this->cohortName,
             $this->schedule
         );
+
+        $this->reset();
+
+        return $bootcamp;
+    }
+
+    public function notYetFinished(DateTime $byNow)
+    {
+        $now = clone $byNow;
+        $tomorrow = clone $now->modify('tomorrow');
+        $fourMonthsAgo = clone $now->modify('4 months ago');
+
+        $this->duration = Duration::between($fourMonthsAgo, $tomorrow);
+
+        return $this;
     }
 
     /**
+     * @param DateTime $byNow
      * @return BootcampBuilder
      */
-    public function alreadyFinished()
+    public function alreadyFinished(DateTime $byNow)
     {
-        $this->duration = Duration::between(
-            $this->factory->dateTimeBetween('-7 day', '-3 day'),
-            $this->factory->dateTimeBetween('-2 day', '-1 day')
-        );
+        $now = clone $byNow;
+        $yesterday = clone $now->modify('1 day ago');
+        $fourMonthsAgo = clone $now->modify('4 months ago');
+        $this->duration = Duration::between($fourMonthsAgo, $yesterday);
 
         return $this;
     }
@@ -69,13 +83,9 @@ class BootcampBuilder
     private function reset()
     {
         static::$nextId++;
-        $this->duration = Duration::between(
-            $this->factory->dateTimeBetween('-7 day', '-1 day'),
-            $this->factory->dateTimeBetween('1 day', '7 day')
-        );
-        $this->cohortName = $this->factory->word;
+        $this->cohortName = $this->generator()->word;
         $aDate = (new DateTimeImmutable())->setTime(12, 0, 0);
-        $hours = $this->factory->numberBetween(1,10);
+        $hours = $this->generator()->numberBetween(1,10);
         $this->schedule = Schedule::withClassTimeBetween(
             $aDate->sub(new DateInterval("PT{$hours}H")),
             $aDate
