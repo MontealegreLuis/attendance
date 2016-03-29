@@ -6,7 +6,7 @@
  */
 namespace Codeup\JmsSerializer;
 
-use Codeup\Bootcamps\Identifier;
+use Codeup\Bootcamps\AttendanceId;
 use Codeup\DomainEvents\Event;
 use Codeup\DomainEvents\EventSerializer;
 use DateTime;
@@ -26,20 +26,19 @@ class JsonSerializer implements EventSerializer
         $this->serializer = SerializerBuilder::create()
             ->configureHandlers(function (HandlerRegistry $registry) {
                 // We only need the value of the ID
+                $idSerializer = new IdentifierHandler();
                 $registry->registerHandler(
                     'serialization',
-                    Identifier::class,
+                    AttendanceId::class,
                     'json',
-                    function ($visitor, Identifier $id, array $type) {
-                        return $id->value();
-                    }
+                    $idSerializer
                 );
                 // Use specific format for date/time objects
                 $registry->registerHandler(
                     'serialization',
                     DateTime::class,
                     'json',
-                    function ($visitor, DateTime $dateTime, array $type) {
+                    function ($_, DateTime $dateTime, array $_) {
                         return $dateTime->format('Y-m-d H:i:s');
                     }
                 );

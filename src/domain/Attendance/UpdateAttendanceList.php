@@ -35,9 +35,9 @@ class UpdateAttendanceList implements MessageConsumer
      */
     public function consume(StoredEvent $event)
     {
-        $eventInformation = json_decode($event->body(), true);
+        $eventInformation = json_decode($event->body());
         $attendance = $this->attendances->detailsOf(
-            AttendanceId::fromLiteral($eventInformation['attendance_id']['value'])
+            AttendanceId::fromLiteral($eventInformation->attendance_id)
         );
         $this
             ->stream

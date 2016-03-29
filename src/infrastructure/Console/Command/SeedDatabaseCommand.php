@@ -43,7 +43,7 @@ class SeedDatabaseCommand extends Command
     {
         $loader = new Loader();
         $objects = $loader->load(
-            __DIR__ . '/../../../var/fixtures/attendance.yml'
+            __DIR__ . '/../../../../var/fixtures/attendance.yml'
         );
         $this->persister->persist($objects);
         $output->writeln(
