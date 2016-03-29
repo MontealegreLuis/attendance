@@ -6,6 +6,7 @@
  */
 namespace Codeup\Pimple;
 
+use Codeup\Slim\HomeController;
 use Pimple\Container;
 use Slim\Views\Twig;
 use Slim\Views\TwigExtension;
@@ -26,6 +27,12 @@ class WebServiceProvider extends AttendanceServiceProvider
             ));
 
             return $view;
+        };
+        $container['HomeController'] = function () use ($container) {
+            return new HomeController(
+                $container['attendance.bootcamps'],
+                $container['view']
+            );
         };
     }
 }
