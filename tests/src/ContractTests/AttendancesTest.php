@@ -84,4 +84,14 @@ abstract class AttendancesTest extends TestCase
 
         $this->assertEquals($this->knownId, $attendance->id()->value());
     }
+
+    /** @test */
+    function it_does_not_find_attendance_with_unknown_id()
+    {
+        $attendance = $this->attendances->with(
+            AttendanceId::fromLiteral($unknownId = 1234)
+        );
+
+        $this->assertNull($attendance);
+    }
 }

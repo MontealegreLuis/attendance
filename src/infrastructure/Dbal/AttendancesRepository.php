@@ -65,8 +65,11 @@ class AttendancesRepository implements Attendances
             ->setMaxResults(1)
             ->setParameter('attendanceId', $attendanceId->value())
         ;
+        $attendanceInformation = $builder->execute()->fetch();
 
-        return Attendance::from($builder->execute()->fetch());
+        if ($attendanceInformation) {
+            return Attendance::from($attendanceInformation);
+        }
     }
 
     /**

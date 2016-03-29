@@ -6,8 +6,6 @@
  */
 namespace Codeup\Dbal;
 
-use Codeup\Bootcamps\Bootcamps;
-use Codeup\Bootcamps\Students;
 use Codeup\ContractTests\AttendancesTest;
 use Codeup\TestHelpers\SetupDatabaseConnection;
 
@@ -28,6 +26,10 @@ class AttendanceRepositoryTest extends AttendancesTest
         return new AttendancesRepository($connection);
     }
 
+    /**
+     * @return StudentsRepository
+     * @throws \Doctrine\DBAL\DBALException
+     */
     public function studentsInstance()
     {
         $connection = $this->connection();
@@ -37,6 +39,10 @@ class AttendanceRepositoryTest extends AttendancesTest
         return new StudentsRepository($connection);
     }
 
+    /**
+     * @return BootcampsRepository
+     * @throws \Doctrine\DBAL\DBALException
+     */
     public function bootcampsInstance()
     {
         $connection = $this->connection();
