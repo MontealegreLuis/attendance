@@ -18,10 +18,7 @@ trait RecordsEvents
      */
     public function recordThat(Event $event)
     {
-        if (!$this->events) {
-            $this->events = new SplObjectStorage();
-        }
-        $this->events->attach($event);
+        $this->events()->attach($event);
     }
 
     /**
@@ -29,6 +26,10 @@ trait RecordsEvents
      */
     public function events()
     {
+        if (!$this->events) {
+            $this->events = new SplObjectStorage();
+        }
+
         return $this->events;
     }
 }
