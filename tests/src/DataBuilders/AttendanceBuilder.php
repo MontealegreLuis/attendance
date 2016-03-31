@@ -9,6 +9,7 @@ namespace Codeup\DataBuilders;
 use Codeup\Bootcamps\Attendance;
 use Codeup\Bootcamps\AttendanceId;
 use Codeup\Bootcamps\StudentId;
+use DateTime;
 
 class AttendanceBuilder
 {
@@ -17,7 +18,7 @@ class AttendanceBuilder
     /** @var int */
     private $id;
 
-    /** @var \DateTime */
+    /** @var DateTime */
     private $date;
 
     /** @var StudentId */
@@ -62,6 +63,17 @@ class AttendanceBuilder
     public function withStudentId(StudentId $studentId)
     {
         $this->studentId = $studentId;
+
+        return $this;
+    }
+
+    /**
+     * @param DateTime $time
+     * @return AttendanceBuilder
+     */
+    public function recordedAt(DateTime $time)
+    {
+        $this->date = $time;
 
         return $this;
     }

@@ -10,7 +10,7 @@ use Codeup\Dbal\AttendancesRepository;
 use Codeup\Dbal\BootcampsRepository;
 use Codeup\Dbal\EventStoreRepository;
 use Codeup\Dbal\StudentsRepository;
-use Codeup\JmsSerializer\JsonSerializer;
+use Codeup\JmsSerializer\JsonEventSerializer;
 use Doctrine\DBAL\DriverManager;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
@@ -39,7 +39,7 @@ class AttendanceServiceProvider implements ServiceProviderInterface
         $container['events.store'] = function () use ($container) {
             return new EventStoreRepository(
                 $container['db.connection'],
-                new JsonSerializer()
+                new JsonEventSerializer()
             );
         };
         $container['attendance.attendances'] = function () use ($container) {

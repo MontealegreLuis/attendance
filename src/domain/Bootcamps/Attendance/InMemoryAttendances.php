@@ -36,4 +36,19 @@ class InMemoryAttendances implements Attendances
     {
         return AttendanceId::fromLiteral($this->attendances->count() + 1);
     }
+
+    public function with(AttendanceId $attendanceId)
+    {
+        /** @var Attendance $attendance */
+        foreach ($this->attendances as $attendance) {
+            if ($attendance->id()->equals($attendanceId)) {
+                return $attendance;
+            }
+        }
+    }
+
+    public function detailsOf(AttendanceId $attendanceId)
+    {
+        // TODO: Implement detailsOf() method.
+    }
 }

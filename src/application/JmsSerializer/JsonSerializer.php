@@ -7,13 +7,12 @@
 namespace Codeup\JmsSerializer;
 
 use Codeup\Bootcamps\AttendanceId;
-use Codeup\DomainEvents\Event;
-use Codeup\DomainEvents\EventSerializer;
+use Codeup\Bootcamps\StudentId;
 use DateTime;
 use JMS\Serializer\Handler\HandlerRegistry;
 use JMS\Serializer\SerializerBuilder;
 
-class JsonSerializer implements EventSerializer
+class JsonSerializer
 {
     /** @var \JMS\Serializer\Serializer */
     private $serializer;
@@ -33,6 +32,12 @@ class JsonSerializer implements EventSerializer
                     'json',
                     $idSerializer
                 );
+                $registry->registerHandler(
+                    'serialization',
+                    StudentId::class,
+                    'json',
+                    $idSerializer
+                );
                 // Use specific format for date/time objects
                 $registry->registerHandler(
                     'serialization',
@@ -47,11 +52,20 @@ class JsonSerializer implements EventSerializer
     }
 
     /**
-     * @param Event $anEvent
+     * @param mixed $object
      * @return string
      */
-    public function serialize(Event $anEvent)
+    public function serialize($object)
     {
-        return $this->serializer->serialize($anEvent, 'json');
+        return $this->serializer->serialize($object, 'json');
+    }
+
+    /**
+     * @param mixed $object
+     * @return array
+     */
+    public function deserialize($object)
+    {
+        return $this->serializer->deserialize($object, 'array', 'json');
     }
 }

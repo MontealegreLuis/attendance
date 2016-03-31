@@ -9,42 +9,45 @@ namespace Codeup\Attendance;
 use Codeup\Bootcamps\AttendanceId;
 use Codeup\Bootcamps\Attendances;
 use Codeup\DomainEvents\StoredEvent;
+use Codeup\ServerSentEvents\EventStream;
+use Codeup\JmsSerializer\JsonSerializer;
 use Codeup\Messaging\MessageConsumer;
-use Igorw\EventSource\Stream;
 
 class UpdateAttendanceList implements MessageConsumer
 {
-    /** @var Stream */
+    /** @var EventStream */
     private $stream;
 
     /** @var Attendances */
     private $attendances;
 
+    /** @var JsonSerializer */
+    private $serializer;
+
     /**
-     * @param Stream $stream
+     * @param EventStream $stream
      * @param Attendances $attendances
+     * @param JsonSerializer $serializer
      */
-    public function __construct(Stream $stream, Attendances $attendances)
-    {
+    public function __construct(
+        EventStream $stream,
+        Attendances $attendances,
+        JsonSerializer $serializer
+    ) {
         $this->stream = $stream;
         $this->attendances = $attendances;
+        $this->serializer = $serializer;
     }
 
     /**
-     * @param StoredEvent $event
+     * @param StoredEvent $aStudentHasCheckedIn
      */
-    public function consume(StoredEvent $event)
+    public function consume(StoredEvent $aStudentHasCheckedIn)
     {
-        $eventInformation = json_decode($event->body());
-        $attendance = $this->attendances->detailsOf(
-            AttendanceId::fromLiteral($eventInformation->attendance_id)
+        $event = $this->serializer->deserialize($aStudentHasCheckedIn->body());
+        $attendance = $this->attendances->with(
+            AttendanceId::fromLiteral($event['attendance_id'])
         );
-        $this
-            ->stream
-               ->event()
-                    ->setData(json_encode($attendance))
-                ->end()
-            ->flush()
-        ;
+        $this->stream->push($this->serializer->serialize($attendance));
     }
 }

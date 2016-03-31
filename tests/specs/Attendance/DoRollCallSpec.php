@@ -10,7 +10,6 @@ use Codeup\Bootcamps\Attendance;
 use Codeup\Bootcamps\AttendanceChecker;
 use Codeup\Bootcamps\AttendanceId;
 use Codeup\Bootcamps\Attendances;
-use Codeup\Bootcamps\Student;
 use Codeup\Bootcamps\Students;
 use Codeup\DataBuilders\A;
 use Codeup\DomainEvents\EventPublisher;
@@ -29,7 +28,7 @@ class DoRollCallSpec extends ObjectBehavior
         $this->now = (new DateTime('now'))->setTime(12, 0, 0);
     }
 
-    function it_should_update_all_students_who_have_arrived_now(
+    function it_updates_all_students_who_have_arrived_now(
         AttendanceChecker $checker,
         Students $students,
         Attendances $attendances
@@ -77,7 +76,7 @@ class DoRollCallSpec extends ObjectBehavior
         $this->rollCall($this->now);
     }
 
-    function it_should_update_only_the_students_who_have_not_already_checked_in(
+    function it_updates_only_the_students_who_have_not_already_checked_in(
         AttendanceChecker $checker,
         Students $students,
         Attendances $attendances
@@ -124,7 +123,7 @@ class DoRollCallSpec extends ObjectBehavior
         $this->rollCall($this->now);
     }
 
-    function it_should_not_update_students_who_have_already_checked_in(
+    function it_does_not_update_students_who_have_already_checked_in(
         AttendanceChecker $checker,
         Students $students,
         Attendances $attendances
