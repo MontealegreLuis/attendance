@@ -35,6 +35,28 @@ body {
     font-size: 0.8em !important;
 }
 
-body {
-    background-color: #aaa;
+.carousel-indicators li {
+    border: 1px solid #341D4F;
+}
+
+.carousel-indicators .active {
+    background-color: #341D4F;
+}
+
+.carousel-caption {
+    color: #779C48;
+}
+
+.left.carousel-control,
+.right.carousel-control {
+    color: #341D4F;
+    background-image: none;
+}
+
+.stats li {
+    list-style-type: none;
+}
+
+.carousel-caption {
+    font-size: 2.5em;
 }

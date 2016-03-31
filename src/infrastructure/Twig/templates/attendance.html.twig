@@ -13,24 +13,32 @@
                 {% else %}
                 <div class="item">
                 {% endif %}
-                    <div class="fill">
-                        <div class="container" style="margin-top: 2em">
-                            <h1>{{ todayAttendance[loop.index0].cohort_name }}</h1>
-                            <dl>
-                                <dt>Today's attendance</dt>
-                                <dd>
+                    <div class="fill"></div>
+                    <div class="carousel-caption">
+                        <h2>{{ todayAttendance[loop.index0].cohort_name }}</h2>
+                        <ul class="stats">
+                            <li>
+                                <i class="fa fa-calendar-plus-o fa-2"></i>
+                                Today's attendance
+                                <strong>
                                     {{ todayAttendance[loop.index0].attendance_percentage|number_format(2) }}%
-                                </dd>
-                                <dt>On-time today</dt>
-                                <dd>
+                                </strong>
+                            </li>
+                            <li>
+                                <i class="fa fa-calendar-check-o fa-2"></i>
+                                On-time today
+                                <strong>
                                     {{ attendanceOnTime[loop.index0].on_time_attendance|number_format(2) }}%
-                                </dd>
-                                <dt># of days with 100% attendance</dt>
-                                <dd>
+                                </strong>
+                            </li>
+                            <li>
+                                <i class="fa fa-star fa-2"></i>
+                                Days with 100% attendance
+                                <strong>
                                     {{ daysWithPerfectAttendance[loop.index0].days_with_perfect_attendance|number_format(0) }}
-                                </dd>
-                            </dl>
-                        </div>
+                                </strong>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             {% endfor %}
