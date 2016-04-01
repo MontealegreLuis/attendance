@@ -8,11 +8,12 @@ namespace Codeup\JmsSerializer;
 
 use Codeup\Bootcamps\AttendanceId;
 use Codeup\Bootcamps\StudentId;
+use Codeup\Serializer\Serializer;
 use DateTime;
 use JMS\Serializer\Handler\HandlerRegistry;
 use JMS\Serializer\SerializerBuilder;
 
-class JsonSerializer
+class JsonSerializer implements Serializer
 {
     /** @var \JMS\Serializer\Serializer */
     private $serializer;
