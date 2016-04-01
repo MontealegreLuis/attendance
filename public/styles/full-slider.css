@@ -60,3 +60,7 @@ body {
 .carousel-caption {
     font-size: 2.5em;
 }
+
+.carousel-caption h2 {
+    font-size: 3em;
+}
