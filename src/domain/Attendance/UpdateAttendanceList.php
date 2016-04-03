@@ -9,8 +9,8 @@ namespace Codeup\Attendance;
 use Codeup\Bootcamps\AttendanceId;
 use Codeup\Bootcamps\Attendances;
 use Codeup\DomainEvents\StoredEvent;
+use Codeup\Serializer\Serializer;
 use Codeup\ServerSentEvents\EventStream;
-use Codeup\JmsSerializer\JsonSerializer;
 use Codeup\Messaging\MessageConsumer;
 
 class UpdateAttendanceList implements MessageConsumer
@@ -21,18 +21,18 @@ class UpdateAttendanceList implements MessageConsumer
     /** @var Attendances */
     private $attendances;
 
-    /** @var JsonSerializer */
+    /** @var Serializer */
     private $serializer;
 
     /**
      * @param EventStream $stream
      * @param Attendances $attendances
-     * @param JsonSerializer $serializer
+     * @param Serializer $serializer
      */
     public function __construct(
         EventStream $stream,
         Attendances $attendances,
-        JsonSerializer $serializer
+        Serializer $serializer
     ) {
         $this->stream = $stream;
         $this->attendances = $attendances;
@@ -45,7 +45,7 @@ class UpdateAttendanceList implements MessageConsumer
     public function consume(StoredEvent $aStudentHasCheckedIn)
     {
         $event = $this->serializer->deserialize($aStudentHasCheckedIn->body());
-        $attendance = $this->attendances->with(
+        $attendance = $this->attendances->detailsOf(
             AttendanceId::fromLiteral($event['attendance_id'])
         );
         $this->stream->push($this->serializer->serialize($attendance));

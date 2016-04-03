@@ -6,10 +6,10 @@
  */
 namespace specs\Codeup\Attendance;
 
+use Codeup\Bootcamps\Attendance;
+use Codeup\Bootcamps\AttendanceId;
 use Codeup\Bootcamps\Attendances;
 use Codeup\Bootcamps\StudentHasCheckedIn;
-use Codeup\Bootcamps\StudentId;
-use Codeup\DataBuilders\A as An;
 use Codeup\DomainEvents\StoredEvent;
 use Codeup\DomainEvents\StoredEventId;
 use Codeup\JmsSerializer\JsonSerializer;
@@ -23,15 +23,25 @@ class UpdateAttendanceListSpec extends ObjectBehavior
         Attendances $attendances,
         EventStream $stream
     ) {
-        $attendance = An::attendance()
-            ->withId(1)
-            ->withStudentId(StudentId::fromLiteral(2))
-            ->recordedAt(DateTime::createFromFormat(
-                'Y-m-d H:i:s', '2016-03-30 08:30:03'
-            ))
-            ->build()
+        $attendance = [
+            'bootcamp_id' => 1,
+            'cohort_name' => 'Hampton',
+            'start_date' => '2016-01-30 00:00:00',
+            'stop_date' => '2016-04-30 00:00:00',
+            'start_time' => '0000-00-00 09:00:00',
+            'stop_time' => '0000-00-00 16:00:00',
+            'student_id' => 2,
+            'name' => 'Luis Montealegre',
+            'mac_address' => '00-80-C8-E3-4C-BD',
+            'attendance_id' => 3,
+            'date' => '2016-04-03 08:35:09',
+            'type' => Attendance::CHECK_IN,
+        ];
+
+        $attendances
+            ->detailsOf(AttendanceId::fromLiteral($attendance['attendance_id']))
+            ->willReturn($attendance)
         ;
-        $attendances->with($attendance->id())->willReturn($attendance);
 
         $this->beConstructedWith(
             $stream,
@@ -41,13 +51,13 @@ class UpdateAttendanceListSpec extends ObjectBehavior
 
         $this->consume(new StoredEvent(
             StoredEventId::fromLiteral(1),
-            json_encode(['attendance_id' => 1]),
+            json_encode(['attendance_id' => 3]),
             StudentHasCheckedIn::class,
             new DateTime('now')
         ));
 
         $stream
-            ->push('{"attendance_id":1,"date":"2016-03-30 08:30:03","type":0,"student_id":2}')
+            ->push('{"bootcamp_id":1,"cohort_name":"Hampton","start_date":"2016-01-30 00:00:00","stop_date":"2016-04-30 00:00:00","start_time":"0000-00-00 09:00:00","stop_time":"0000-00-00 16:00:00","student_id":2,"name":"Luis Montealegre","mac_address":"00-80-C8-E3-4C-BD","attendance_id":3,"date":"2016-04-03 08:35:09","type":0}')
             ->shouldHaveBeenCalled()
         ;
     }
