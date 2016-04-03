@@ -15,11 +15,11 @@ class JsonEventSerializer implements EventSerializer
     private $serializer;
 
     /**
-     * JsonSerializer constructor.
+     * @param JsonSerializer $serializer
      */
-    public function __construct()
+    public function __construct(JsonSerializer $serializer)
     {
-        $this->serializer = new JsonSerializer();
+        $this->serializer = $serializer;
     }
 
     /**

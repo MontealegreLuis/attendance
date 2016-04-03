@@ -9,6 +9,7 @@ namespace Codeup\Dbal;
 use Codeup\ContractTests\EventStore;
 use Codeup\ContractTests\EventStoreTest;
 use Codeup\JmsSerializer\JsonEventSerializer;
+use Codeup\JmsSerializer\JsonSerializer;
 use Codeup\TestHelpers\SetupDatabaseConnection;
 
 class EventStoreRepositoryTest extends EventStoreTest
@@ -19,7 +20,7 @@ class EventStoreRepositoryTest extends EventStoreTest
     {
         $store = new EventStoreRepository(
             $connection =$this->connection(),
-            new JsonEventSerializer()
+            new JsonEventSerializer(new JsonSerializer())
         );
         $connection->executeQuery('DELETE FROM events');
 
