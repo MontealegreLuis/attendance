@@ -25,6 +25,7 @@ class SetupApplication extends Application
         parent::__construct('Setup for Codeup attendance application', '1.0.0');
         $this->setHelperSet($helperSet);
         $this->addCommands([
+            $container['command.attendance_generator'],
             $container['command.db_seeder'],
             new CreateDatabaseCommand(),
             new DropDatabaseCommand(),
