@@ -66,11 +66,16 @@ class BootcampsRepository implements Bootcamps
         $builder
             ->addSelect('b.bootcamp_id')
             ->addSelect('b.cohort_name')
-            ->addSelect('COUNT(a.attendance_id) * 100.0 /
-                (
+            ->addSelect('(
                 SELECT COUNT(*)
                 FROM students
                 WHERE students.bootcamp_id = b.bootcamp_id
+            ) AS students_count')
+            ->addSelect('COUNT(a.attendance_id) * 100.0 /
+                (
+                    SELECT COUNT(*)
+                    FROM students
+                    WHERE students.bootcamp_id = b.bootcamp_id
                 ) AS attendance_percentage
             ')
             ->from('bootcamps', 'b')

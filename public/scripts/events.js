@@ -3,16 +3,25 @@
  */
 (function($) {
     var source = new EventSource('attendance.php');
-    var rowTemplate = '<tr><td>{{class}}</td><td>{{student}}</td><td>{{time}}</td></tr>';
+
     source.addEventListener('message', function(event) {
         var attendance = JSON.parse(event.data);
-        console.log(attendance);
-        /*var row = rowTemplate
-            .replace('{{class}}', attendance.cohort_name)
-            .replace('{{student}}', attendance.name)
-            .replace('{{time}}', attendance.date.split(' ')[1])
-        ;
-        $('.js-students').append(row);*/
+        var $studentsCount = $('#students-count-' + attendance.bootcamp_id);
+        var $todayPercentage = $('#today-percentage-' + attendance.bootcamp_id);
+        var $onTimeToday = $('#on-time-today-' + attendance.bootcamp_id);
+        var $perfectAttendance = $('#perfect-attendance-' + attendance.bootcamp_id);
+        var studentsCount = $studentsCount.data('count');
+        var todayPercentage = $todayPercentage.data('percentage');
+        var onTimeToday = $onTimeToday.data('percentage');
+        var perfectAttendance = $perfectAttendance.data('count');
+        var newTodayPercentage = (Math.round(studentsCount * todayPercentage / 100) + 1) * 100 / studentsCount;
+        var newOnTimeToday = (Math.round(studentsCount * onTimeToday / 100) + 1) * 100 / studentsCount;
+
+        $todayPercentage.children('strong').html(newTodayPercentage.toFixed(2) + '%');
+        $onTimeToday.children('strong').html(newOnTimeToday.toFixed(2) + '%');
+        if (newTodayPercentage >= 100) {
+            $perfectAttendance.children('strong').html(perfectAttendance + 1);
+        }
     });
     $('#myCarousel').carousel({
         interval: 5000

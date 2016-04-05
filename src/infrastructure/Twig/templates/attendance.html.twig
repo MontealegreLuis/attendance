@@ -15,23 +15,41 @@
                 {% endif %}
                     <div class="fill"></div>
                     <div class="carousel-caption">
-                        <h2>{{ todayAttendance[loop.index0].cohort_name }}</h2>
+                        <h2>
+                            {{ todayAttendance[loop.index0].cohort_name }}
+                        </h2>
+                        <h3
+                            id="students-count-{{ todayAttendance[loop.index0].bootcamp_id }}"
+                            data-count="{{ todayAttendance[loop.index0].students_count }}"
+                        >
+                            <i class="fa fa-street-view fa-2"></i>
+                            {{ todayAttendance[loop.index0].students_count }} students
+                        </h3>
                         <ul class="stats">
-                            <li>
+                            <li
+                                id="today-percentage-{{ todayAttendance[loop.index0].bootcamp_id }}"
+                                data-percentage="{{ todayAttendance[loop.index0].attendance_percentage|number_format(2) }}"
+                            >
                                 <i class="fa fa-calendar-plus-o fa-2"></i>
                                 Today's attendance
                                 <strong>
                                     {{ todayAttendance[loop.index0].attendance_percentage|number_format(2) }}%
                                 </strong>
                             </li>
-                            <li>
+                            <li
+                                id="on-time-today-{{ todayAttendance[loop.index0].bootcamp_id }}"
+                                data-percentage="{{ attendanceOnTime[loop.index0].on_time_attendance|number_format(2) }}"
+                            >
                                 <i class="fa fa-calendar-check-o fa-2"></i>
                                 On-time today
                                 <strong>
                                     {{ attendanceOnTime[loop.index0].on_time_attendance|number_format(2) }}%
                                 </strong>
                             </li>
-                            <li>
+                            <li
+                                id="perfect-attendance-{{ todayAttendance[loop.index0].bootcamp_id }}"
+                                data-count="{{ daysWithPerfectAttendance[loop.index0].days_with_perfect_attendance|number_format(0) }}"
+                            >
                                 <i class="fa fa-star fa-2"></i>
                                 Days with 100% attendance
                                 <strong>
