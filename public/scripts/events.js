@@ -3,10 +3,16 @@
  */
 (function($) {
     var source = new EventSource('attendance.php');
+    var statistics = [];
 
     source.addEventListener('message', function(event) {
         var attendance = JSON.parse(event.data);
-        var $studentsCount = $('#students-count-' + attendance.bootcamp_id);
+
+        if (statistics[attendance.bootcamp_id] == null) {
+            statistics[attendance.bootcamp_id] = 0;
+        }
+        statistics[attendance.bootcamp_id]++;
+        /*var $studentsCount = $('#students-count-' + attendance.bootcamp_id);
         var $todayPercentage = $('#today-percentage-' + attendance.bootcamp_id);
         var $onTimeToday = $('#on-time-today-' + attendance.bootcamp_id);
         var $perfectAttendance = $('#perfect-attendance-' + attendance.bootcamp_id);
@@ -21,7 +27,7 @@
         $onTimeToday.children('strong').html(newOnTimeToday.toFixed(2) + '%');
         if (newTodayPercentage >= 100) {
             $perfectAttendance.children('strong').html(perfectAttendance + 1);
-        }
+        }*/
     });
     $('#myCarousel').carousel({
         interval: 5000

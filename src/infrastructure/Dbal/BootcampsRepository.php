@@ -71,13 +71,7 @@ class BootcampsRepository implements Bootcamps
                 FROM students
                 WHERE students.bootcamp_id = b.bootcamp_id
             ) AS students_count')
-            ->addSelect('COUNT(a.attendance_id) * 100.0 /
-                (
-                    SELECT COUNT(*)
-                    FROM students
-                    WHERE students.bootcamp_id = b.bootcamp_id
-                ) AS attendance_percentage
-            ')
+            ->addSelect('COUNT(a.attendance_id) present_students_count')
             ->from('bootcamps', 'b')
             ->innerJoin('b', 'students', 's', 'b.bootcamp_id = s.bootcamp_id')
             ->leftJoin(
@@ -101,13 +95,7 @@ class BootcampsRepository implements Bootcamps
         $builder
             ->addSelect('b.bootcamp_id')
             ->addSelect('b.cohort_name')
-            ->addSelect('COUNT(a.attendance_id) * 100.0 /
-                (
-                SELECT COUNT(*)
-                FROM students
-                WHERE students.bootcamp_id = b.bootcamp_id
-                ) AS on_time_attendance
-            ')
+            ->addSelect('COUNT(a.attendance_id) AS on_time_students_count')
             ->from('bootcamps', 'b')
             ->innerJoin('b', 'students', 's', 'b.bootcamp_id = s.bootcamp_id')
             ->leftJoin(

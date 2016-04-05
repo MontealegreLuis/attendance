@@ -7,6 +7,7 @@
 namespace Codeup\Pimple;
 
 use Codeup\Slim\HomeController;
+use Codeup\Twig\Extensions\AttendanceExtension;
 use Pimple\Container;
 use Slim\Views\Twig;
 use Slim\Views\TwigExtension;
@@ -25,6 +26,7 @@ class WebServiceProvider extends AttendanceServiceProvider
                 $container['router'],
                 $container['request']->getUri()
             ));
+            $view->addExtension(new AttendanceExtension());
 
             return $view;
         };

@@ -28,22 +28,32 @@
                         <ul class="stats">
                             <li
                                 id="today-percentage-{{ todayAttendance[loop.index0].bootcamp_id }}"
-                                data-percentage="{{ todayAttendance[loop.index0].attendance_percentage|number_format(2) }}"
+                                data-percentage="{{ todayAttendance[loop.index0].present_students_count|number_format(2) }}"
                             >
                                 <i class="fa fa-calendar-plus-o fa-2"></i>
                                 Today's attendance
                                 <strong>
-                                    {{ todayAttendance[loop.index0].attendance_percentage|number_format(2) }}%
+                                    {{ percentage(
+                                            todayAttendance[loop.index0].present_students_count,
+                                            todayAttendance[loop.index0].students_count
+                                        )
+                                        |number_format(2)
+                                    }}%
                                 </strong>
                             </li>
                             <li
                                 id="on-time-today-{{ todayAttendance[loop.index0].bootcamp_id }}"
-                                data-percentage="{{ attendanceOnTime[loop.index0].on_time_attendance|number_format(2) }}"
+                                data-percentage="{{ attendanceOnTime[loop.index0].on_time_students_count|number_format(2) }}"
                             >
                                 <i class="fa fa-calendar-check-o fa-2"></i>
                                 On-time today
                                 <strong>
-                                    {{ attendanceOnTime[loop.index0].on_time_attendance|number_format(2) }}%
+                                    {{ percentage(
+                                            attendanceOnTime[loop.index0].on_time_students_count,
+                                            todayAttendance[loop.index0].students_count
+                                        )
+                                        |number_format(2)
+                                    }}%
                                 </strong>
                             </li>
                             <li
