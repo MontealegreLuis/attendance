@@ -8,6 +8,8 @@ namespace Codeup\Pimple;
 
 use Codeup\Attendance\UpdateAttendanceList;
 use Codeup\Dbal\MessageTrackerRepository;
+use Codeup\EventSource\EventSourceStream;
+use Codeup\JmsSerializer\JsonSerializer;
 use Codeup\Messaging\MessagePublisher;
 use Codeup\Symfony\UpdateAttendanceController;
 use Igorw\EventSource\Stream;
@@ -26,8 +28,9 @@ class MessagingServiceProvider extends AttendanceServiceProvider
         };
         $container['attendance.update_attendance'] = function () use ($container) {
             return new UpdateAttendanceList(
-                new Stream(),
-                $container['attendance.attendances']
+                new EventSourceStream(new Stream()),
+                $container['attendance.attendances'],
+                new JsonSerializer()
             );
         };
         $container['controllers.update_attendance'] = function () use ($container) {

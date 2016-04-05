@@ -35,8 +35,7 @@ class HomeController
      */
     public function summaryAction($_, Response $response)
     {
-        //TODO: this should be really today, get timestamp from $_SERVER ?
-        $today = new DateTime('2016-03-06');
+        $today = new DateTime('now');
 
         return $response->write($this->view->fetch('attendance.html.twig', [
             'todayAttendance' => $this->bootcamps->attendance($today),

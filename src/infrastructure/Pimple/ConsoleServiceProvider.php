@@ -8,8 +8,6 @@ namespace Codeup\Pimple;
 
 use Codeup\Attendance\DoRollCall;
 use Codeup\Console\Command\RollCallCommand;
-use Codeup\DomainEvents\EventPublisher;
-use Codeup\DomainEvents\PersistEventSubscriber;
 use Codeup\WebDriver\WebDriverAttendanceChecker;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Pimple\Container;
@@ -49,14 +47,6 @@ class ConsoleServiceProvider extends AttendanceServiceProvider
 
             // Lazy load the connection to Facebook's Web Driver
             return $factory->createProxy(DoRollCall::class, $initializer);
-        };
-        $container['events.publisher'] = function () use ($container) {
-            $publisher = new EventPublisher();
-            $publisher->subscribe(new PersistEventSubscriber(
-                $container['events.store']
-            ));
-
-            return $publisher;
         };
     }
 }

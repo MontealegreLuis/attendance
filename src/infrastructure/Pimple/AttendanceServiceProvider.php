@@ -10,6 +10,8 @@ use Codeup\Dbal\AttendancesRepository;
 use Codeup\Dbal\BootcampsRepository;
 use Codeup\Dbal\EventStoreRepository;
 use Codeup\Dbal\StudentsRepository;
+use Codeup\DomainEvents\EventPublisher;
+use Codeup\DomainEvents\PersistEventSubscriber;
 use Codeup\JmsSerializer\JsonEventSerializer;
 use Codeup\JmsSerializer\JsonSerializer;
 use Doctrine\DBAL\DriverManager;
@@ -51,6 +53,14 @@ class AttendanceServiceProvider implements ServiceProviderInterface
         };
         $container['attendance.students'] = function () use ($container) {
             return new StudentsRepository($container['db.connection']);
+        };
+        $container['events.publisher'] = function () use ($container) {
+            $publisher = new EventPublisher();
+            $publisher->subscribe(new PersistEventSubscriber(
+                $container['events.store']
+            ));
+
+            return $publisher;
         };
     }
 }

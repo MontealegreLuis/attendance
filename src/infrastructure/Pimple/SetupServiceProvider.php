@@ -22,7 +22,8 @@ class SetupServiceProvider extends AttendanceServiceProvider
         $container['command.attendance_generator'] = function () use ($container) {
             return new AttendanceGeneratorCommand(
                 $container['db.connection'],
-                $container['attendance.attendances']
+                $container['attendance.attendances'],
+                $container['events.publisher']
             );
         };
         $container['db.persister'] = function () use ($container) {
