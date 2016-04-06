@@ -7,7 +7,6 @@
 namespace Codeup\Pimple;
 
 use Codeup\Attendance\UpdateAttendanceList;
-use Codeup\Dbal\MessageTrackerRepository;
 use Codeup\EventSource\EventSourceStream;
 use Codeup\JmsSerializer\JsonSerializer;
 use Codeup\Messaging\MessagePublisher;
@@ -22,7 +21,7 @@ class MessagingServiceProvider extends AttendanceServiceProvider
         parent::register($container);
         $container['messages.publisher'] = function () use ($container) {
             return new MessagePublisher(
-                new MessageTrackerRepository($container['db.connection']),
+                $container['messages.tracker'],
                 $container['events.store']
             );
         };

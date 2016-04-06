@@ -58,7 +58,7 @@ Codeup\Bootcamps\Student:
 
 Codeup\Bootcamps\AttendanceId (local):
     attendance_id{1..46}:
-        value: <current()>
+        value: <attendanceId()>
 Codeup\Bootcamps\Attendance:
     attendance{1..25}:
         __construct: { checkIn: ['@attendance_id<current()>', '@today', '@student_id<current()>'] }

@@ -17,13 +17,18 @@ class SeedDatabaseCommand extends Command
     /** @var PersisterInterface */
     private $persister;
 
+    /** @var Loader */
+    private $loader;
+
     /**
      * @param PersisterInterface $persister
+     * @param Loader $loader
      */
-    public function __construct(PersisterInterface $persister)
+    public function __construct(PersisterInterface $persister, Loader $loader)
     {
         parent::__construct();
         $this->persister = $persister;
+        $this->loader = $loader;
     }
 
     protected function configure()
@@ -41,8 +46,7 @@ class SeedDatabaseCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $loader = new Loader();
-        $objects = $loader->load(
+        $objects = $this->loader->load(
             __DIR__ . '/../../../../var/fixtures/attendance.yml'
         );
         $this->persister->persist($objects);

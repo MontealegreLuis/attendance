@@ -6,9 +6,11 @@
  */
 namespace Codeup\Pimple;
 
+use Codeup\Alice\AttendanceProvider;
 use Codeup\Alice\DbalPersister;
 use Codeup\Console\Command\AttendanceGeneratorCommand;
 use Codeup\Console\Command\SeedDatabaseCommand;
+use Nelmio\Alice\Fixtures\Loader;
 use Pimple\Container;
 
 class SetupServiceProvider extends AttendanceServiceProvider
@@ -16,8 +18,18 @@ class SetupServiceProvider extends AttendanceServiceProvider
     public function register(Container $container)
     {
         parent::register($container);
+        $container['fixtures.loader'] = function() use ($container) {
+            return new Loader('en_US', [new AttendanceProvider(
+                $container['events.store'],
+                $container['messages.tracker'],
+                $container['attendance.attendances']
+            )]);
+        };
         $container['command.db_seeder'] = function () use ($container) {
-            return new SeedDatabaseCommand($container['db.persister']);
+            return new SeedDatabaseCommand(
+                $container['db.persister'],
+                $container['fixtures.loader']
+            );
         };
         $container['command.attendance_generator'] = function () use ($container) {
             return new AttendanceGeneratorCommand(

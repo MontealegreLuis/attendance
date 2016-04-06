@@ -9,6 +9,7 @@ namespace Codeup\Pimple;
 use Codeup\Dbal\AttendancesRepository;
 use Codeup\Dbal\BootcampsRepository;
 use Codeup\Dbal\EventStoreRepository;
+use Codeup\Dbal\MessageTrackerRepository;
 use Codeup\Dbal\StudentsRepository;
 use Codeup\DomainEvents\EventPublisher;
 use Codeup\DomainEvents\PersistEventSubscriber;
@@ -61,6 +62,9 @@ class AttendanceServiceProvider implements ServiceProviderInterface
             ));
 
             return $publisher;
+        };
+        $container['messages.tracker'] = function () use ($container) {
+            return new MessageTrackerRepository($container['db.connection']);
         };
     }
 }
