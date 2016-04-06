@@ -23,4 +23,7 @@ interface EventStore
      * @return StoredEvent[]
      */
     public function allEvents();
+
+    /** @return StoredEventId */
+    public function nextEventId();
 }

@@ -59,9 +59,7 @@ class EventStoreRepository implements EventStore
     public function from(Event $event)
     {
         return new StoredEvent(
-            StoredEventId::fromLiteral(
-                $this->nextIdentifierValue($this->connection, 'events_seq')
-            ),
+            $this->nextEventId(),
             $this->serializer->serialize($event),
             get_class($event),
             $event->occurredOn()
@@ -102,5 +100,15 @@ class EventStoreRepository implements EventStore
         return array_map(function (array $values) {
             return StoredEvent::from($values);
         }, $builder->execute()->fetchAll());
+    }
+
+    /**
+     * @return StoredEventId
+     */
+    public function nextEventId()
+    {
+        return StoredEventId::fromLiteral(
+            $this->nextIdentifierValue($this->connection, 'events_seq')
+        );
     }
 }

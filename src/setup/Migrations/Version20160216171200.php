@@ -8,6 +8,7 @@ namespace Migrations;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
+use Doctrine\DBAL\Schema\Table;
 
 /**
  * Generate tables for Bootcamp and Student entities.
@@ -19,6 +20,34 @@ class Version20160216171200 extends AbstractMigration
      */
     public function up(Schema $schema)
     {
+        $bootcamps = $this->bootcampsTable($schema);
+        $students = $this->studentsTable($schema, $bootcamps);
+        $this->attendanceTable($schema, $students);
+        $this->eventsTable($schema);
+        $this->messagesTable($schema);
+    }
+
+    /**
+     * @param Schema $schema
+     */
+    public function down(Schema $schema)
+    {
+        $schema->dropTable('bootcamps');
+        $schema->dropTable('students');
+        $schema->dropTable('attendances');
+        $schema->dropTable('attendances_seq');
+        $schema->dropTable('events');
+        $schema->dropTable('events_seq');
+        $schema->dropTable('published_messages');
+        $schema->dropTable('messages_seq');
+    }
+
+    /**
+     * @param Schema $schema
+     * @return Table
+     */
+    protected function bootcampsTable(Schema $schema)
+    {
         $bootcamps = $schema->createTable('bootcamps');
         $bootcamps->addColumn('bootcamp_id', 'integer', ['unsigned' => true]);
         $bootcamps->addColumn('cohort_name', 'string');
@@ -28,6 +57,16 @@ class Version20160216171200 extends AbstractMigration
         $bootcamps->addColumn('stop_time', 'datetime');
         $bootcamps->setPrimaryKey(['bootcamp_id']);
 
+        return $bootcamps;
+    }
+
+    /**
+     * @param Schema $schema
+     * @param Table $bootcamps
+     * @return Table
+     */
+    protected function studentsTable(Schema $schema, Table $bootcamps)
+    {
         $students = $schema->createTable('students');
         $students->addColumn('student_id', 'integer', ['unsigned' => true]);
         $students->addColumn('name', 'string');
@@ -40,6 +79,15 @@ class Version20160216171200 extends AbstractMigration
             ['bootcamp_id']  // Foreign column
         );
 
+        return $students;
+    }
+
+    /**
+     * @param Schema $schema
+     * @param Table $students
+     */
+    protected function attendanceTable(Schema $schema, Table $students)
+    {
         $attendance = $schema->createTable('attendances');
         $attendance->addColumn('attendance_id', 'integer', ['unsigned' => true]);
         $attendance->addColumn('date', 'datetime');
@@ -56,7 +104,13 @@ class Version20160216171200 extends AbstractMigration
         $attendanceSequence->addColumn('next_val', 'integer', [
             'unsigned' => true
         ]);
+    }
 
+    /**
+     * @param Schema $schema
+     */
+    protected function eventsTable(Schema $schema)
+    {
         $events = $schema->createTable('events');
         $events->addColumn('event_id', 'integer', ['unsigned' => true]);
         $events->addColumn('body', 'string');
@@ -68,29 +122,21 @@ class Version20160216171200 extends AbstractMigration
         $eventsSequence->addColumn('next_val', 'integer', [
             'unsigned' => true
         ]);
-
-        $messages = $schema->createTable('published_messages');
-        $messages->addColumn('message_id', 'integer', ['unsigned' => true]);
-        $messages->addColumn('most_recent_message_id', 'integer', ['unsigned' => true]);
-
-        $messagesSequence = $schema->createTable('messages_seq');
-        $messagesSequence->addColumn('next_val', 'integer', [
-            'unsigned' => true
-        ]);
     }
 
     /**
      * @param Schema $schema
      */
-    public function down(Schema $schema)
+    protected function messagesTable(Schema $schema)
     {
-        $schema->dropTable('bootcamps');
-        $schema->dropTable('students');
-        $schema->dropTable('attendances');
-        $schema->dropTable('attendances_seq');
-        $schema->dropTable('events');
-        $schema->dropTable('events_seq');
-        $schema->dropTable('published_messages');
-        $schema->dropTable('messages_seq');
+        $messages = $schema->createTable('published_messages');
+        $messages->addColumn('message_id', 'integer', ['unsigned' => true]);
+        $messages->addColumn('most_recent_message_id', 'integer',
+            ['unsigned' => true]);
+
+        $messagesSequence = $schema->createTable('messages_seq');
+        $messagesSequence->addColumn('next_val', 'integer', [
+            'unsigned' => true
+        ]);
     }
 }
