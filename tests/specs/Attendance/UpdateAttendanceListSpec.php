@@ -39,7 +39,7 @@ class UpdateAttendanceListSpec extends ObjectBehavior
         ];
 
         $attendances
-            ->detailsOf(AttendanceId::fromLiteral($attendance['attendance_id']))
+            ->summary(AttendanceId::fromLiteral($attendance['attendance_id']))
             ->willReturn($attendance)
         ;
 

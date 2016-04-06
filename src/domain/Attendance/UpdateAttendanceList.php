@@ -45,9 +45,9 @@ class UpdateAttendanceList implements MessageConsumer
     public function consume(StoredEvent $aStudentHasCheckedIn)
     {
         $event = $this->serializer->deserialize($aStudentHasCheckedIn->body());
-        $attendance = $this->attendances->detailsOf(
+        $summary = $this->attendances->summary(
             AttendanceId::fromLiteral($event['attendance_id'])
         );
-        $this->stream->push($this->serializer->serialize($attendance));
+        $this->stream->push($this->serializer->serialize($summary));
     }
 }

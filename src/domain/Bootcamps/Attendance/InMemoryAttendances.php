@@ -47,7 +47,7 @@ class InMemoryAttendances implements Attendances
         }
     }
 
-    public function detailsOf(AttendanceId $attendanceId)
+    public function summary(AttendanceId $attendanceId)
     {
         // TODO: Implement detailsOf() method.
     }

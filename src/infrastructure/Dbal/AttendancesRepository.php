@@ -73,22 +73,52 @@ class AttendancesRepository implements Attendances
     }
 
     /**
+     * Calculates the total of students, the count of students already in
+     * class, and how many of they arrived on time, for the bootcamp associated
+     * with this attendance
+     *
      * @param AttendanceId $attendanceId
      * @return array
      */
-    public function detailsOf(AttendanceId $attendanceId)
+    public function summary(AttendanceId $attendanceId)
     {
         $builder = $this->connection->createQueryBuilder();
         $builder
-            ->select('*')
-            ->from('attendances', 'a')
-            ->innerJoin('a', 'students', 's', 'a.student_id = s.student_id')
-            ->innerJoin('s', 'bootcamps', 'b', 's.bootcamp_id = b.bootcamp_id')
-            ->where('a.attendance_id = :attendanceId')
-            ->setMaxResults(1)
+            ->addSelect('b.bootcamp_id')
+            ->addSelect('COUNT(a.attendance_id) AS students_count')
+            ->addSelect('COUNT(
+                CASE WHEN TIME(a.date) <= TIME(b.start_time)
+                THEN 1
+                ELSE NULL
+                END
+            ) AS on_time_students_count')
+            ->from('bootcamps', 'b')
+            ->innerJoin(
+                'b',
+                'students',
+                's',
+                'b.bootcamp_id = s.bootcamp_id'
+            )
+            ->innerJoin(
+                's',
+                'attendances',
+                'a',
+                'a.student_id = s.student_id AND DATE(a.date) = (
+                    SELECT DATE(a.date)
+                    FROM attendances a
+                    WHERE a.attendance_id = :attendanceId
+                )'
+            )
+            ->groupBy('b.bootcamp_id')
+            ->having('b.bootcamp_id = (
+                SELECT b.bootcamp_id
+                FROM bootcamps b
+                INNER JOIN students s ON s.bootcamp_id = b.bootcamp_id
+                INNER JOIN attendances a ON a.student_id = s.student_id
+                WHERE  a.attendance_id = :attendanceId
+            )')
             ->setParameter('attendanceId', $attendanceId->value())
         ;
-
         return $builder->execute()->fetch();
     }
 }
