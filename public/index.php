@@ -19,7 +19,5 @@ $app = new App([
 ;
 
 $app->get('/', 'HomeController:summaryAction');
-$app->get('/bootcamps', function ($_, \Slim\Http\Response $response) use ($container) {
-    return $response->write($container['view']->fetch('bootcamp.html.twig'));
-});
+$app->get('/bootcamps', 'RegisterBootcampController:showRegistrationForm');
 $app->run();
