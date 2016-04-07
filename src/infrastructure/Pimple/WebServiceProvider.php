@@ -38,7 +38,10 @@ class WebServiceProvider extends AttendanceServiceProvider
             );
         };
         $container['RegisterBootcampController'] = function () use ($container) {
-            return new RegisterBootcampController($container['view']);
+            return new RegisterBootcampController(
+                $container['view'],
+                $container['attendance.bootcamps']
+            );
         };
     }
 }
