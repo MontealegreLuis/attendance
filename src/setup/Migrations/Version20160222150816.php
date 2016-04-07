@@ -19,6 +19,9 @@ class Version20160222150816 extends AbstractMigration
      */
     public function up(Schema $schema)
     {
+        $this->connection->insert('bootcamps_seq', [
+            'next_val' => 0,
+        ]);
         $this->connection->insert('attendances_seq', [
             'next_val' => 0,
         ]);
@@ -35,6 +38,7 @@ class Version20160222150816 extends AbstractMigration
      */
     public function down(Schema $schema)
     {
+        $this->connection->executeQuery('DELETE FROM bootcamps_seq');
         $this->connection->executeQuery('DELETE FROM attendances_seq');
         $this->connection->executeQuery('DELETE FROM events_seq');
         $this->connection->executeQuery('DELETE FROM messages_seq');

@@ -10,6 +10,9 @@ use DateTime;
 
 interface Bootcamps
 {
+    /** @return BootcampId */
+    public function nextBootcampId();
+
     /**
      * @param Bootcamp $bootcamp
      */

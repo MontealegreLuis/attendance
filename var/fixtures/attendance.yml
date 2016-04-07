@@ -1,6 +1,6 @@
 Codeup\Bootcamps\BootcampId (local):
     bootcamp_id{1..2}:
-        value: <current()>
+        value: <bootcampId()>
 Codeup\Bootcamps\Duration (local):
     duration{1..2}:
         __construct: { between: ["<dateTimeBetween('-5 days','now')>", "<dateTimeBetween('now', '4 months')>"] }

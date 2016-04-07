@@ -14,6 +14,8 @@ use SplObjectStorage;
 
 class InMemoryBootcamps implements Bootcamps
 {
+    private static $nextBootcampId = 0;
+
     /** @var SplObjectStorage */
     private $bootcamps;
 
@@ -28,6 +30,16 @@ class InMemoryBootcamps implements Bootcamps
     public function add(Bootcamp $bootcamp)
     {
         $this->bootcamps->attach($bootcamp);
+    }
+
+    /**
+     * @return BootcampId
+     */
+    public function nextBootcampId()
+    {
+        self::$nextBootcampId++;
+
+        return BootcampId::fromLiteral(self::$nextBootcampId);
     }
 
     /**

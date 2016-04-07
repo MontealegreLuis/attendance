@@ -14,6 +14,8 @@ use Doctrine\DBAL\Connection;
 
 class BootcampsRepository implements Bootcamps
 {
+    use ProvidesIdentifiers;
+
     /** @var Connection */
     private $connection;
 
@@ -54,6 +56,16 @@ class BootcampsRepository implements Bootcamps
         ;
 
         return Bootcamp::from($builder->execute()->fetch());
+    }
+
+    /**
+     * @return BootcampId
+     */
+    public function nextBootcampId()
+    {
+        return BootcampId::fromLiteral(
+            $this->nextIdentifierValue($this->connection, 'bootcamps_seq')
+        );
     }
 
     /**

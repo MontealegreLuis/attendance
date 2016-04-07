@@ -22,7 +22,8 @@ class SetupServiceProvider extends AttendanceServiceProvider
             return new Loader('en_US', [new AttendanceProvider(
                 $container['events.store'],
                 $container['messages.tracker'],
-                $container['attendance.attendances']
+                $container['attendance.attendances'],
+                $container['attendance.bootcamps']
             )]);
         };
         $container['command.db_seeder'] = function () use ($container) {

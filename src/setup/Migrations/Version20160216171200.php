@@ -57,6 +57,11 @@ class Version20160216171200 extends AbstractMigration
         $bootcamps->addColumn('stop_time', 'datetime');
         $bootcamps->setPrimaryKey(['bootcamp_id']);
 
+        $bootcampsSequence = $schema->createTable('bootcamps_seq');
+        $bootcampsSequence->addColumn('next_val', 'integer', [
+            'unsigned' => true
+        ]);
+
         return $bootcamps;
     }
 
