@@ -69,6 +69,25 @@ class BootcampsRepository implements Bootcamps
     }
 
     /**
+     * @param DateTime $onADate
+     * @return Bootcamp[]
+     */
+    public function notYetFinished(DateTime $onADate)
+    {
+        $builder = $this->connection->createQueryBuilder();
+        $builder
+            ->addSelect('*')
+            ->from('bootcamps', 'b')
+            ->where('DATE(b.start_date) <= DATE(:date) AND DATE(:date) <= DATE(b.stop_date)')
+            ->setParameter('date', $onADate->format('Y-m-d'))
+        ;
+
+        return array_map(function($information) {
+            return Bootcamp::from($information);
+        }, $builder->execute()->fetchAll());
+    }
+
+    /**
      * @param DateTime $onDate
      * @return array
      */

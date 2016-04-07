@@ -57,6 +57,15 @@ class InMemoryBootcamps implements Bootcamps
     }
 
     /**
+     * @param DateTime $onADate
+     * @return Bootcamp[]
+     */
+    public function notYetFinished(DateTime $onADate)
+    {
+    }
+
+
+    /**
      * @param DateTime $onDate
      * @return array
      */

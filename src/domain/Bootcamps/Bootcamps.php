@@ -25,6 +25,12 @@ interface Bootcamps
     public function with(BootcampId $bootcampId);
 
     /**
+     * @param DateTime $onADate
+     * @return Bootcamp[]
+     */
+    public function notYetFinished(DateTime $onADate);
+
+    /**
      * @param DateTime $onDate
      * @return array
      */

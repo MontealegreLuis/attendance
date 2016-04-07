@@ -21,4 +21,10 @@ $app = new App([
 $app->get('/', 'HomeController:summaryAction');
 $app->get('/bootcamps', 'RegisterBootcampController:showRegistrationForm');
 $app->post('/bootcamps', 'RegisterBootcampController:registerBootcamp');
+$app->get('/students', function ($_, \Slim\Http\Response $response) use ($container) {
+    $bootcamps = $container['attendance.bootcamps'];
+    return $response->write($container['view']->fetch('students.html.twig', [
+        'bootcamps' => $bootcamps->notYetFinished(new DateTime('now')),
+    ]));
+});
 $app->run();

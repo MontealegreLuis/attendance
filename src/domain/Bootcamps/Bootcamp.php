@@ -86,6 +86,14 @@ class Bootcamp
     }
 
     /**
+     * @return string
+     */
+    public function cohortName()
+    {
+        return $this->cohortName;
+    }
+
+    /**
      * @param DateTimeInterface $aDate
      * @return bool
      */

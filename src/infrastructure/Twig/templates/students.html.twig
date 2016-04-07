@@ -1,0 +1,44 @@
+{% extends 'layouts/main.html.twig' %}
+{% block content %}
+    <div class="row" style="margin-top: 5em">
+        <div class="col-md-6 col-md-offset-3">
+            <form method="post">
+                <div class="form-group">
+                    <label for="bootcamp_id">Cohort</label>
+                    <select class="form-control" name="bootcamp_id">
+                        {% for bootcamp in bootcamps %}
+                            <option value="{{ bootcamp.id() }}">
+                                {{ bootcamp.cohortName() }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <span class="btn btn-default btn-file">
+                    <i class="fa fa-upload"></i>
+                    Students MAC addresses
+                    <input type="file" class="form-control" name="students" placeholder="Name">
+                    </span>
+                </div>
+                <button type="submit" class="btn btn-default">Upload</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+    <script>
+        $(document).on('change', '.btn-file :file', function() {
+            var input = $(this),
+                    numFiles = input.get(0).files ? input.get(0).files.length : 1,
+                    label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+            input.trigger('fileselect', [numFiles, label]);
+        });
+        $('.btn-file :file').on('fileselect', function(event, numFiles, label) {
+            console.log(numFiles);
+            console.log(label);
+        });
+    </script>
+{% endblock %}
+{% block styles %}
+    <link rel="stylesheet" href="/styles/file.css">
+{% endblock %}
