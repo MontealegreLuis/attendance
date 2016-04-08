@@ -22,4 +22,5 @@ $app->get('/', 'HomeController:summaryAction');
 $app->get('/bootcamps', 'RegisterBootcampController:showRegistrationForm');
 $app->post('/bootcamps', 'RegisterBootcampController:registerBootcamp');
 $app->get('/students', 'RegisterStudentsController:showStudentsForm');
+$app->post('/students', 'RegisterStudentsController:saveStudentsInformation');
 $app->run();

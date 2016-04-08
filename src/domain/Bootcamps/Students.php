@@ -11,6 +11,11 @@ use DateTime;
 interface Students
 {
     /**
+     * @return StudentId
+     */
+    public function nextStudentId();
+
+    /**
      * Retrieve all the students who are currently enrolled in a bootcamp that
      * is not yet finished
      *

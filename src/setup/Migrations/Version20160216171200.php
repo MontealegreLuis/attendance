@@ -33,7 +33,9 @@ class Version20160216171200 extends AbstractMigration
     public function down(Schema $schema)
     {
         $schema->dropTable('bootcamps');
+        $schema->dropTable('bootcamps_seq');
         $schema->dropTable('students');
+        $schema->dropTable('students_seq');
         $schema->dropTable('attendances');
         $schema->dropTable('attendances_seq');
         $schema->dropTable('events');
@@ -83,6 +85,11 @@ class Version20160216171200 extends AbstractMigration
             ['bootcamp_id'], // Local column
             ['bootcamp_id']  // Foreign column
         );
+
+        $studentsSequence = $schema->createTable('students_seq');
+        $studentsSequence->addColumn('next_val', 'integer', [
+            'unsigned' => true
+        ]);
 
         return $students;
     }

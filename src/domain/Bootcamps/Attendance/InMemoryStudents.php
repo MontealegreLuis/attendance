@@ -15,12 +15,24 @@ use SplObjectStorage;
 
 class InMemoryStudents implements Students
 {
+    private static $nextStudentId = 0;
+
     /** @var SplObjectStorage */
     private $students;
 
     public function __construct()
     {
         $this->students = new SplObjectStorage();
+    }
+
+    /**
+     * @return StudentId
+     */
+    public function nextStudentId()
+    {
+        self::$nextStudentId++;
+
+        return StudentId::fromLiteral(self::$nextStudentId);
     }
 
     /**

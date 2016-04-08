@@ -26,7 +26,7 @@ Codeup\Bootcamps\Bootcamp:
 
 Codeup\Bootcamps\StudentId (local):
     student_id{1..46}:
-        value: <current()>
+        value: <studentId()>
 Codeup\Bootcamps\MacAddress (local):
     address1:
         value: 'ac:bc:32:93:64:29'

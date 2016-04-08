@@ -64,7 +64,6 @@ class InMemoryBootcamps implements Bootcamps
     {
     }
 
-
     /**
      * @param DateTime $onDate
      * @return array

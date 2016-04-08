@@ -60,6 +60,6 @@ class RegisterBootcampController
         );
         $this->bootcamps->add($bootcamp);
 
-        return $response->withRedirect('/');
+        return $response->withRedirect('/students');
     }
 }

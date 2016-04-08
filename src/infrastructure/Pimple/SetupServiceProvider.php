@@ -23,7 +23,8 @@ class SetupServiceProvider extends AttendanceServiceProvider
                 $container['events.store'],
                 $container['messages.tracker'],
                 $container['attendance.attendances'],
-                $container['attendance.bootcamps']
+                $container['attendance.bootcamps'],
+                $container['attendance.students']
             )]);
         };
         $container['command.db_seeder'] = function () use ($container) {

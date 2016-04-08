@@ -17,6 +17,8 @@ use PDO;
 
 class StudentsRepository implements Students
 {
+    use ProvidesIdentifiers;
+
     /** @var Connection */
     private $connection;
 
@@ -26,6 +28,13 @@ class StudentsRepository implements Students
     public function __construct(Connection $connection)
     {
         $this->connection = $connection;
+    }
+
+    public function nextStudentId()
+    {
+        return StudentId::fromLiteral(
+            $this->nextIdentifierValue($this->connection, 'students_seq')
+        );
     }
 
     /**

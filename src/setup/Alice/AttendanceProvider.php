@@ -8,6 +8,7 @@ namespace Codeup\Alice;
 
 use Codeup\Bootcamps\Attendances;
 use Codeup\Bootcamps\Bootcamps;
+use Codeup\Bootcamps\Students;
 use Codeup\DomainEvents\EventStore;
 use Codeup\Messaging\MessageTracker;
 use Faker\Provider\Base;
@@ -26,22 +27,28 @@ class AttendanceProvider extends Base
     /** @var Bootcamps */
     private $bootcamps;
 
+    /** @var Students */
+    private $students;
+
     /**
      * @param EventStore $events
      * @param MessageTracker $messages
      * @param Attendances $attendances
      * @param Bootcamps $bootcamps
+     * @param Students $students
      */
     public function __construct(
         EventStore $events,
         MessageTracker $messages,
         Attendances $attendances,
-        Bootcamps $bootcamps
+        Bootcamps $bootcamps,
+        Students $students
     ) {
         $this->events = $events;
         $this->messages = $messages;
         $this->attendances = $attendances;
         $this->bootcamps = $bootcamps;
+        $this->students = $students;
     }
 
     /**
@@ -66,6 +73,14 @@ class AttendanceProvider extends Base
     public function bootcampId()
     {
         return $this->bootcamps->nextBootcampId()->value();
+    }
+
+    /**
+     * @return int
+     */
+    public function studentId()
+    {
+        return $this->students->nextStudentId()->value();
     }
 
     /**
