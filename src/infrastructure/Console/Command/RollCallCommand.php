@@ -60,6 +60,9 @@ class RollCallCommand extends Command
         $output->writeln(sprintf(
             '<info>%d new student(s) found.</info>', count($students)
         ));
+        if (empty($students)) {
+            return;
+        }
         $table = new Table($output);
         $table
             ->setHeaders(['Student'])
