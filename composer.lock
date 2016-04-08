@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "44ea6060ee59c1da77a8d41331850be2",
-    "content-hash": "5c29c87d697867b2a68212a41c75a601",
+    "hash": "fb927ceff61fb621d83199c855cee875",
+    "content-hash": "5e946eeec94c3a0bcb3652b6692f5311",
     "packages": [
         {
             "name": "anahkiasen/underscore-php",
@@ -1551,6 +1551,53 @@
                 "templating"
             ],
             "time": "2016-01-25 21:22:18"
+        },
+        {
+            "name": "vkartaviy/retry",
+            "version": "v0.2.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/vkartaviy/retry.git",
+                "reference": "8d726458bec9a773e4ae8baf8afd9666f0d1142d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/vkartaviy/retry/zipball/8d726458bec9a773e4ae8baf8afd9666f0d1142d",
+                "reference": "8d726458bec9a773e4ae8baf8afd9666f0d1142d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "3.7.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Retry": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Vladimir Kartaviy",
+                    "email": "vkartaviy@gmail.com",
+                    "homepage": "http://vkartaviy.name"
+                }
+            ],
+            "description": "The library for repeatable and retryable operations",
+            "homepage": "https://github.com/vkartaviy/retry",
+            "keywords": [
+                "backoff",
+                "proxy",
+                "repeat",
+                "retry"
+            ],
+            "time": "2015-05-06 17:39:09"
         },
         {
             "name": "zendframework/zend-code",

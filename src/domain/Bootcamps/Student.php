@@ -141,23 +141,17 @@ class Student implements CanRecordEvents
      */
     public static function from(array $storedValues)
     {
-        return new Student(
+        $student = new Student(
             StudentId::fromLiteral($storedValues['student_id']),
-            Bootcamp::start(
-                BootcampId::fromLiteral($storedValues['bootcamp_id']),
-                Duration::between(
-                    DateTime::createFromFormat('Y-m-d', $storedValues['start_date']),
-                    DateTime::createFromFormat('Y-m-d', $storedValues['stop_date'])
-                ),
-                $storedValues['cohort_name'],
-                Schedule::withClassTimeBetween(
-                    DateTime::createFromFormat('Y-m-d H:i:s', $storedValues['start_time']),
-                    DateTime::createFromFormat('Y-m-d H:i:s', $storedValues['stop_time'])
-                )
-            ),
+            Bootcamp::from($storedValues),
             $storedValues['name'],
             MacAddress::withValue($storedValues['mac_address'])
         );
+        if (!is_null($storedValues['attendance_id'])) {
+            $student->checkIn = Attendance::from($storedValues);
+        }
+
+        return $student;
     }
 
     public function checkOut(DateTimeInterface $now)

@@ -66,9 +66,9 @@ class StudentsRepository implements Students
                 's',
                 'attendances',
                 'a',
-                'a.student_id = s.student_id AND a.date = :today AND a.type = :type'
+                'a.student_id = s.student_id AND DATE(a.date) = :today AND a.type = :type'
             )
-            ->where('b.start_date <= :today AND b.stop_date >= :today')
+            ->where('b.start_date <= :today AND :today <= b.stop_date')
             ->andWhere("s.mac_address IN ({$this->buildParameters($addresses)})")
             ->setParameter('today', $today->format('Y-m-d'))
             ->setParameter('type', Attendance::CHECK_IN)
