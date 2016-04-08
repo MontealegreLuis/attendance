@@ -8,6 +8,7 @@ namespace Codeup\Pimple;
 
 use Codeup\Slim\HomeController;
 use Codeup\Slim\RegisterBootcampController;
+use Codeup\Slim\RegisterStudentsController;
 use Codeup\Twig\Extensions\AttendanceExtension;
 use Pimple\Container;
 use Slim\Views\Twig;
@@ -39,6 +40,12 @@ class WebServiceProvider extends AttendanceServiceProvider
         };
         $container['RegisterBootcampController'] = function () use ($container) {
             return new RegisterBootcampController(
+                $container['view'],
+                $container['attendance.bootcamps']
+            );
+        };
+        $container['RegisterStudentsController'] = function () use ($container) {
+            return new RegisterStudentsController(
                 $container['view'],
                 $container['attendance.bootcamps']
             );
