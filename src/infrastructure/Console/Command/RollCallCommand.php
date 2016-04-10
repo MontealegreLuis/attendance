@@ -8,6 +8,7 @@ namespace Codeup\Console\Command;
 
 use Codeup\Attendance\DoRollCall;
 use Codeup\Bootcamps\Student;
+use Codeup\Retry\RetriesExhausted;
 use DateTime;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
@@ -43,9 +44,20 @@ class RollCallCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $students = $this->useCase->rollCall(new DateTime('now'));
+        try {
 
-        $this->showSummary($students, $output);
+            $students = $this->useCase->rollCall(new DateTime('now'));
+            $this->showSummary($students, $output);
+
+        } catch (RetriesExhausted $exception) {
+            $output->writeln(
+                '<info>Could not complete command, retries exhausted.</info>'
+            );
+            $output->writeln(sprintf(
+                '<info>Following errors occured:<error>%s</error></info>',
+                $exception->getMessage()
+            ));
+        }
     }
 
     /**

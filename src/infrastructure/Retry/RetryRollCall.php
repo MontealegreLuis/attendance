@@ -11,8 +11,8 @@ use Codeup\Bootcamps\AttendanceChecker;
 use Codeup\Bootcamps\Attendances;
 use Codeup\Bootcamps\Students;
 use DateTime;
+use Exception;
 use Retry\BackOff\ExponentialBackOffPolicy;
-use Retry\Policy\SimpleRetryPolicy;
 use Retry\RetryProxy;
 
 /**
@@ -22,6 +22,9 @@ class RetryRollCall extends DoRollCall
 {
     /** @var RetryProxy */
     private $proxy;
+
+    /** @var RecordingRetryPolicy */
+    private $retryPolicy;
 
     /**
      * @param AttendanceChecker $checker
@@ -38,16 +41,26 @@ class RetryRollCall extends DoRollCall
         $interval
     ) {
         parent::__construct($checker, $students, $attendances);
+        $this->retryPolicy = new RecordingRetryPolicy($attempts);
         $this->proxy = new RetryProxy(
-            new SimpleRetryPolicy($attempts),
+            $this->retryPolicy,
             new ExponentialBackOffPolicy($interval)
         );
     }
 
+    /**
+     * @param DateTime $today
+     * @return \Codeup\Bootcamps\Student[]
+     * @throws RetriesExhausted
+     */
     public function rollCall(DateTime $today)
     {
-        return $this->proxy->call(function (DateTime $today) {
-            return parent::rollCall($today);
-        }, [$today]);
+        try {
+            return $this->proxy->call(function (DateTime $today) {
+                return parent::rollCall($today);
+            }, [$today]);
+        } catch (Exception $exception) {
+            throw RetriesExhausted::using($this->retryPolicy);
+        }
     }
 }
