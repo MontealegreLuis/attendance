@@ -13,6 +13,7 @@ use DateTime;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class RollCallCommand extends Command
@@ -34,6 +35,17 @@ class RollCallCommand extends Command
         $this
             ->setName('codeup:rollcall')
             ->setDescription('Poll the DHCP status page to know who is currently in class')
+            ->setHelp(<<<HELP
+If you run this command with the option <info>--locally</info> it will connect to PHP's built-in server 
+and it will serve the files in the <info>var/fixtures</info> folder instead.
+HELP
+           )
+            ->addOption(
+                'locally',
+                'l',
+                InputOption::VALUE_OPTIONAL,
+                'Connect to PHP built-in server instead of the router\'s DHCP page'
+            )
         ;
     }
 

@@ -8,6 +8,7 @@ namespace Codeup\Pimple;
 
 use Codeup\Attendance\DoRollCall;
 use Codeup\Console\Command\Listeners\PhantomJsListener;
+use Codeup\Console\Command\Listeners\PhpServerListener;
 use Codeup\Console\Command\RollCallCommand;
 use Codeup\Retry\RetryRollCall;
 use Codeup\WebDriver\WebDriverAttendanceChecker;
@@ -57,6 +58,9 @@ class ConsoleServiceProvider extends AttendanceServiceProvider
         $container['console.listeners.phantomjs'] = function () {
             return new PhantomJsListener();
         };
+        $container['console.listeners.php_server'] = function () {
+            return new PhpServerListener();
+        };
         $container['console.dispatcher'] = function () use ($container) {
             $dispatcher = new EventDispatcher();
             $dispatcher->addListener(ConsoleEvents::COMMAND, [
@@ -67,6 +71,15 @@ class ConsoleServiceProvider extends AttendanceServiceProvider
                 $container['console.listeners.phantomjs'],
                 'stopPhantomJs'
             ]);
+            $dispatcher->addListener(ConsoleEvents::COMMAND, [
+                $container['console.listeners.php_server'],
+                'startPhpServer'
+            ]);
+            $dispatcher->addListener(ConsoleEvents::TERMINATE, [
+                $container['console.listeners.php_server'],
+                'stopPhpServer'
+            ]);
+
 
             return $dispatcher;
         };
