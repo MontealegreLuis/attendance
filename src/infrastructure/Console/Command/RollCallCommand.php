@@ -48,21 +48,30 @@ class RollCallCommand extends Command
     {
         $retryPolicy = new SimpleRetryPolicy(3);
         $backOffPolicy = new ExponentialBackOffPolicy(1000000);
-
         $proxy = new RetryProxy($retryPolicy, $backOffPolicy);
 
-        $proxy->call([$this, 'rollCall'], [$output]);
+        $students = $proxy->call(
+            [$this->useCase, 'rollCall'],
+            [new DateTime('now')]
+        );
+
+        $this->showSummary($students, $output);
     }
 
-    public function rollCall(OutputInterface $output)
+    /**
+     * @param array $students
+     * @param OutputInterface $output
+     */
+    public function showSummary(array $students, OutputInterface $output)
     {
-        $students = $this->useCase->rollCall(new DateTime('now'));
         $output->writeln(sprintf(
             '<info>%d new student(s) found.</info>', count($students)
         ));
+
         if (empty($students)) {
             return;
         }
+
         $table = new Table($output);
         $table
             ->setHeaders(['Student'])
