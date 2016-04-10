@@ -47,7 +47,7 @@ class RollCallCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $retryPolicy = new SimpleRetryPolicy(3);
-        $backOffPolicy = new ExponentialBackOffPolicy();
+        $backOffPolicy = new ExponentialBackOffPolicy(1000000);
 
         $proxy = new RetryProxy($retryPolicy, $backOffPolicy);
 

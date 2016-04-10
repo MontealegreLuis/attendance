@@ -20,5 +20,6 @@ class AttendanceApplication extends Application
         $this->addCommands([
             $container['command.roll_call'],
         ]);
+        $this->setDispatcher($container['console.dispatcher']);
     }
 }

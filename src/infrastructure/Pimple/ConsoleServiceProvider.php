@@ -7,11 +7,14 @@
 namespace Codeup\Pimple;
 
 use Codeup\Attendance\DoRollCall;
+use Codeup\Console\Command\Listeners\PhantomJsListener;
 use Codeup\Console\Command\RollCallCommand;
 use Codeup\WebDriver\WebDriverAttendanceChecker;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Pimple\Container;
 use ProxyManager\Factory\LazyLoadingValueHolderFactory;
+use Symfony\Component\Console\ConsoleEvents;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class ConsoleServiceProvider extends AttendanceServiceProvider
 {
@@ -47,6 +50,22 @@ class ConsoleServiceProvider extends AttendanceServiceProvider
 
             // Lazy load the connection to Facebook's Web Driver
             return $factory->createProxy(DoRollCall::class, $initializer);
+        };
+        $container['console.listeners.phantomjs'] = function () {
+            return new PhantomJsListener();
+        };
+        $container['console.dispatcher'] = function () use ($container) {
+            $dispatcher = new EventDispatcher();
+            $dispatcher->addListener(ConsoleEvents::COMMAND, [
+                $container['console.listeners.phantomjs'],
+                'startPhantomJs'
+            ]);
+            $dispatcher->addListener(ConsoleEvents::TERMINATE, [
+                $container['console.listeners.phantomjs'],
+                'stopPhantomJs'
+            ]);
+
+            return $dispatcher;
         };
     }
 }
