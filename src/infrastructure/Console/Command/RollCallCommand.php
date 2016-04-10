@@ -9,9 +9,6 @@ namespace Codeup\Console\Command;
 use Codeup\Attendance\DoRollCall;
 use Codeup\Bootcamps\Student;
 use DateTime;
-use Retry\BackOff\ExponentialBackOffPolicy;
-use Retry\Policy\SimpleRetryPolicy;
-use Retry\RetryProxy;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
@@ -46,14 +43,7 @@ class RollCallCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $retryPolicy = new SimpleRetryPolicy(3);
-        $backOffPolicy = new ExponentialBackOffPolicy(1000000);
-        $proxy = new RetryProxy($retryPolicy, $backOffPolicy);
-
-        $students = $proxy->call(
-            [$this->useCase, 'rollCall'],
-            [new DateTime('now')]
-        );
+        $students = $this->useCase->rollCall(new DateTime('now'));
 
         $this->showSummary($students, $output);
     }

@@ -9,6 +9,7 @@ namespace Codeup\Pimple;
 use Codeup\Attendance\DoRollCall;
 use Codeup\Console\Command\Listeners\PhantomJsListener;
 use Codeup\Console\Command\RollCallCommand;
+use Codeup\Retry\RetryRollCall;
 use Codeup\WebDriver\WebDriverAttendanceChecker;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Pimple\Container;
@@ -26,7 +27,7 @@ class ConsoleServiceProvider extends AttendanceServiceProvider
         };
         $container['attendance.do_roll_call'] = function () use ($container) {
             $initializer = function (& $wrappedObject, $_, $_, $_, & $initializer) use ($container) {
-                $useCase = new DoRollCall(
+                $useCase = new RetryRollCall(
                     new WebDriverAttendanceChecker(
                         RemoteWebDriver::create(
                             $this->options['webdriver']['host'],
@@ -36,7 +37,9 @@ class ConsoleServiceProvider extends AttendanceServiceProvider
                         $this->options['dhcp']
                     ),
                     $container['attendance.students'],
-                    $container['attendance.attendances']
+                    $container['attendance.attendances'],
+                    $this->options['retry']['attempts'],
+                    $this->options['retry']['interval']
                 );
                 $useCase->setPublisher($container['events.publisher']);
 

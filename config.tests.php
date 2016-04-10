@@ -32,4 +32,8 @@ return [
         'cache' => __DIR__ . '/var/cache',
         'debug' => true
     ],
+    'retry' => [
+        'attempts' => 3,
+        'interval' => 1000000, // A second
+    ],
 ];
