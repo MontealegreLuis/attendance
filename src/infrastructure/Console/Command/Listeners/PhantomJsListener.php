@@ -34,6 +34,8 @@ class PhantomJsListener
             '<info>PhantomJS is running with PID <comment>%d</comment></info>',
             $this->pidPhantomJs
         ));
+
+        sleep(2);
     }
 
     public function stopPhantomJs(ConsoleTerminateEvent $event)
