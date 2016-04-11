@@ -43,7 +43,7 @@ HELP
             ->addOption(
                 'locally',
                 'l',
-                InputOption::VALUE_OPTIONAL,
+                InputOption::VALUE_NONE,
                 'Connect to PHP built-in server instead of the router\'s DHCP page'
             )
         ;

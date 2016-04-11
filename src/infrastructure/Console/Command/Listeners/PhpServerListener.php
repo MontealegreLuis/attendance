@@ -21,7 +21,7 @@ class PhpServerListener
     {
         if (
                'codeup:rollcall' === $event->getCommand()->getName()
-            && $event->getInput()->hasOption('locally')
+            && $event->getInput()->getOption('locally')
         ) {
             $output = [];
             exec(
@@ -44,7 +44,7 @@ class PhpServerListener
     {
         if (
             'codeup:rollcall' === $event->getCommand()->getName()
-            && $event->getInput()->hasOption('locally')
+            && $event->getInput()->getOption('locally')
         ) {
             exec("kill {$this->pidPhpServer}");
 
