@@ -19,6 +19,7 @@ $app = new App([
 ;
 
 $app->get('/', 'HomeController:summaryAction');
+$app->get('/attendances', 'UpdateAttendanceController:updateAttendanceList');
 $app->get('/bootcamps', 'RegisterBootcampController:showRegistrationForm');
 $app->post('/bootcamps', 'RegisterBootcampController:registerBootcamp');
 $app->get('/students', 'RegisterStudentsController:showStudentsForm');

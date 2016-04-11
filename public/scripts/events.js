@@ -4,7 +4,7 @@
 (function($) {
     'use strict';
 
-    var source = new EventSource('attendance.php');
+    var source = new EventSource('/attendances');
 
     var percentage = function(count, total) {
         return (count * 100.0 / total).toFixed(2);

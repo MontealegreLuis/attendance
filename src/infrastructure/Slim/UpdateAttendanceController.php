@@ -4,12 +4,11 @@
  *
  * This source file is subject to the license that is bundled with this package in the file LICENSE.
  */
-namespace Codeup\Symfony;
+namespace Codeup\Slim;
 
 use Codeup\Attendance\UpdateAttendanceList;
 use Codeup\Messaging\MessagePublisher;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\StreamedResponse;
+use Slim\Http\Response;
 
 class UpdateAttendanceController
 {
@@ -31,15 +30,15 @@ class UpdateAttendanceController
         $this->consumer = $consumer;
     }
 
-    public function updateListAction()
+    public function updateAttendanceList($_, Response $response)
     {
-        $response = new StreamedResponse(function () {
-            $this->publisher->publishTo($this->consumer);
-            sleep(3);
-        });
+        ob_start();
+        $this->publisher->publishTo($this->consumer);
+        $body = ob_get_clean();
 
-        $response->prepare(Request::createFromGlobals());
-        $response->headers->set('Content-Type', 'text/event-stream');
-        $response->send();
+        return $response
+            ->withAddedHeader('Content-Type', 'text/event-stream')
+            ->write($body)
+        ;
     }
 }
