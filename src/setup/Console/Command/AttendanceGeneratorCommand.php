@@ -6,16 +6,14 @@
  */
 namespace Codeup\Console\Command;
 
+use Codeup\Attendance\AttendanceAnalyzer;
 use Codeup\Bootcamps\Attendances;
 use Codeup\Bootcamps\StudentHasCheckedIn;
 use Codeup\Bootcamps\StudentId;
 use Codeup\DataBuilders\A as An;
-use Codeup\Dbal\Queries\AbsentStudents;
-use Codeup\Dbal\Queries\OngoingBootcamps;
 use Codeup\DomainEvents\EventPublisher;
 use Codeup\DomainEvents\RecordsEvents;
 use DateTime;
-use Doctrine\DBAL\Connection;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -25,8 +23,8 @@ class AttendanceGeneratorCommand extends Command
 {
     use RecordsEvents;
 
-    /** @var Connection */
-    private $connection;
+    /** @var AttendanceAnalyzer */
+    private $analyzer;
 
     /** @var Attendances */
     private $attendances;
@@ -35,17 +33,17 @@ class AttendanceGeneratorCommand extends Command
     private $publisher;
 
     /**
-     * @param Connection $connection
+     * @param AttendanceAnalyzer $analyzer
      * @param Attendances $attendances
      * @param EventPublisher $publisher
      */
     public function __construct(
-        Connection $connection,
+        AttendanceAnalyzer $analyzer,
         Attendances $attendances,
         EventPublisher $publisher
     ) {
         parent::__construct();
-        $this->connection = $connection;
+        $this->analyzer = $analyzer;
         $this->attendances = $attendances;
         $this->publisher = $publisher;
     }
@@ -78,9 +76,10 @@ class AttendanceGeneratorCommand extends Command
      */
     protected function currentBootcamps(DateTime $today)
     {
-        $ongoingBootcamps = new OngoingBootcamps($this->connection);
-
-        return Arrays::pluck($ongoingBootcamps->during($today), 'bootcamp_id');
+        return Arrays::pluck(
+            $this->analyzer->ongoingBootcamps($today),
+            'bootcamp_id'
+        );
     }
 
     /**
@@ -90,10 +89,8 @@ class AttendanceGeneratorCommand extends Command
      */
     protected function absentStudentsIn(array $bootcamps, DateTime $today)
     {
-        $absentStudents = new AbsentStudents($this->connection);
-
         return Arrays::group(
-            $absentStudents->enrolledDuring($bootcamps, $today),
+            $this->analyzer->absentStudentsIn($bootcamps, $today),
             'bootcamp_id'
         );
     }
