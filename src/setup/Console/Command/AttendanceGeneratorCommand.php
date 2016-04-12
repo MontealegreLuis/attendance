@@ -7,12 +7,7 @@
 namespace Codeup\Console\Command;
 
 use Codeup\Attendance\AttendanceAnalyzer;
-use Codeup\Bootcamps\Attendances;
-use Codeup\Bootcamps\StudentHasCheckedIn;
-use Codeup\Bootcamps\StudentId;
-use Codeup\DataBuilders\A as An;
-use Codeup\DomainEvents\EventPublisher;
-use Codeup\DomainEvents\RecordsEvents;
+use Codeup\Attendance\AttendanceGenerator;
 use DateTime;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -21,31 +16,23 @@ use Underscore\Types\Arrays;
 
 class AttendanceGeneratorCommand extends Command
 {
-    use RecordsEvents;
-
     /** @var AttendanceAnalyzer */
     private $analyzer;
 
-    /** @var Attendances */
-    private $attendances;
-
-    /** @var EventPublisher */
-    private $publisher;
+    /** @var AttendanceGenerator */
+    private $generator;
 
     /**
      * @param AttendanceAnalyzer $analyzer
-     * @param Attendances $attendances
-     * @param EventPublisher $publisher
+     * @param AttendanceGenerator $generator
      */
     public function __construct(
         AttendanceAnalyzer $analyzer,
-        Attendances $attendances,
-        EventPublisher $publisher
+        AttendanceGenerator $generator
     ) {
         parent::__construct();
         $this->analyzer = $analyzer;
-        $this->attendances = $attendances;
-        $this->publisher = $publisher;
+        $this->generator = $generator;
     }
 
     protected function configure()
@@ -65,9 +52,10 @@ class AttendanceGeneratorCommand extends Command
     {
         $bootcamps = $this->currentBootcamps($today = new DateTime('now'));
         $absentStudents = $this->absentStudentsIn($bootcamps, $today);
-        $students = $this->chooseRandom($absentStudents);
-        $this->showAttendanceToBeGenerated($output, $students);
-        $this->generateAttendances($students, $today);
+        $forRandomStudents = $this->generator->generateRandomAttendance(
+            $absentStudents, new DateTime('now')
+        );
+        $this->showGeneratedAttendance($output, $forRandomStudents);
     }
 
     /**
@@ -96,84 +84,23 @@ class AttendanceGeneratorCommand extends Command
     }
 
     /**
-     * @param array $absentStudents
-     * @return array
-     */
-    protected function chooseRandom(array $absentStudents)
-    {
-        $studentsInformation = [];
-        foreach ($absentStudents as $bootcampId => $students) {
-            shuffle($students);
-            $studentsInformation[$bootcampId] = array_slice(
-                $students,
-                0,
-                mt_rand(1, 5)
-            );
-        }
-        return $studentsInformation;
-    }
-
-    /**
-     * @param array $randomStudents
-     * @param DateTime $today
-     */
-    protected function generateAttendances(
-        array $randomStudents,
-        DateTime $today
-    ) {
-        foreach ($randomStudents as $studentsInBootcamp) {
-            $this->attendanceForBootcamp($studentsInBootcamp, $today);
-        }
-        $this->publisher->publish($this->events());
-    }
-
-    /**
      * @param OutputInterface $output
-     * @param array $students
+     * @param array $randomStudents
      */
-    protected function showAttendanceToBeGenerated(
+    protected function showGeneratedAttendance(
         OutputInterface $output,
-        array $students
+        array $randomStudents
     ) {
-        foreach ($students as $studentsByBootcamp) {
-            foreach ($studentsByBootcamp as $student) {
+        foreach ($randomStudents as $students) {
+            foreach ($students as $student) {
                 $name = $student['cohort_name'];
                 break;
             }
             $output->writeln(sprintf(
                 'Generating <info>%d</info> attendances for <info>%s</info>...',
-                count($studentsByBootcamp),
+                count($students),
                 $name
             ));
-        }
-    }
-
-    /**
-     * @param array $students
-     * @param DateTime $today
-     */
-    protected function attendanceForBootcamp(array $students, DateTime $today)
-    {
-        foreach ($students as $student) {
-            $startTime = DateTime::createFromFormat(
-                'Y-m-d H:i:s',
-                $student['start_time']
-            );
-            $now = clone $today;
-            $now->setTime(
-                (int) $startTime->format('H'),
-                (int) $startTime->format('i'),
-                (int) $startTime->format('s')
-            );
-            $minutes = mt_rand(-90, 90);
-            $now->modify("$minutes minutes");
-            $attendance = An::attendance()
-                ->withId($this->attendances->nextAttendanceId()->value())
-                ->withStudentId(StudentId::fromLiteral($student['student_id']))
-                ->recordedAt($now)
-                ->build();
-            $this->attendances->add($attendance);
-            $this->recordThat(new StudentHasCheckedIn($attendance->id()));
         }
     }
 }
