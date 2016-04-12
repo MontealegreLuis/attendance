@@ -10,6 +10,8 @@ use Codeup\Bootcamps\Attendances;
 use Codeup\Bootcamps\StudentHasCheckedIn;
 use Codeup\Bootcamps\StudentId;
 use Codeup\DataBuilders\A as An;
+use Codeup\Dbal\Queries\AbsentStudents;
+use Codeup\Dbal\Queries\OngoingBootcamps;
 use Codeup\DomainEvents\EventPublisher;
 use Codeup\DomainEvents\RecordsEvents;
 use DateTime;
@@ -64,7 +66,7 @@ class AttendanceGeneratorCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $bootcamps = $this->currentBootcamps($today = new DateTime('now'));
-        $absentStudents = $this->absentStudentsIn($bootcamps);
+        $absentStudents = $this->absentStudentsIn($bootcamps, $today);
         $students = $this->chooseRandom($absentStudents);
         $this->showAttendanceToBeGenerated($output, $students);
         $this->generateAttendances($students, $today);
@@ -76,45 +78,22 @@ class AttendanceGeneratorCommand extends Command
      */
     protected function currentBootcamps(DateTime $today)
     {
-        $builder = $this->connection->createQueryBuilder();
-        $builder
-            ->addSelect('b.bootcamp_id')
-            ->from('bootcamps', 'b')
-            ->where('b.start_date <= :today AND :today <= b.stop_date')
-            ->setParameter('today', $today->format('Y-m-d'))
-        ;
+        $ongoingBootcamps = new OngoingBootcamps($this->connection);
 
-        return Arrays::pluck($builder->execute()->fetchAll(), 'bootcamp_id');
+        return Arrays::pluck($ongoingBootcamps->during($today), 'bootcamp_id');
     }
 
     /**
      * @param array $bootcamps
+     * @param DateTime $today
      * @return array
      */
-    protected function absentStudentsIn(array $bootcamps)
+    protected function absentStudentsIn(array $bootcamps, DateTime $today)
     {
-        $builder = $this->connection->createQueryBuilder();
-        $builder
-            ->addSelect('b.bootcamp_id')
-            ->addSelect('b.start_time')
-            ->addSelect('b.cohort_name')
-            ->addSelect('s.student_id')
-            ->addSelect('a.attendance_id')
-            ->from('bootcamps', 'b')
-            ->innerJoin('b', 'students', 's', 'b.bootcamp_id = s.bootcamp_id')
-            ->leftJoin(
-                's',
-                'attendances',
-                'a',
-                's.student_id = a.student_id AND DATE(a.date) = :today AND a.type = :check_in'
-            )
-            ->where('b.bootcamp_id IN (' . implode(', ', $bootcamps) . ')')
-        ;
+        $absentStudents = new AbsentStudents($this->connection);
 
         return Arrays::group(
-            Arrays::filter($builder->execute()->fetchAll(), function ($row) {
-                return is_null($row['attendance_id']);
-            }),
+            $absentStudents->enrolledDuring($bootcamps, $today),
             'bootcamp_id'
         );
     }
