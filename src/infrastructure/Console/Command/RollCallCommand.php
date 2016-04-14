@@ -57,10 +57,8 @@ HELP
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         try {
-
             $students = $this->useCase->rollCall(new DateTime('now'));
             $this->showSummary($students, $output);
-
         } catch (RetriesExhausted $exception) {
             $output->writeln(
                 '<info>Could not complete command, retries exhausted.</info>'

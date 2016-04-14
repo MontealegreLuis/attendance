@@ -6,7 +6,6 @@
  */
 namespace Codeup\Bootcamps;
 
-use DateTime;
 use DateTimeInterface;
 use Codeup\DomainEvents\CanRecordEvents;
 use Codeup\DomainEvents\RecordsEvents;

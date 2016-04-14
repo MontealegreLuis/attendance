@@ -82,7 +82,7 @@ class BootcampsRepository implements Bootcamps
             ->setParameter('date', $onADate->format('Y-m-d'))
         ;
 
-        return array_map(function($information) {
+        return array_map(function ($information) {
             return Bootcamp::from($information);
         }, $builder->execute()->fetchAll());
     }

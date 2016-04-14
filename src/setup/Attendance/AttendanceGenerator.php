@@ -37,16 +37,16 @@ class AttendanceGenerator
     }
 
     /**
-     * @param array $enrolledStudents
+     * @param array $absentStudents
      * @param DateTime $aDate
      * @return array The information of the randomly selected students
      */
     public function generateRandomAttendance(
-        array $enrolledStudents,
+        array $absentStudents,
         DateTime $aDate
     ) {
         $this->generateAttendances(
-            $randomStudents = $this->randomSample($enrolledStudents),
+            $randomStudents = $this->randomSample($absentStudents),
             $aDate
         );
         $this->publisher->publish($this->events());
@@ -55,13 +55,13 @@ class AttendanceGenerator
     }
 
     /**
-     * @param array $enrolledStudents
+     * @param array $absentStudents
      * @return array
      */
-    protected function randomSample(array $enrolledStudents)
+    protected function randomSample(array $absentStudents)
     {
         $studentsInformation = [];
-        foreach ($enrolledStudents as $bootcampId => $students) {
+        foreach ($absentStudents as $bootcampId => $students) {
             shuffle($students);
             $studentsInformation[$bootcampId] = array_slice(
                 $students,

@@ -14,7 +14,7 @@ class AttendanceExtension extends Extension
     public function getFunctions()
     {
         return [
-            new SimpleFunction('percentage', function($currentCount, $total) {
+            new SimpleFunction('percentage', function ($currentCount, $total) {
                 return $currentCount * 100 / $total;
             }),
         ];

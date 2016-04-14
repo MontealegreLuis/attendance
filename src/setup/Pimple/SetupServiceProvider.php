@@ -20,7 +20,7 @@ class SetupServiceProvider extends AttendanceServiceProvider
     public function register(Container $container)
     {
         parent::register($container);
-        $container['fixtures.loader'] = function() use ($container) {
+        $container['fixtures.loader'] = function () use ($container) {
             return new Loader('en_US', [new AttendanceProvider(
                 $container['events.store'],
                 $container['messages.tracker'],
