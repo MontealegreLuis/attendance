@@ -11,8 +11,10 @@ matrix:
 before_script:
   - composer self-update
   - composer install --prefer-source --no-interaction
+  - cp config.tests.php config.php
   - bin/setup codeup:db:create
   - bin/setup migrations:migrate
+  - npm install -g phantomjs-prebuilt
 
 script:
   - bin/phpspec run -v
