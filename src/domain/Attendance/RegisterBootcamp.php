@@ -14,18 +14,26 @@ class RegisterBootcamp
     /** @var Bootcamps */
     private $bootcamps;
 
+    /** @var RegisterStudentsInformation */
+    private $students;
+
     /**
      * @param Bootcamps $bootcamps
+     * @param RegisterStudentsInformation $students
      */
-    public function __construct(Bootcamps $bootcamps)
-    {
+    public function __construct(
+        Bootcamps $bootcamps,
+        RegisterStudentsInformation $students
+    ) {
         $this->bootcamps = $bootcamps;
+        $this->students = $students;
     }
 
     /**
      * @param RegisterBootcampInformation $information
+     * @param string $path
      */
-    public function register(RegisterBootcampInformation $information)
+    public function register(RegisterBootcampInformation $information, $path)
     {
         $bootcamp = Bootcamp::start(
             $this->bootcamps->nextBootcampId(),
@@ -34,5 +42,6 @@ class RegisterBootcamp
             $information->schedule()
         );
         $this->bootcamps->add($bootcamp);
+        $this->students->register($path, $bootcamp->id()->value());
     }
 }

@@ -8,18 +8,13 @@ namespace Codeup\Slim;
 
 use Codeup\Attendance\RegisterBootcamp;
 use Codeup\Attendance\RegisterBootcampInformation;
-use Codeup\Bootcamps\Bootcamp;
-use Codeup\Bootcamps\Bootcamps;
-use Codeup\Bootcamps\Duration;
-use Codeup\Bootcamps\Schedule;
-use DateTime;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Views\Twig;
 
 class RegisterBootcampController
 {
-    /** @var View */
+    /** @var Twig */
     private $view;
 
     /** @var RegisterBootcamp */
@@ -27,7 +22,7 @@ class RegisterBootcampController
 
     /**
      * @param Twig $view
-     * @param Bootcamps $bootcamps
+     * @param RegisterBootcamp $registerBootcamp
      */
     public function __construct(Twig $view, RegisterBootcamp $registerBootcamp)
     {
@@ -47,9 +42,27 @@ class RegisterBootcampController
 
     public function registerBootcamp(Request $request, Response $response)
     {
-        $input = $request->getParsedBody();
-        $this->useCase->register(RegisterBootcampInformation::from($input));
+        $path = $this->moveUploadedFile($request);
+
+        $this->useCase->register(
+            RegisterBootcampInformation::from($request->getParsedBody()),
+            $path
+        );
 
         return $response->withRedirect('/students');
+    }
+
+    /**
+     * @param Request $request
+     * @return string
+     */
+    protected function moveUploadedFile(Request $request)
+    {
+        /** @var \Slim\Http\UploadedFile $file */
+        $file = $request->getUploadedFiles()['students'];
+        $path = __DIR__ . "/../../../var/bootcamps/{$file->getClientFilename()}";
+        $file->moveTo($path);
+
+        return $path;
     }
 }

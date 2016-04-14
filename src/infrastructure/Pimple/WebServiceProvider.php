@@ -49,16 +49,12 @@ class WebServiceProvider extends AttendanceServiceProvider
         $container['RegisterBootcampController'] = function () use ($container) {
             return new RegisterBootcampController(
                 $container['view'],
-                new RegisterBootcamp($container['attendance.bootcamps'])
-            );
-        };
-        $container['RegisterStudentsController'] = function () use ($container) {
-            return new RegisterStudentsController(
-                $container['view'],
-                $container['attendance.bootcamps'],
-                new RegisterStudentsInformation(
-                    $container['db.connection'],
-                    $container['attendance.students']
+                new RegisterBootcamp(
+                    $container['attendance.bootcamps'],
+                    new RegisterStudentsInformation(
+                        $container['db.connection'],
+                        $container['attendance.students']
+                    )
                 )
             );
         };
