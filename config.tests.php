@@ -28,7 +28,7 @@ return [
         'timeout' => 5000,
     ],
     'twig' => [
-        'templates' => __DIR__ . '/src/infrastructure/Twig/templates',
+        'templates' => __DIR__ . '/src/infrastructure/Twig/Resources/templates',
         'cache' => __DIR__ . '/var/cache',
         'debug' => true
     ],
