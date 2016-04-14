@@ -6,6 +6,8 @@
  */
 namespace Codeup\Slim;
 
+use Codeup\Attendance\RegisterBootcamp;
+use Codeup\Attendance\RegisterBootcampInformation;
 use Codeup\Bootcamps\Bootcamp;
 use Codeup\Bootcamps\Bootcamps;
 use Codeup\Bootcamps\Duration;
@@ -20,17 +22,17 @@ class RegisterBootcampController
     /** @var View */
     private $view;
 
-    /** @var Bootcamps */
-    private $bootcamps;
+    /** @var RegisterBootcamp */
+    private $useCase;
 
     /**
      * @param Twig $view
      * @param Bootcamps $bootcamps
      */
-    public function __construct(Twig $view, Bootcamps $bootcamps)
+    public function __construct(Twig $view, RegisterBootcamp $registerBootcamp)
     {
         $this->view = $view;
-        $this->bootcamps = $bootcamps;
+        $this->useCase = $registerBootcamp;
     }
 
     /**
@@ -45,20 +47,8 @@ class RegisterBootcampController
 
     public function registerBootcamp(Request $request, Response $response)
     {
-        $information = $request->getParsedBody();
-        $bootcamp = Bootcamp::start(
-            $this->bootcamps->nextBootcampId(),
-            Duration::between(
-                DateTime::createFromFormat('Y-m-d', $information['start_date']),
-                DateTime::createFromFormat('Y-m-d', $information['stop_date'])
-            ),
-            $information['cohort_name'],
-            Schedule::withClassTimeBetween(
-                DateTime::createFromFormat('H:i', $information['start_time']),
-                DateTime::createFromFormat('H:i', $information['stop_time'])
-            )
-        );
-        $this->bootcamps->add($bootcamp);
+        $input = $request->getParsedBody();
+        $this->useCase->register(RegisterBootcampInformation::from($input));
 
         return $response->withRedirect('/students');
     }

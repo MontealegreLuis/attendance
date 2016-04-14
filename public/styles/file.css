@@ -17,3 +17,12 @@
     cursor: inherit;
     display: block;
 }
+
+.btn-primary {
+    background-color: #799F4B;
+    border-style: none;
+}
+
+.btn-primary:hover {
+    background-color: #86A85D;
+}

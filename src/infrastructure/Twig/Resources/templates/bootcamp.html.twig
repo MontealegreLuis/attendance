@@ -5,37 +5,71 @@
             <form method="post">
                 <div class="form-group">
                     <label for="cohort_name">Name</label>
-                    <input type="text" class="form-control" name="cohort_name" placeholder="Name">
+                    <input
+                        type="text"
+                        class="form-control"
+                        name="cohort_name"
+                        placeholder="Name">
                 </div>
                 <div class="form-group">
                     <label for="start_date">Start date</label>
                     <div class="input-group input-append date">
-                        <input type="text" class="form-control" id="start_date" name="start_date">
-                        <span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="start_date"
+                            name="start_date">
+                        <span class="input-group-addon add-on">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="stop_date">Stop date</label>
                     <div class="input-group input-append date">
-                        <input type="text" class="form-control" id="stop_date" name="stop_date">
-                        <span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="stop_date"
+                            name="stop_date">
+                        <span class="input-group-addon add-on">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="start_time">Start time</label>
                     <div class="input-group bootstrap-timepicker timepicker">
-                        <input name="start_time" type="text" class="time form-control input-small">
-                        <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+                        <input
+                            name="start_time"
+                            type="text"
+                            class="time form-control input-small">
+                        <span class="input-group-addon">
+                            <i class="glyphicon glyphicon-time"></i>
+                        </span>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="stop_time">Stop time</label>
                     <div class="input-group bootstrap-timepicker timepicker">
-                        <input name="stop_time" type="text" class="time form-control input-small">
-                        <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+                        <input
+                            name="stop_time"
+                            type="text"
+                            class="time form-control input-small">
+                        <span class="input-group-addon">
+                            <i class="glyphicon glyphicon-time"></i>
+                        </span>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-default">Submit</button>
+                <div class="form-group">
+                    <span class="btn btn-default btn-file">
+                    <i class="fa fa-upload"></i>
+                    Students MAC addresses
+                    <input type="file" class="form-control" name="students" placeholder="Name">
+                    </span>
+                    <span id="file-label"></span>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
             </form>
         </div>
     </div>
@@ -49,4 +83,5 @@
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker.min.css">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker3.min.css">
     <link rel="stylesheet" href="/styles/bootstrap-timepicker.min.css">
+    <link rel="stylesheet" href="/styles/file.css">
 {% endblock %}
