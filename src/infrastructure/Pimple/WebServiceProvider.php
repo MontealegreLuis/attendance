@@ -7,6 +7,7 @@
 namespace Codeup\Pimple;
 
 use Codeup\Attendance\RegisterBootcamp;
+use Codeup\Attendance\RegisterStudentsInformation;
 use Codeup\Attendance\UpdateAttendanceList;
 use Codeup\EventSource\EventSourceStream;
 use Codeup\JmsSerializer\JsonSerializer;
@@ -55,8 +56,10 @@ class WebServiceProvider extends AttendanceServiceProvider
             return new RegisterStudentsController(
                 $container['view'],
                 $container['attendance.bootcamps'],
-                $container['attendance.students'],
-                $container['db.connection']
+                new RegisterStudentsInformation(
+                    $container['db.connection'],
+                    $container['attendance.students']
+                )
             );
         };
         $container['UpdateAttendanceController'] = function () use ($container) {
