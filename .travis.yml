@@ -13,7 +13,7 @@ before_script:
   - composer install --prefer-source --no-interaction
   - cp config.tests.php config.php
   - bin/setup codeup:db:create
-  - bin/setup migrations:migrate
+  - bin/setup migrations:migrate -n
   - npm install -g phantomjs-prebuilt
 
 script:
