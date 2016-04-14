@@ -1,4 +1,7 @@
 {
+    "name": "codeup/attendance",
+    "description": "Codeup's attendance application",
+    "license": "MIT",
     "autoload": {
         "psr-4": {
             "Codeup\\": [

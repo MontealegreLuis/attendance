@@ -155,7 +155,6 @@ class Student implements CanRecordEvents
 
     public function checkOut(DateTimeInterface $now)
     {
-        // TODO: write logic here
     }
 
     public function hasCheckedOut()
