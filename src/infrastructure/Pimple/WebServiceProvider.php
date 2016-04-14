@@ -14,7 +14,6 @@ use Codeup\JmsSerializer\JsonSerializer;
 use Codeup\Messaging\MessagePublisher;
 use Codeup\Slim\HomeController;
 use Codeup\Slim\RegisterBootcampController;
-use Codeup\Slim\RegisterStudentsController;
 use Codeup\Slim\UpdateAttendanceController;
 use Codeup\Twig\Extensions\AttendanceExtension;
 use Igorw\EventSource\Stream;
