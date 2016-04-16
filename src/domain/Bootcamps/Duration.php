@@ -6,46 +6,57 @@
  */
 namespace Codeup\Bootcamps;
 
-use DateTime;
+use DateTimeInterface;
 
+/**
+ * The duration of a bootcamp is usually of 16 weeks
+ */
 class Duration
 {
-    /** @var DateTime */
+    /** @var DateTimeInterface */
     private $startDate;
 
-    /** @var DateTime */
+    /** @var DateTimeInterface */
     private $stopDate;
 
     /**
-     * @param DateTime $startDate
-     * @param DateTime $stopDate
+     * @param DateTimeInterface $startDate
+     * @param DateTimeInterface $stopDate
      */
-    private function __construct(DateTime $startDate, DateTime $stopDate)
-    {
+    private function __construct(
+        DateTimeInterface $startDate,
+        DateTimeInterface $stopDate
+    ) {
         AssertValueIs::greaterThan(
             $stopDate,
             $startDate,
-            "{$startDate->format('Y-m-d')} is greater than {$stopDate->format('Y-m-d')}"
+            sprintf(
+                'Start date %s is greater than stop date %s',
+                $startDate->format('Y-m-d'),
+                $stopDate->format('Y-m-d')
+            )
         );
         $this->startDate = $startDate->setTime(0, 0, 0);
         $this->stopDate = $stopDate->setTime(0, 0, 0);
     }
 
     /**
-     * @param DateTime $startDate
-     * @param DateTime $stopDate
+     * @param DateTimeInterface $startDate
+     * @param DateTimeInterface $stopDate
      * @return Duration
      */
-    public static function between(DateTime $startDate, DateTime $stopDate)
-    {
+    public static function between(
+        DateTimeInterface $startDate,
+        DateTimeInterface $stopDate
+    ) {
         return new Duration($startDate, $stopDate);
     }
 
     /**
-     * @param DateTime $aDate
+     * @param DateTimeInterface $aDate
      * @return Duration
      */
-    public static function workWeekContaining(DateTime $aDate)
+    public static function workWeekContaining(DateTimeInterface $aDate)
     {
         return new Duration(
             clone $aDate->modify('monday this week'),
@@ -54,16 +65,16 @@ class Duration
     }
 
     /**
-     * @param DateTime $aDate
+     * @param DateTimeInterface $aDate
      * @return bool
      */
-    public function contains(DateTime $aDate)
+    public function contains(DateTimeInterface $aDate)
     {
         return $aDate >= $this->startDate && $aDate <= $this->stopDate;
     }
 
     /**
-     * @return DateTime
+     * @return DateTimeInterface
      */
     public function startDate()
     {
@@ -71,7 +82,7 @@ class Duration
     }
 
     /**
-     * @return DateTime
+     * @return DateTimeInterface
      */
     public function stopDate()
     {

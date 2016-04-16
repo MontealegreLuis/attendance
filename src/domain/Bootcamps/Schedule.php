@@ -8,6 +8,9 @@ namespace Codeup\Bootcamps;
 
 use DateTimeInterface;
 
+/**
+ * The usual schedule of a bootcamp is from 9:00 to 16:00 hrs.
+ */
 class Schedule
 {
     /** @var DateTimeInterface */
@@ -27,7 +30,11 @@ class Schedule
         AssertValueIs::greaterThan(
             $stopTime->setDate(0, 1, 1),
             $startTime->setDate(0, 1, 1),
-            "{$startTime->format('H:i:s')} is greater than {$stopTime->format('H:i:s')}"
+            sprintf(
+                'Scheduled start time %s is greater than stop time %s',
+                $startTime->format('H:i:s'),
+                $stopTime->format('H:i:s')
+            )
         );
         $this->startTime = $startTime->setDate(0, 1, 1);
         $this->stopTime = $stopTime->setDate(0, 1, 1);

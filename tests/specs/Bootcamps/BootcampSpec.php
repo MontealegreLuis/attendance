@@ -9,31 +9,36 @@ namespace specs\Codeup\Bootcamps;
 use Codeup\Bootcamps\BootcampId;
 use Codeup\Bootcamps\Schedule;
 use Codeup\Bootcamps\Duration;
-use DateTime;
+use DateTimeImmutable;
 use PhpSpec\ObjectBehavior;
 
 class BootcampSpec extends ObjectBehavior
 {
+    /** @var DateTimeImmutable */
+    private $now;
+
     function let()
     {
+        $this->now = new DateTimeImmutable('now');
+        $currentHour = (int) $this->now->format('H');
+        $currentMinute = (int) $this->now->format('i');
+
         $this->beConstructedThrough('start', [
             BootcampId::fromLiteral(1),
-            Duration::between(new DateTime('-30 day'), new DateTime('30 day')),
+            Duration::between(
+                $this->now->modify('-1 day'),
+                $this->now->modify('4 months')
+            ),
             'Hampton',
             Schedule::withClassTimeBetween(
-                new DateTime('-6 hour'),
-                new DateTime('now')
+                $this->now->setTime($currentHour - 1, $currentMinute),
+                $this->now->setTime($currentHour + 6, $currentMinute)
             )
         ]);
     }
 
-    /*function it_should_have_a_name()
+    function it_knows_if_it_is_in_progress()
     {
-        $this->cohortName()->shouldBe('Hampton');
-    }*/
-
-    function it_should_know_if_it_is_in_progress()
-    {
-        $this->isInProgress(new DateTime('now'))->shouldBe(true);
+        $this->isInProgress($this->now)->shouldBe(true);
     }
 }

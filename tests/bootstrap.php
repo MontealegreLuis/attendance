@@ -14,7 +14,7 @@ echo "PHP server is running with PID $pidServer", PHP_EOL;
 $output = [];
 exec('phantomjs --webdriver=127.0.0.1:8910 >/dev/null 2>&1 & echo $!', $output);
 $pidPhantom = (int) $output[0];
-echo "PhantomJS is running with PID $pidServer", PHP_EOL;
+echo "PhantomJS is running with PID $pidPhantom", PHP_EOL;
 
 sleep(3); // Wait a moment for PhantomJS
 
