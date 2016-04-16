@@ -12,7 +12,7 @@ use Codeup\Bootcamps\Bootcamp;
 use Codeup\Bootcamps\MacAddress;
 use Codeup\Bootcamps\Student;
 use Codeup\Bootcamps\StudentId;
-use DateTime;
+use DateTimeInterface;
 
 class StudentBuilder
 {
@@ -83,10 +83,10 @@ class StudentBuilder
     }
 
     /**
-     * @param DateTime $time
+     * @param DateTimeInterface $time
      * @return StudentBuilder
      */
-    public function whoCheckedInAt(DateTime $time)
+    public function whoCheckedInAt(DateTimeInterface $time)
     {
         $this->checkIn = Attendance::checkIn(
             AttendanceId::fromLiteral(static::$nextId),

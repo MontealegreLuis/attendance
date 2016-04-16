@@ -11,7 +11,7 @@ use Codeup\Bootcamps\Attendances;
 use Codeup\Bootcamps\Bootcamps;
 use Codeup\Bootcamps\Students;
 use Codeup\DataBuilders\A;
-use DateTime;
+use DateTimeImmutable;
 use PHPUnit_Framework_TestCase as TestCase;
 
 abstract class AttendancesTest extends TestCase
@@ -53,7 +53,7 @@ abstract class AttendancesTest extends TestCase
         $this->knownId = 4;
         $this->bootcamps->add(
             $bootcamp = A::bootcamp()
-                ->notYetFinished(new DateTime('now'))
+                ->notYetFinished(new DateTimeImmutable('now'))
                 ->build()
         );
         $this->students->add(

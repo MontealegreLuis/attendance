@@ -7,7 +7,12 @@
 namespace Codeup\Bootcamps;
 
 use DateTime;
+use DateTimeInterface;
 
+/**
+ * There are two types of attendances to be tracked: when the students arrive
+ * to the class and when they leave.
+ */
 class Attendance
 {
     const CHECK_IN = 0;
@@ -16,7 +21,7 @@ class Attendance
     /** @var AttendanceId */
     private $attendanceId;
 
-    /** @var DateTime */
+    /** @var DateTimeInterface */
     private $date;
 
     /** @var int */
@@ -27,13 +32,13 @@ class Attendance
 
     /**
      * @param AttendanceId $attendanceId
-     * @param DateTime $date
+     * @param DateTimeInterface $date
      * @param int $type
      * @param StudentId $studentId
      */
     private function __construct(
         AttendanceId $attendanceId,
-        DateTime $date,
+        DateTimeInterface $date,
         $type,
         StudentId $studentId
     ) {
@@ -59,13 +64,13 @@ class Attendance
 
     /**
      * @param AttendanceId $attendanceId
-     * @param DateTime $aDate
+     * @param DateTimeInterface $aDate
      * @param StudentId $studentId
      * @return Attendance
      */
     public static function checkOut(
         AttendanceId $attendanceId,
-        DateTime $aDate,
+        DateTimeInterface $aDate,
         StudentId $studentId
     ) {
         return new Attendance(
@@ -78,13 +83,13 @@ class Attendance
 
     /**
      * @param AttendanceId $attendanceId
-     * @param DateTime $aDate
+     * @param DateTimeInterface $aDate
      * @param StudentId $studentId
      * @return Attendance
      */
     public static function checkIn(
         AttendanceId $attendanceId,
-        DateTime $aDate,
+        DateTimeInterface $aDate,
         StudentId $studentId
     ) {
         return new Attendance(
@@ -112,10 +117,10 @@ class Attendance
     }
 
     /**
-     * @param DateTime $aDate
+     * @param DateTimeInterface $aDate
      * @return bool
      */
-    public function occurredOn(DateTime $aDate)
+    public function occurredOn(DateTimeInterface $aDate)
     {
         return $this->date->format('Y-m-d') === $aDate->format('Y-m-d');
     }

@@ -11,7 +11,7 @@ use Codeup\Bootcamps\MacAddress;
 use Codeup\Bootcamps\Student;
 use Codeup\Bootcamps\StudentId;
 use Codeup\Bootcamps\Students;
-use DateTime;
+use DateTimeInterface;
 use Doctrine\DBAL\Connection;
 use PDO;
 
@@ -38,11 +38,11 @@ class StudentsRepository implements Students
     }
 
     /**
-     * @param DateTime $today
+     * @param DateTimeInterface $today
      * @param MacAddress[] $addresses
      * @return Student[]
      */
-    public function attending(DateTime $today, array $addresses)
+    public function attending(DateTimeInterface $today, array $addresses)
     {
         $builder = $this->connection->createQueryBuilder();
         $builder

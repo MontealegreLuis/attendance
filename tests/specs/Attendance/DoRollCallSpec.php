@@ -14,18 +14,18 @@ use Codeup\Bootcamps\Students;
 use Codeup\DataBuilders\A;
 use Codeup\DomainEvents\EventPublisher;
 use DateInterval;
-use DateTime;
+use DateTimeImmutable;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
 class DoRollCallSpec extends ObjectBehavior
 {
-    /** @var DateTime */
+    /** @var DateTimeImmutable */
     private $now;
 
     function let()
     {
-        $this->now = (new DateTime('now'))->setTime(12, 0, 0);
+        $this->now = (new DateTimeImmutable('now'))->setTime(12, 0, 0);
     }
 
     function it_updates_all_students_who_have_arrived_now(

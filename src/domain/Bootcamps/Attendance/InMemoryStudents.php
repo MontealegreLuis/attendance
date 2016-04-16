@@ -10,7 +10,7 @@ use Codeup\Bootcamps\MacAddress;
 use Codeup\Bootcamps\Student;
 use Codeup\Bootcamps\StudentId;
 use Codeup\Bootcamps\Students;
-use DateTime;
+use DateTimeInterface;
 use SplObjectStorage;
 
 class InMemoryStudents implements Students
@@ -66,11 +66,11 @@ class InMemoryStudents implements Students
     }
 
     /**
-     * @param DateTime $today
+     * @param DateTimeInterface $today
      * @param MacAddress[] $addresses
      * @return Student[]
      */
-    public function attending(DateTime $today, array $addresses)
+    public function attending(DateTimeInterface $today, array $addresses)
     {
         $students = [];
 
@@ -89,13 +89,13 @@ class InMemoryStudents implements Students
      * then check if one of the registered MAC addresses belong to one of them.
      *
      * @param Student $student
-     * @param DateTime $today
+     * @param DateTimeInterface $today
      * @param MacAddress[] $addresses
      * @return bool
      */
     private function isStudentPresent(
         Student $student,
-        DateTime $today,
+        DateTimeInterface $today,
         array $addresses
     ) {
         /** @var MacAddress $address */

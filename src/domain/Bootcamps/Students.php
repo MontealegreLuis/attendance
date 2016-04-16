@@ -6,7 +6,7 @@
  */
 namespace Codeup\Bootcamps;
 
-use DateTime;
+use DateTimeInterface;
 
 interface Students
 {
@@ -22,11 +22,11 @@ interface Students
      * It does not matter if they have checked in/out today yet. The
      * appropriate action will be taken if needed in a subsequent step.
      *
-     * @param DateTime $today
+     * @param DateTimeInterface $today
      * @param array $addresses
      * @return Student[]
      */
-    public function attending(DateTime $today, array $addresses);
+    public function attending(DateTimeInterface $today, array $addresses);
 
     /**
      * @param Student $student

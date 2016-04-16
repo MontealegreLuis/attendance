@@ -11,12 +11,12 @@ use Codeup\Bootcamps\MacAddress;
 use Codeup\Bootcamps\Students;
 use Codeup\DataBuilders\A;
 use DateInterval;
-use DateTime;
+use DateTimeImmutable;
 use PHPUnit_Framework_TestCase as TestCase;
 
 abstract class StudentsTest extends TestCase
 {
-    /** @var DateTime */
+    /** @var DateTimeImmutable */
     private $today;
 
     /** @var Students */
@@ -41,7 +41,7 @@ abstract class StudentsTest extends TestCase
     /** @before */
     function generateFixtures()
     {
-        $this->today = (new DateTime('now'))->setTime(12, 0, 0);
+        $this->today = (new DateTimeImmutable('now'))->setTime(12, 0, 0);
         $this->students = $this->studentsInstance();
         $this->bootcamps = $this->bootcampsInstance();
         $this->bootcamps->add(

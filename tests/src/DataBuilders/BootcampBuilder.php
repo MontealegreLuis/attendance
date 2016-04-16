@@ -11,7 +11,7 @@ use Codeup\Bootcamps\BootcampId;
 use Codeup\Bootcamps\Duration;
 use Codeup\Bootcamps\Schedule;
 use DateInterval;
-use DateTime;
+use DateTimeInterface;
 use DateTimeImmutable;
 
 class BootcampBuilder
@@ -55,11 +55,17 @@ class BootcampBuilder
         return $bootcamp;
     }
 
-    public function notYetFinished(DateTime $byNow)
+    /**
+     * It creates a bootcamp that started 4 months before and finished 1 day
+     * **after** `$byNow` date
+     *
+     * @param DateTimeInterface $byNow
+     * @return BootcampBuilder
+     */
+    public function notYetFinished(DateTimeInterface $byNow)
     {
-        $now = clone $byNow;
-        $tomorrow = clone $now->modify('tomorrow');
-        $fourMonthsAgo = clone $now->modify('4 months ago');
+        $tomorrow = $byNow->modify('tomorrow');
+        $fourMonthsAgo = $byNow->modify('4 months ago');
 
         $this->duration = Duration::between($fourMonthsAgo, $tomorrow);
 
@@ -67,14 +73,16 @@ class BootcampBuilder
     }
 
     /**
-     * @param DateTime $byNow
+     * It creates a bootcamp that started 4 months before and finished 1 day
+     * **before** `$byNow` date
+     *
+     * @param DateTimeInterface $byNow
      * @return BootcampBuilder
      */
-    public function alreadyFinished(DateTime $byNow)
+    public function alreadyFinished(DateTimeInterface $byNow)
     {
-        $now = clone $byNow;
-        $yesterday = clone $now->modify('1 day ago');
-        $fourMonthsAgo = clone $now->modify('4 months ago');
+        $yesterday = $byNow->modify('1 day ago');
+        $fourMonthsAgo = $byNow->modify('4 months ago');
         $this->duration = Duration::between($fourMonthsAgo, $yesterday);
 
         return $this;

@@ -12,7 +12,7 @@ use Codeup\Bootcamps\Attendances;
 use Codeup\Bootcamps\Student;
 use Codeup\Bootcamps\Students;
 use Codeup\DomainEvents\PublishesEvents;
-use DateTime;
+use DateTimeInterface;
 
 /**
  * Poll the router's DHCP status page to see who is connected, if the MAC
@@ -48,10 +48,10 @@ class DoRollCall
     }
 
     /**
-     * @param DateTime $today
+     * @param DateTimeInterface $today
      * @return \Codeup\Bootcamps\Student[]
      */
-    public function rollCall(DateTime $today)
+    public function rollCall(DateTimeInterface $today)
     {
         $addresses = $this->checker->whoIsConnected();
         $students = $this->students->attending($today, $addresses);
@@ -59,20 +59,24 @@ class DoRollCall
 
         /** @var Student $student */
         foreach ($students as $student) {
-            $studentsInClass = $this->registerStudentCheckIn($today, $student, $studentsInClass);
+            $studentsInClass = $this->registerStudentCheckIn(
+                $today,
+                $student,
+                $studentsInClass
+            );
         }
 
         return $studentsInClass;
     }
 
     /**
-     * @param DateTime $today
+     * @param DateTimeInterface $today
      * @param Student $student
      * @param array $students
      * @return Student[]
      */
     private function registerStudentCheckIn(
-        DateTime $today,
+        DateTimeInterface $today,
         Student $student,
         array $students
     ) {
