@@ -28,37 +28,28 @@ class DoRollCallSpec extends ObjectBehavior
         $this->now = (new DateTimeImmutable('now'))->setTime(12, 0, 0);
     }
 
-    function it_updates_all_students_who_have_arrived_now(
+    function it_updates_all_students_who_are_arriving_now(
         AttendanceChecker $checker,
         Students $students,
         Attendances $attendances
     ) {
         // Given
-        $addresses = [
-            $address1 = A::macAddress()->build(),
-            $address2 = A::macAddress()->build(),
-            $address3 = A::macAddress()->build(),
-        ];
         $bootcamp = A::bootcamp()->notYetFinished($this->now)->build();
+        $addresses = [
+            A::macAddress()->build(),
+            A::macAddress()->build(),
+            A::macAddress()->build(),
+        ];
+        $studentsInClassroom = [
+            A::student()->enrolledOn($bootcamp)->build(),
+            A::student()->enrolledOn($bootcamp)->build(),
+            A::student()->enrolledOn($bootcamp)->build(),
+        ];
         $checker->whoIsConnected()->willReturn($addresses);
-        $students->attending($this->now, $addresses)->willReturn([
-            $student1 = A::student()
-                ->enrolledOn($bootcamp)
-                ->withMacAddress($address1)
-                ->build(),
-            $student2 = A::student()
-                ->enrolledOn($bootcamp)
-                ->withMacAddress($address2)
-                ->build(),
-            $student3 = A::student()
-                ->enrolledOn($bootcamp)
-                ->withMacAddress($address3)
-                ->build(),
-        ]);
-        $this->beConstructedWith($checker, $students, $attendances);
-        $this->setPublisher(new EventPublisher());
-
-        // Then
+        $students
+            ->attending($this->now, $addresses)
+            ->willReturn($studentsInClassroom)
+        ;
         $attendances
             ->nextAttendanceId()
             ->willReturn(
@@ -67,13 +58,18 @@ class DoRollCallSpec extends ObjectBehavior
                 AttendanceId::fromLiteral(3)
             )
         ;
+
+        $this->beConstructedWith($checker, $students, $attendances);
+        $this->setPublisher(new EventPublisher());
+
+        // Then
         $attendances
             ->add(Argument::type(Attendance::class))
             ->shouldBeCalledTimes(3)
         ;
 
         // When
-        $this->rollCall($this->now);
+        $this->rollCall($this->now)->shouldBe($studentsInClassroom);
     }
 
     function it_updates_only_the_students_who_have_not_already_checked_in(
@@ -82,31 +78,25 @@ class DoRollCallSpec extends ObjectBehavior
         Attendances $attendances
     ) {
         // Given
-        $addresses = [
-            $address1 = A::macAddress()->build(),
-            $address2 = A::macAddress()->build(),
-            $address3 = A::macAddress()->build(),
-        ];
         $bootcamp = A::bootcamp()->notYetFinished($this->now)->build();
-        $checker->whoIsConnected()->willReturn($addresses);
-        $students->attending($this->now, $addresses)->willReturn([
-            $student1 = A::student()
-                ->enrolledOn($bootcamp)
-                ->withMacAddress($address1)->build(),
-            $student2 = A::student()
+        $addresses = [
+            A::macAddress()->build(),
+            A::macAddress()->build(),
+            A::macAddress()->build(),
+        ];
+        $studentsInClassroom = [
+            A::student()->enrolledOn($bootcamp)->build(),
+            A::student()
                 ->enrolledOn($bootcamp)
                 ->whoCheckedInAt($this->now->sub(new DateInterval('PT1H')))
-                ->withMacAddress($address2)
                 ->build(),
-            $student3 = A::student()
-                ->enrolledOn($bootcamp)
-                ->withMacAddress($address3)
-                ->build(),
-        ]);
-        $this->beConstructedWith($checker, $students, $attendances);
-        $this->setPublisher(new EventPublisher());
-
-        // Then
+            A::student()->enrolledOn($bootcamp)->build(),
+        ];
+        $checker->whoIsConnected()->willReturn($addresses);
+        $students
+            ->attending($this->now, $addresses)
+            ->willReturn($studentsInClassroom)
+        ;
         $attendances
             ->nextAttendanceId()
             ->willReturn(
@@ -114,48 +104,56 @@ class DoRollCallSpec extends ObjectBehavior
                 AttendanceId::fromLiteral(2)
             )
         ;
+
+        $this->beConstructedWith($checker, $students, $attendances);
+        $this->setPublisher(new EventPublisher());
+
+        // Then
         $attendances
             ->add(Argument::type(Attendance::class))
             ->shouldBeCalledTimes(2)
         ;
 
         // When
-        $this->rollCall($this->now);
+        $this->rollCall($this->now)->shouldHaveCount(2);
     }
 
-    function it_does_not_update_students_who_have_already_checked_in(
+    function it_does_not_update_students_if_all_have_already_checked_in(
         AttendanceChecker $checker,
         Students $students,
         Attendances $attendances
     ) {
         // Given
-        $addresses = [
-            $address1 = A::macAddress()->build(),
-            $address2 = A::macAddress()->build(),
-            $address3 = A::macAddress()->build(),
-        ];
         $bootcamp = A::bootcamp()->notYetFinished($this->now)->build();
-        $checker->whoIsConnected()->willReturn($addresses);
-        $students->attending($this->now, $addresses)->willReturn([
-            $student1 = A::student()
+        $addresses = [
+            A::macAddress()->build(),
+            A::macAddress()->build(),
+            A::macAddress()->build(),
+        ];
+        $studentsInClassroom = [
+            A::student()
                 ->enrolledOn($bootcamp)
                 ->whoCheckedInAt($this->now->sub(new DateInterval('PT2H')))
-                ->withMacAddress($address1)
                 ->build(),
-            $student2 = A::student()
+            A::student()
                 ->enrolledOn($bootcamp)
                 ->whoCheckedInAt($this->now->sub(new DateInterval('PT1H')))
-                ->withMacAddress($address2)
                 ->build(),
-            $student3 = A::student()
+            A::student()
                 ->enrolledOn($bootcamp)
                 ->whoCheckedInAt($this->now->sub(new DateInterval('PT3H')))
-                ->withMacAddress($address3)->build(),
-        ]);
+                ->build(),
+        ];
+        $checker->whoIsConnected()->willReturn($addresses);
+        $students
+            ->attending($this->now, $addresses)
+            ->willReturn($studentsInClassroom)
+        ;
+
         $this->beConstructedWith($checker, $students, $attendances);
 
         // When
-        $this->rollCall($this->now);
+        $this->rollCall($this->now)->shouldHaveCount(0);
 
         // Then
         $attendances
