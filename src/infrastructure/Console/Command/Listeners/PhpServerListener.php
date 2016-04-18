@@ -6,13 +6,22 @@
  */
 namespace Codeup\Console\Command\Listeners;
 
+use Codeup\TestHelpers\HeadlessRunner;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
 use Symfony\Component\Console\Event\ConsoleTerminateEvent;
 
 class PhpServerListener
 {
-    /** @var int */
-    private $pidPhpServer;
+    /** @var HeadlessRunner */
+    private $runner;
+
+    /**
+     * @param HeadlessRunner $runner
+     */
+    public function __construct(HeadlessRunner $runner)
+    {
+        $this->runner = $runner;
+    }
 
     /**
      * @param ConsoleCommandEvent $event
@@ -23,16 +32,11 @@ class PhpServerListener
                'codeup:rollcall' === $event->getCommand()->getName()
             && $event->getInput()->getOption('locally')
         ) {
-            $output = [];
-            exec(
-                'php -S localhost:8000 -t tests/fixtures >/dev/null 2>&1 & echo $!',
-                $output
-            );
-            $this->pidPhpServer = (int) $output[0];
+            $this->runner->startPhpServer();
 
             $event->getOutput()->writeln(sprintf(
                 '<info>PHP server is running with PID <comment>%d</comment></info>',
-                $this->pidPhpServer
+                $this->runner->phpServerPid()
             ));
         }
     }
@@ -46,11 +50,11 @@ class PhpServerListener
             'codeup:rollcall' === $event->getCommand()->getName()
             && $event->getInput()->getOption('locally')
         ) {
-            exec("kill {$this->pidPhpServer}");
+            $this->runner->stopPhpServer();
 
             $event->getOutput()->writeln(sprintf(
                 '<info>PHP server with PID <comment>%d</comment> was stopped</info>',
-                $this->pidPhpServer
+                $this->runner->phpServerPid()
             ));
         }
     }

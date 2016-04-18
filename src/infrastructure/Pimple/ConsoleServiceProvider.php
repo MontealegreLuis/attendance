@@ -11,6 +11,7 @@ use Codeup\Console\Command\Listeners\PhantomJsListener;
 use Codeup\Console\Command\Listeners\PhpServerListener;
 use Codeup\Console\Command\RollCallCommand;
 use Codeup\Retry\RetryRollCall;
+use Codeup\TestHelpers\HeadlessRunner;
 use Codeup\WebDriver\WebDriverAttendanceChecker;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Pimple\Container;
@@ -55,11 +56,14 @@ class ConsoleServiceProvider extends AttendanceServiceProvider
             // Lazy load the connection to Facebook's Web Driver
             return $factory->createProxy(DoRollCall::class, $initializer);
         };
-        $container['console.listeners.phantomjs'] = function () {
-            return new PhantomJsListener();
+        $container['console.runner'] = function () use ($container) {
+            return new HeadlessRunner();
         };
-        $container['console.listeners.php_server'] = function () {
-            return new PhpServerListener();
+        $container['console.listeners.phantomjs'] = function () use ($container) {
+            return new PhantomJsListener($container['console.runner']);
+        };
+        $container['console.listeners.php_server'] = function () use ($container) {
+            return new PhpServerListener($container['console.runner']);
         };
         $container['console.dispatcher'] = function () use ($container) {
             $dispatcher = new EventDispatcher();

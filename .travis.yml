@@ -18,4 +18,4 @@ before_script:
 
 script:
   - bin/phpspec run -v
-  - bin/phpunit -v
+  - bin/phpunit --testsuite unit --testsuite integration -v

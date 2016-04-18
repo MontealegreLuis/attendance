@@ -10,7 +10,7 @@ use Codeup\Attendance\DoRollCall;
 use Codeup\Bootcamps\AttendanceChecker;
 use Codeup\Bootcamps\Attendances;
 use Codeup\Bootcamps\Students;
-use DateTime;
+use DateTimeInterface;
 use Exception;
 use Retry\BackOff\ExponentialBackOffPolicy;
 use Retry\RetryProxy;
@@ -49,14 +49,14 @@ class RetryRollCall extends DoRollCall
     }
 
     /**
-     * @param DateTime $today
+     * @param DateTimeInterface $today
      * @return \Codeup\Bootcamps\Student[]
      * @throws RetriesExhausted
      */
-    public function rollCall(DateTime $today)
+    public function rollCall(DateTimeInterface $today)
     {
         try {
-            return $this->proxy->call(function (DateTime $today) {
+            return $this->proxy->call(function (DateTimeInterface $today) {
                 return parent::rollCall($today);
             }, [$today]);
         } catch (Exception $exception) {

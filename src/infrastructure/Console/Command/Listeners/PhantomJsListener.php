@@ -6,6 +6,7 @@
  */
 namespace Codeup\Console\Command\Listeners;
 
+use Codeup\TestHelpers\HeadlessRunner;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
 use Symfony\Component\Console\Event\ConsoleTerminateEvent;
 
@@ -14,8 +15,16 @@ use Symfony\Component\Console\Event\ConsoleTerminateEvent;
  */
 class PhantomJsListener
 {
-    /** @var int */
-    private $pidPhantomJs;
+    /** @var HeadlessRunner */
+    private $runner;
+
+    /**
+     * @param HeadlessRunner $runner
+     */
+    public function __construct(HeadlessRunner $runner)
+    {
+        $this->runner = $runner;
+    }
 
     public function startPhantomJs(ConsoleCommandEvent $event)
     {
@@ -23,16 +32,11 @@ class PhantomJsListener
             return;
         }
 
-        $output = [];
-        exec(
-            'phantomjs --webdriver=127.0.0.1:8910 >/dev/null 2>&1 & echo $!',
-            $output
-        );
-        $this->pidPhantomJs = (int) $output[0];
+        $this->runner->startPhantomJs();
 
         $event->getOutput()->writeln(sprintf(
             '<info>PhantomJS is running with PID <comment>%d</comment></info>',
-            $this->pidPhantomJs
+            $this->runner->phantomJsPid()
         ));
 
         sleep(2);
@@ -44,11 +48,11 @@ class PhantomJsListener
             return;
         }
 
-        exec("kill {$this->pidPhantomJs}");
+        $this->runner->stopPhantomJs();
 
         $event->getOutput()->writeln(sprintf(
             '<info>PhantomJS with PID <comment>%d</comment> was stopped</info>',
-            $this->pidPhantomJs
+            $this->runner->phantomJsPid()
         ));
     }
 }
