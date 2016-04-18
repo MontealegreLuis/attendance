@@ -1,0 +1,29 @@
+Codeup\Bootcamps\BootcampId (local):
+    bootcamp_id1:
+        value: <bootcampId()>
+Codeup\Bootcamps\Bootcamp:
+    bootcamp1:
+        bootcampId: '@bootcamp_id1'
+        duration: <startingYesterday()>
+        cohortName: <word()>
+        schedule: <scheduledAt(9)>
+Codeup\Bootcamps\StudentId (local):
+    student_id{1..5}:
+        value: <studentId()>
+Codeup\Bootcamps\MacAddress (local):
+    address{1..5}:
+        value: <macAddress()>
+Codeup\Bootcamps\Student:
+    student{1..5}:
+        studentId: '@student_id<current()>'
+        bootcamp: '@bootcamp1'
+        name: <name()>
+        macAddress: '@address<current()>'
+Codeup\Bootcamps\AttendanceId (local):
+    attendance_id{1..2}:
+        value: <attendanceId()>
+Codeup\Bootcamps\Attendance:
+    attendance1:
+        __construct: { checkIn: ['@attendance_id1', <onTime(9)>, '@student_id1'] }
+    attendance2:
+        __construct: { checkIn: ['@attendance_id2', <late(9)>, '@student_id2'] }
