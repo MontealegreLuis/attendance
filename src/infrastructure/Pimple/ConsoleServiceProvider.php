@@ -56,7 +56,7 @@ class ConsoleServiceProvider extends AttendanceServiceProvider
             // Lazy load the connection to Facebook's Web Driver
             return $factory->createProxy(DoRollCall::class, $initializer);
         };
-        $container['console.runner'] = function () use ($container) {
+        $container['console.runner'] = function () {
             return new HeadlessRunner();
         };
         $container['console.listeners.phantomjs'] = function () use ($container) {
