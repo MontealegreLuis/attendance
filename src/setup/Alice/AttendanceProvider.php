@@ -9,6 +9,7 @@ namespace Codeup\Alice;
 use Codeup\Bootcamps\Attendances;
 use Codeup\Bootcamps\Bootcamps;
 use Codeup\Bootcamps\Duration;
+use Codeup\Bootcamps\Schedule;
 use Codeup\Bootcamps\Students;
 use Codeup\DomainEvents\EventStore;
 use Codeup\Messaging\MessageTracker;
@@ -113,5 +114,41 @@ class AttendanceProvider extends Base
             new DateTime('4 months ago'),
             new DateTime('yesterday')
         );
+    }
+
+    /**
+     * @param int $hour
+     * @return Schedule
+     */
+    public function scheduledAt($hour)
+    {
+        return Schedule::withClassTimeBetween(
+            (new DateTime())->setTime((int) $hour, 0),
+            (new DateTime())->setTime($hour + 7, 0)
+        );
+    }
+
+    /**
+     * @param int $hour
+     * @return DateTime
+     */
+    public function onTime($hour)
+    {
+        return (new DateTime())
+            ->setTime((int) $hour, 0)
+            ->modify('15 minutes ago')
+        ;
+    }
+
+    /**
+     * @param int $hour
+     * @return DateTime
+     */
+    public function late($hour)
+    {
+        return (new DateTime())
+            ->setTime((int) $hour, 0)
+            ->modify('15 minutes')
+        ;
     }
 }

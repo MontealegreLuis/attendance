@@ -6,7 +6,11 @@
  */
 namespace Codeup\Dbal;
 
+use Codeup\Alice\AttendanceProvider;
+use Codeup\Alice\DbalPersister;
 use Codeup\ContractTests\AttendancesTest;
+use Codeup\JmsSerializer\JsonEventSerializer;
+use Codeup\JmsSerializer\JsonSerializer;
 use Codeup\TestHelpers\SetupDatabaseConnection;
 
 class AttendanceRepositoryTest extends AttendancesTest
@@ -50,5 +54,38 @@ class AttendanceRepositoryTest extends AttendancesTest
         $connection->executeQuery('UPDATE bootcamps_seq SET next_val = 0');
 
         return new BootcampsRepository($connection);
+    }
+
+    /**
+     * @return DbalPersister
+     */
+    public function persister()
+    {
+        return new DbalPersister(
+            new BootcampsRepository($this->connection()),
+            new StudentsRepository($this->connection()),
+            new AttendancesRepository($this->connection()),
+            new EventStoreRepository(
+                $this->connection(),
+                new JsonEventSerializer(new JsonSerializer())
+            )
+        );
+    }
+
+    /**
+     * @return AttendanceProvider
+     */
+    public function provider()
+    {
+        return new AttendanceProvider(
+            new EventStoreRepository(
+                $this->connection(),
+                new JsonEventSerializer(new JsonSerializer())
+            ),
+            new MessageTrackerRepository($this->connection()),
+            new AttendancesRepository($this->connection()),
+            new BootcampsRepository($this->connection()),
+            new StudentsRepository($this->connection())
+        );
     }
 }
