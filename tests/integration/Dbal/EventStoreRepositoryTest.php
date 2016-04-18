@@ -23,6 +23,7 @@ class EventStoreRepositoryTest extends EventStoreTest
             new JsonEventSerializer(new JsonSerializer())
         );
         $connection->executeQuery('DELETE FROM events');
+        $connection->executeQuery('UPDATE events_seq SET next_val = 0');
 
         return $store;
     }

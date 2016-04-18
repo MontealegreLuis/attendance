@@ -20,13 +20,16 @@ class BootcampSpec extends ObjectBehavior
     function let()
     {
         $this->now = new DateTimeImmutable('now');
-        $currentHour = (int) $this->now->format('H');
+        $currentHour = $this->now->format('G') >= 18
+            ? $this->now->format('G') - 12
+            : $this->now->format('G')
+        ;
         $currentMinute = (int) $this->now->format('i');
 
         $this->beConstructedThrough('start', [
             BootcampId::fromLiteral(1),
             Duration::between(
-                $this->now->modify('-1 day'),
+                $this->now->modify('1 day ago'),
                 $this->now->modify('4 months')
             ),
             'Hampton',
@@ -40,5 +43,15 @@ class BootcampSpec extends ObjectBehavior
     function it_knows_if_it_is_in_progress()
     {
         $this->isInProgress($this->now)->shouldBe(true);
+    }
+
+    function it_knows_if_has_not_yet_started()
+    {
+        $this->isInProgress($this->now->modify('2 days ago'))->shouldBe(false);
+    }
+
+    function it_knows_if_has_finished()
+    {
+        $this->isInProgress($this->now->modify('5 months'))->shouldBe(false);
     }
 }

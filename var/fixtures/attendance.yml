@@ -1,9 +1,6 @@
 Codeup\Bootcamps\BootcampId (local):
     bootcamp_id{1..2}:
         value: <bootcampId()>
-Codeup\Bootcamps\Duration (local):
-    duration{1..2}:
-        __construct: { between: ["<dateTimeBetween('-5 days','now')>", "<dateTimeBetween('now', '4 months')>"] }
 DateTime (local):
     start:
         __construct: { createFromFormat: ['Y-m-d H:i:s', '2016-03-06 09:00:00'] }
@@ -20,7 +17,7 @@ Codeup\Bootcamps\Schedule (local):
 Codeup\Bootcamps\Bootcamp:
     bootcamp{1..2}:
         bootcampId: '@bootcamp_id<current()>'
-        duration: '@duration<current()>'
+        duration: <startingYesterday()>
         cohortName: <word()>
         schedule: '@schedule<current()>'
 

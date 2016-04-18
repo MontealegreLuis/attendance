@@ -20,27 +20,19 @@ use PhpSpec\ObjectBehavior;
 class UpdateAttendanceListSpec extends ObjectBehavior
 {
     function it_updates_the_attendance_list(
-        Attendances $attendances,
-        EventStream $stream
+        EventStream $stream,
+        Attendances $attendances
     ) {
-        $attendance = [
+        $bootcampSummary = [
             'bootcamp_id' => 1,
-            'cohort_name' => 'Hampton',
-            'start_date' => '2016-01-30 00:00:00',
-            'stop_date' => '2016-04-30 00:00:00',
-            'start_time' => '0000-00-00 09:00:00',
-            'stop_time' => '0000-00-00 16:00:00',
-            'student_id' => 2,
-            'name' => 'Luis Montealegre',
-            'mac_address' => '00-80-C8-E3-4C-BD',
-            'attendance_id' => 3,
-            'date' => '2016-04-03 08:35:09',
-            'type' => Attendance::CHECK_IN,
+            'students_count' => 12,
+            'on_time_students_count' => 3,
         ];
+        $attendanceId = AttendanceId::fromLiteral(3);
 
         $attendances
-            ->summary(AttendanceId::fromLiteral($attendance['attendance_id']))
-            ->willReturn($attendance)
+            ->summary($attendanceId)
+            ->willReturn($bootcampSummary)
         ;
 
         $this->beConstructedWith(
@@ -51,13 +43,13 @@ class UpdateAttendanceListSpec extends ObjectBehavior
 
         $this->consume(new StoredEvent(
             StoredEventId::fromLiteral(1),
-            json_encode(['attendance_id' => 3]),
+            json_encode(['attendance_id' => $attendanceId->value()]),
             StudentHasCheckedIn::class,
             new DateTime('now')
         ));
 
         $stream
-            ->push('{"bootcamp_id":1,"cohort_name":"Hampton","start_date":"2016-01-30 00:00:00","stop_date":"2016-04-30 00:00:00","start_time":"0000-00-00 09:00:00","stop_time":"0000-00-00 16:00:00","student_id":2,"name":"Luis Montealegre","mac_address":"00-80-C8-E3-4C-BD","attendance_id":3,"date":"2016-04-03 08:35:09","type":0}')
+            ->push('{"bootcamp_id":1,"students_count":12,"on_time_students_count":3}')
             ->shouldHaveBeenCalled()
         ;
     }

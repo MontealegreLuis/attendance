@@ -21,6 +21,7 @@ class StudentsRepositoryTest extends StudentsTest
     {
         $connection = $this->connection();
         $connection->query('DELETE FROM students');
+        $connection->executeQuery('UPDATE students_seq SET next_val = 0');
 
         return new StudentsRepository($connection);
     }
@@ -33,6 +34,7 @@ class StudentsRepositoryTest extends StudentsTest
     {
         $connection = $this->connection();
         $connection->query('DELETE FROM bootcamps');
+        $connection->executeQuery('UPDATE bootcamps_seq SET next_val = 0');
 
         return new BootcampsRepository($connection);
     }

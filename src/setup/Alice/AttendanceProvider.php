@@ -8,9 +8,11 @@ namespace Codeup\Alice;
 
 use Codeup\Bootcamps\Attendances;
 use Codeup\Bootcamps\Bootcamps;
+use Codeup\Bootcamps\Duration;
 use Codeup\Bootcamps\Students;
 use Codeup\DomainEvents\EventStore;
 use Codeup\Messaging\MessageTracker;
+use DateTime;
 use Faker\Provider\Base;
 
 class AttendanceProvider extends Base
@@ -89,5 +91,27 @@ class AttendanceProvider extends Base
     public function attendanceId()
     {
         return $this->attendances->nextAttendanceId()->value();
+    }
+
+    /**
+     * @return Duration
+     */
+    public function startingYesterday()
+    {
+        return Duration::between(
+            new DateTime('yesterday'),
+            new DateTime('4 months')
+        );
+    }
+
+    /**
+     * @return Duration
+     */
+    public function finishingYesterday()
+    {
+        return Duration::between(
+            new DateTime('4 months ago'),
+            new DateTime('yesterday')
+        );
     }
 }
