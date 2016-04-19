@@ -43,6 +43,11 @@ class HeadlessBrowserListener implements TestListener
     {
     }
 
+    /**
+     * Start both PhantomJS and PHP's built-in server
+     *
+     * @param TestSuite $suite
+     */
     public function startTestSuite(TestSuite $suite)
     {
         if ($suite->getName() === 'headless') {
@@ -60,6 +65,11 @@ class HeadlessBrowserListener implements TestListener
         }
     }
 
+    /**
+     * Stop both PhantomJS and PHP's built-in server
+     *
+     * @param TestSuite $suite
+     */
     public function endTestSuite(TestSuite $suite)
     {
         if ($suite->getName() === 'headless') {

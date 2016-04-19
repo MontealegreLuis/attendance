@@ -13,33 +13,34 @@ use PhpSpec\ObjectBehavior;
 
 class AttendanceSpec extends ObjectBehavior
 {
-    function it_should_be_created_as_a_check_in_entry()
+    function it_knows_it_is_a_check_in_entry()
     {
         $this->beConstructedThrough('checkIn', [
-            AttendanceId::fromLiteral(1),
-            $date = new DateTime(),
-            StudentId::fromLiteral(1),
-        ]);
-        $this->occurredOn($date)->shouldBe(true);
-    }
-
-    function it_should_be_created_as_a_check_out_entry()
-    {
-        $this->beConstructedThrough('checkOut', [
-            AttendanceId::fromLiteral(1),
-            $date = new DateTime(),
-            StudentId::fromLiteral(1),
-        ]);
-        $this->occurredOn($date)->shouldBe(true);
-    }
-
-    function it_should_know_when_it_occurred_on_a_different_day()
-    {
-        $this->beConstructedThrough('checkOut', [
             AttendanceId::fromLiteral(1),
             new DateTime(),
             StudentId::fromLiteral(1),
         ]);
-        $this->occurredOn(new DateTime('1 day'))->shouldBe(false);
+        $this->isCheckIn()->shouldBe(true);
+    }
+
+    function it_knows_it_is_a_check_out_entry()
+    {
+        $this->beConstructedThrough('checkOut', [
+            AttendanceId::fromLiteral(1),
+            $date = new DateTime(),
+            StudentId::fromLiteral(1),
+        ]);
+        $this->occurredOn($date)->shouldBe(true);
+    }
+
+    function it_knows_when_it_occurred_on_a_different_day()
+    {
+        $this->beConstructedThrough('checkOut', [
+            AttendanceId::fromLiteral(1),
+            new DateTime('now'),
+            StudentId::fromLiteral(1),
+        ]);
+        $this->occurredOn(new DateTime('1 day ago'))->shouldBe(false);
+        $this->occurredOn(new DateTime('tomorrow'))->shouldBe(false);
     }
 }

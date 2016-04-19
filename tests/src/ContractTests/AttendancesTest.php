@@ -9,10 +9,8 @@ namespace Codeup\ContractTests;
 use Codeup\Bootcamps\Attendance;
 use Codeup\Bootcamps\AttendanceId;
 use Codeup\Bootcamps\Attendances;
-use Codeup\Bootcamps\BootcampId;
 use Codeup\Bootcamps\Bootcamps;
 use Codeup\Bootcamps\Students;
-use Codeup\DataBuilders\A;
 use Codeup\Fixtures\Bootcamp5Students1OnTime1Late;
 use Faker\Provider\Base as Provider;
 use Nelmio\Alice\PersisterInterface;
@@ -108,6 +106,7 @@ abstract class AttendancesTest extends TestCase
             AttendanceId::fromLiteral(self::KNOWN_ID)
         );
 
+        $this->assertCount(3, $summary);
         $this->assertEquals($expectedBootcampId, $summary['bootcamp_id']);
         $this->assertEquals($studentsInClass, $summary['students_count']);
         $this->assertEquals($studentsOnTime, $summary['on_time_students_count']);

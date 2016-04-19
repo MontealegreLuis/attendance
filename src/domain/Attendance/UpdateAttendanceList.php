@@ -9,9 +9,9 @@ namespace Codeup\Attendance;
 use Codeup\Bootcamps\AttendanceId;
 use Codeup\Bootcamps\Attendances;
 use Codeup\DomainEvents\StoredEvent;
+use Codeup\Messaging\MessageConsumer;
 use Codeup\Serializer\Serializer;
 use Codeup\ServerSentEvents\EventStream;
-use Codeup\Messaging\MessageConsumer;
 
 class UpdateAttendanceList implements MessageConsumer
 {

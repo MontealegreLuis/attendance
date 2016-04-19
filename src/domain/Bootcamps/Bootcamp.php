@@ -6,8 +6,8 @@
  */
 namespace Codeup\Bootcamps;
 
-use DateTimeInterface;
 use DateTime;
+use DateTimeInterface;
 
 class Bootcamp
 {

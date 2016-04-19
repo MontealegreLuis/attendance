@@ -6,9 +6,9 @@
  */
 namespace Codeup\Bootcamps;
 
-use DateTimeInterface;
 use Codeup\DomainEvents\CanRecordEvents;
 use Codeup\DomainEvents\RecordsEvents;
+use DateTimeInterface;
 
 class Student implements CanRecordEvents
 {

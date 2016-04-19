@@ -6,8 +6,8 @@
  */
 namespace Codeup\Bootcamps;
 
-use DateTime;
 use Codeup\DomainEvents\Event;
+use DateTime;
 
 class StudentHasCheckedIn implements Event
 {

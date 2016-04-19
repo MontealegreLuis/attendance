@@ -55,6 +55,13 @@ class MacAddress
         return preg_match('/^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/', trim($address)) === 1;
     }
 
+    /**
+     * It matches valid mac address using the provided `$text` and creates an
+     * array of mac addresses objects
+     *
+     * @param $text
+     * @return MacAddress[]
+     */
     public static function addressesFrom($text)
     {
         $matches=[];

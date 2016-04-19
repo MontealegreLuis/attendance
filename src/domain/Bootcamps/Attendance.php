@@ -113,7 +113,15 @@ class Attendance
      */
     public function isCheckIn()
     {
-        return $this->type === static::CHECK_IN;
+        return $this->type === self::CHECK_IN;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCheckOut()
+    {
+        return $this->type === self::CHECK_OUT;
     }
 
     /**

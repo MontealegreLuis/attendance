@@ -15,7 +15,7 @@ class AssertValueIs extends Assertion
     {
         $message = $message ? $message : "{$value} is not a valid MAC address";
         if (!filter_var($value, FILTER_VALIDATE_MAC)) {
-            throw new InvalidArgumentException($message);
+            throw new InvalidArgumentException($message, 0, null, $value);
         }
     }
 }
