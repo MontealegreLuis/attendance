@@ -50,4 +50,23 @@ class DurationSpec extends ObjectBehavior
         ]);
         $this->contains(new DateTime('-31 day'))->shouldBe(false);
     }
+
+    function it_knows_its_start_and_stop_dates()
+    {
+        $startDate = DateTime::createFromFormat(
+            'Y-m-d H:i:s',
+            '2016-01-19 13:13:05'
+        );
+        $stopDate = DateTime::createFromFormat(
+            'Y-m-d H:i:s',
+            '2016-05-19 20:13:05'
+        );
+        $this->beConstructedThrough('between', [
+            $startDate,
+            $stopDate,
+        ]);
+
+        $this->startDate()->format('Y-m-d H:i:s')->shouldBe('2016-01-19 00:00:00');
+        $this->stopDate()->format('Y-m-d H:i:s')->shouldBe('2016-05-19 00:00:00');
+    }
 }
