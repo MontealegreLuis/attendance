@@ -14,6 +14,8 @@ use Codeup\Dbal\BootcampsRepository;
 use Codeup\Dbal\EventStoreRepository;
 use Codeup\Dbal\MessageTrackerRepository;
 use Codeup\Dbal\StudentsRepository;
+use Codeup\DomainEvents\EventPublisher;
+use Codeup\DomainEvents\PersistEventSubscriber;
 use Codeup\JmsSerializer\JsonEventSerializer;
 use Codeup\JmsSerializer\JsonSerializer;
 use Doctrine\DBAL\DriverManager;
@@ -79,6 +81,14 @@ class DatabaseServiceProvider implements ServiceProviderInterface
                 $container['attendance.attendances'],
                 $container['events.store']
             );
+        };
+        $container['events.publisher'] = function () use ($container) {
+            $publisher = new EventPublisher();
+            $publisher->subscribe(new PersistEventSubscriber(
+                $container['events.store']
+            ));
+
+            return $publisher;
         };
     }
 }

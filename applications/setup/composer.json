@@ -1,0 +1,37 @@
+{
+    "name": "attendance/setup",
+    "description": "Setup application for Codeup's attendance application",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Codeup\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Codeup\\": "vendor/attendance/domain/tests/src"
+        }
+    },
+    "config": {
+        "bin-dir": "bin/"
+    },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../../packages/events"
+        },
+        {
+            "type": "path",
+            "url": "../../packages/attendance"
+        },
+        {
+            "type": "path",
+            "url": "../../packages/persistency"
+        }
+    ],
+    "require": {
+        "attendance/persistency": "^1.0",
+        "pimple/pimple": "^3.0",
+        "anahkiasen/underscore-php": "^2.0"
+    }
+}

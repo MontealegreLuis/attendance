@@ -15,7 +15,7 @@ use Codeup\Console\Command\SeedDatabaseCommand;
 use Nelmio\Alice\Fixtures\Loader;
 use Pimple\Container;
 
-class SetupServiceProvider extends AttendanceServiceProvider
+class SetupServiceProvider extends DatabaseServiceProvider
 {
     public function register(Container $container)
     {
