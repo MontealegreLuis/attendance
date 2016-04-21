@@ -1,0 +1,36 @@
+{
+    "name": "attendance/domain",
+    "description": "Domain layer for Codeup's attendance application",
+    "version": "1.0.0",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Codeup\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Codeup\\": "tests/src"
+        },
+        "classmap": [
+            "tests/specs/Bootcamps/IdentifierSpec.php"
+        ]
+    },
+    "config": {
+        "bin-dir": "bin/"
+    },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../events"
+        }
+    ],
+    "require": {
+        "beberlei/assert": "^2.4",
+        "attendance/events": "^1.0"
+    },
+    "require-dev": {
+        "phpspec/phpspec": "^2.4",
+        "fzaninotto/faker": "^1.5"
+    }
+}

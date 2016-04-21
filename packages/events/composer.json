@@ -1,0 +1,14 @@
+{
+    "name": "attendance/events",
+    "description": "Events handling for Codeup's attendance application",
+    "license": "MIT",
+    "version": "1.0.0",
+    "autoload": {
+        "psr-4": {
+            "Codeup\\": "src"
+        }
+    },
+    "require": {
+        "jms/serializer": "^1.1"
+    }
+}
