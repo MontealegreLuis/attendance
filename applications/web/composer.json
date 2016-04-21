@@ -1,0 +1,36 @@
+{
+    "name": "attendance/web",
+    "description": "Web application for Codeup's attendance application",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Codeup\\": "src"
+        }
+    },
+    "config": {
+        "bin-dir": "bin/"
+    },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../../packages/events"
+        },
+        {
+            "type": "path",
+            "url": "../../packages/attendance"
+        },
+        {
+            "type": "path",
+            "url": "../../packages/persistency"
+        }
+    ],
+    "require": {
+        "slim/slim": "^3.1",
+        "attendance/persistency": "^1.0",
+        "igorw/event-source": "^1.0",
+        "pimple/pimple": "^3.0",
+        "slim/twig-view": "^2.0",
+        "anahkiasen/underscore-php": "^2.0",
+        "league/csv": "^8.0"
+    }
+}

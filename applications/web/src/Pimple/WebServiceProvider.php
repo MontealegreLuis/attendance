@@ -21,7 +21,7 @@ use Pimple\Container;
 use Slim\Views\Twig;
 use Slim\Views\TwigExtension;
 
-class WebServiceProvider extends AttendanceServiceProvider
+class WebServiceProvider extends DatabaseServiceProvider
 {
     public function register(Container $container)
     {
