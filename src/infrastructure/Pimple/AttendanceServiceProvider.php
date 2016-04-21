@@ -37,24 +37,6 @@ class AttendanceServiceProvider implements ServiceProviderInterface
      */
     public function register(Container $container)
     {
-        $container['db.connection'] = function () {
-            return DriverManager::getConnection($this->options['dbal']);
-        };
-        $container['events.store'] = function () use ($container) {
-            return new EventStoreRepository(
-                $container['db.connection'],
-                new JsonEventSerializer(new JsonSerializer())
-            );
-        };
-        $container['attendance.attendances'] = function () use ($container) {
-            return new AttendancesRepository($container['db.connection']);
-        };
-        $container['attendance.bootcamps'] = function () use ($container) {
-            return new BootcampsRepository($container['db.connection']);
-        };
-        $container['attendance.students'] = function () use ($container) {
-            return new StudentsRepository($container['db.connection']);
-        };
         $container['events.publisher'] = function () use ($container) {
             $publisher = new EventPublisher();
             $publisher->subscribe(new PersistEventSubscriber(
@@ -62,9 +44,6 @@ class AttendanceServiceProvider implements ServiceProviderInterface
             ));
 
             return $publisher;
-        };
-        $container['messages.tracker'] = function () use ($container) {
-            return new MessageTrackerRepository($container['db.connection']);
         };
     }
 }

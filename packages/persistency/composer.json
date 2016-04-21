@@ -1,0 +1,43 @@
+{
+    "name": "attendance/persistency",
+    "description": "Persistency layer for Codeup's attendance application",
+    "version": "1.0.0",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Codeup\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Codeup\\": [
+                "tests/src",
+                "../attendance/tests/src"
+            ]
+        }
+    },
+    "config": {
+        "bin-dir": "bin/"
+    },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../attendance"
+        },
+        {
+            "type": "path",
+            "url": "../events"
+        }
+    ],
+    "require": {
+        "attendance/domain": "^1.0",
+        "doctrine/dbal": "^2.5",
+        "symfony/console": "^3.0",
+        "doctrine/migrations": "^1.3"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^4.8",
+        "nelmio/alice": "^2.1",
+        "pimple/pimple": "^3.0"
+    }
+}
