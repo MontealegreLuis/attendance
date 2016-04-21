@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+    colors="true"
+    verbose="true"
+    bootstrap="vendor/autoload.php"
+>
+    <testsuites>
+        <testsuite name="headless">
+            <directory>tests/integration/WebDriver</directory>
+        </testsuite>
+    </testsuites>
+    <listeners>
+        <listener class="Codeup\PHPUnit\HeadlessBrowserListener">
+        </listener>
+    </listeners>
+</phpunit>

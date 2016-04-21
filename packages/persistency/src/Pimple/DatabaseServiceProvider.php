@@ -24,7 +24,7 @@ use Pimple\ServiceProviderInterface;
 class DatabaseServiceProvider implements ServiceProviderInterface
 {
     /** @var array */
-    private $options;
+    protected $options;
 
     /**
      * @param array $options

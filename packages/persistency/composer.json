@@ -3,6 +3,7 @@
     "description": "Persistency layer for Codeup's attendance application",
     "version": "1.0.0",
     "license": "MIT",
+    "bin": ["bin/database"],
     "autoload": {
         "psr-4": {
             "Codeup\\": "src"
@@ -32,12 +33,12 @@
     "require": {
         "attendance/domain": "^1.0",
         "doctrine/dbal": "^2.5",
+        "nelmio/alice": "^2.1",
         "symfony/console": "^3.0",
         "doctrine/migrations": "^1.3"
     },
     "require-dev": {
         "phpunit/phpunit": "^4.8",
-        "nelmio/alice": "^2.1",
         "pimple/pimple": "^3.0"
     }
 }

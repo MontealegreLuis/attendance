@@ -47,7 +47,7 @@ class SeedDatabaseCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $objects = $this->loader->load(
-            __DIR__ . '/../../../../var/fixtures/attendance.yml'
+            __DIR__ . '/../../../var/fixtures/attendance.yml'
         );
         $this->persister->persist($objects);
         $output->writeln(

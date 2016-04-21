@@ -1,0 +1,43 @@
+{
+    "name": "attendance/console",
+    "description": "Console application for Codeup's attendance application",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Codeup\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Codeup\\": "tests/src"
+        }
+    },
+    "config": {
+        "bin-dir": "bin/"
+    },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../../packages/events"
+        },
+        {
+            "type": "path",
+            "url": "../../packages/attendance"
+        },
+        {
+            "type": "path",
+            "url": "../../packages/persistency"
+        }
+    ],
+    "require": {
+        "attendance/persistency": "^1.0",
+        "pimple/pimple": "^3.0",
+        "facebook/webdriver": "^1.1",
+        "ocramius/proxy-manager": "^1.0",
+        "vkartaviy/retry": "^0.2.2",
+        "symfony/event-dispatcher": "^3.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^4.8"
+    }
+}

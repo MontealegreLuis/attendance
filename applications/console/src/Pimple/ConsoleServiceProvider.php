@@ -10,6 +10,8 @@ use Codeup\Attendance\DoRollCall;
 use Codeup\Console\Command\Listeners\PhantomJsListener;
 use Codeup\Console\Command\Listeners\PhpServerListener;
 use Codeup\Console\Command\RollCallCommand;
+use Codeup\DomainEvents\EventPublisher;
+use Codeup\DomainEvents\PersistEventSubscriber;
 use Codeup\Retry\RetryRollCall;
 use Codeup\TestHelpers\HeadlessRunner;
 use Codeup\WebDriver\WebDriverAttendanceChecker;
@@ -19,11 +21,19 @@ use ProxyManager\Factory\LazyLoadingValueHolderFactory;
 use Symfony\Component\Console\ConsoleEvents;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
-class ConsoleServiceProvider extends AttendanceServiceProvider
+class ConsoleServiceProvider extends DatabaseServiceProvider
 {
     public function register(Container $container)
     {
         parent::register($container);
+        $container['events.publisher'] = function () use ($container) {
+            $publisher = new EventPublisher();
+            $publisher->subscribe(new PersistEventSubscriber(
+                $container['events.store']
+            ));
+
+            return $publisher;
+        };
         $container['command.roll_call'] = function () use ($container) {
             return new RollCallCommand($container['attendance.do_roll_call']);
         };
