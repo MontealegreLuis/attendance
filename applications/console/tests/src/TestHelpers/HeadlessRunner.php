@@ -18,7 +18,7 @@ class HeadlessRunner
     {
         $output = [];
         exec(
-            'phantomjs --webdriver=127.0.0.1:8910 >/dev/null 2>&1 & echo $!',
+            'phantomjs --webdriver=127.0.0.1:4444 >/dev/null 2>&1 & echo $!',
             $output
         );
         $this->phantomJsPid = (int) $output[0];
