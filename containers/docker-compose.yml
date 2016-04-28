@@ -1,0 +1,15 @@
+data:
+  container_name: attendance_data
+  build: ./data
+db:
+  image: "mysql:5.7"
+  container_name: attendance_db
+  volumes_from:
+    - data
+  ports:
+    - "3306:3306"
+  environment:
+    MYSQL_ROOT_PASSWORD: dev_password
+    MYSQL_USER: dev_attendance_user
+    MYSQL_PASSWORD: dev_attendance_password
+    MYSQL_DATABASE: attendance_db

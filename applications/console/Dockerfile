@@ -17,5 +17,7 @@ RUN ln -s /phantomjs-1.9.8-linux-x86_64/bin/phantomjs /usr/bin/phantomjs
 
 EXPOSE 4444
 
+WORKDIR /usr/src/myapp/applications/console
+
 # Add the console `bin` folder to the PATH environment variable
 ENV PATH /usr/src/myapp/applications/console/bin:$PATH
