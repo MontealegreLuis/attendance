@@ -1,0 +1,8 @@
+web:
+  build: .
+  ports:
+    - "80:80"
+  external_links:
+    - attendance_db
+  volumes:
+    - ./../../:/usr/src/myapp
