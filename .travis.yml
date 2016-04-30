@@ -10,12 +10,12 @@ matrix:
 
 before_script:
   - composer self-update
-  - composer install --prefer-source --no-interaction
-  - cp config.tests.php config.php
+  - npm install -g phantomjs-prebuilt
+  - cd applications/console && composer install --prefer-source --no-interaction
   - bin/setup codeup:db:create
   - bin/setup migrations:migrate -n
-  - npm install -g phantomjs-prebuilt
 
 script:
+  - bin/phpunit -v
+  - cd ../../packages/attendance
   - bin/phpspec run -v
-  - bin/phpunit --testsuite unit --testsuite integration -v
