@@ -12,8 +12,8 @@ before_script:
   - composer self-update
   - npm install -g phantomjs-prebuilt
   - cd applications/console && composer install --prefer-source --no-interaction
-  - bin/setup codeup:db:create
-  - bin/setup migrations:migrate -n
+  - cp config.tests.php config.php
+  - bin/doctrine-migrations migrations:migrate -n
 
 script:
   - bin/phpunit -v
