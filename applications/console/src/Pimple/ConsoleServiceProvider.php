@@ -10,7 +10,6 @@ use Codeup\Attendance\DoRollCall;
 use Codeup\Console\Command\Listeners\PhantomJsListener;
 use Codeup\Console\Command\Listeners\PhpServerListener;
 use Codeup\Console\Command\RollCallCommand;
-use Codeup\DomainEvents\PersistEventSubscriber;
 use Codeup\Retry\RetryRollCall;
 use Codeup\TestHelpers\HeadlessRunner;
 use Codeup\WebDriver\WebDriverAttendanceChecker;
