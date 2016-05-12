@@ -1,0 +1,1 @@
+alias setup='docker-compose run --rm attendance_setup $@'

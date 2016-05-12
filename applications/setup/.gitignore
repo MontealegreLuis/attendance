@@ -1,2 +1,3 @@
 config.php
+/config/auth.json
 /vendor
