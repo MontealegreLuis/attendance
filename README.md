@@ -7,25 +7,14 @@ Command line and Web application to keep track of Codeup bootcamp's attendance.
 
 ## Setup
 
-This application uses [PhantomJS][1] to scrape the DHCP page looking for the
-students MAC addresses. One of the simplest ways to install PhantomJS is using
-`npm`
+This application uses [PhantomJS][1] to scrape the router's DHCP page looking
+for the students MAC addresses.
+
+To install this application you will only need Docker. If you have it
+configured run this commands:
 
 ```bash
-$ npm install -g phantomjs-prebuilt
-```
-
-After setting up PhantomJS, use Composer to install the project's dependencies.
-
-```bash
-$ composer install
-```
-
-Create and seed the database.
-
-```bash
-$ cp configuration.tests.php configuration
-$ bin/setup codeup:db:reset
+$ make install
 ```
 
 ## Tests
