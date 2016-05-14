@@ -8,6 +8,9 @@ namespace Codeup\Retry;
 
 use RuntimeException;
 
+/**
+ * Use the summary of failed attempts as a descriptive message.
+ */
 class RetriesExhausted extends RuntimeException
 {
     /**

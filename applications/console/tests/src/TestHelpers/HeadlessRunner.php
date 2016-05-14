@@ -14,11 +14,22 @@ class HeadlessRunner
     /** @var int */
     private $phpServerPid;
 
+    /** @var string */
+    private $phantomJsHost;
+
+    /**
+     * @param string $phantomJsHost
+     */
+    public function __construct($phantomJsHost)
+    {
+        $this->phantomJsHost = $phantomJsHost;
+    }
+
     public function startPhantomJs()
     {
         $output = [];
         exec(
-            'phantomjs --webdriver=127.0.0.1:4444 >/dev/null 2>&1 & echo $!',
+            "phantomjs --webdriver={$this->phantomJsHost} >/dev/null 2>&1 & echo \$!",
             $output
         );
         $this->phantomJsPid = (int) $output[0];

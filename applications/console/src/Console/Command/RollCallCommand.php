@@ -16,6 +16,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Scrape the router's DHCP page to know who are the students currently in class
+ */
 class RollCallCommand extends Command
 {
     /** @var DoRollCall */
@@ -50,6 +53,9 @@ HELP
     }
 
     /**
+     * Retry a configured amount of times if connection cannot be established
+     * immediately. Show the information of the present students, if found.
+     *
      * @param InputInterface $input
      * @param OutputInterface $output
      * @return void

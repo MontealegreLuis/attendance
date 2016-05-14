@@ -11,6 +11,11 @@ use Codeup\Bootcamps\MacAddress;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\WebDriverBy;
 
+/**
+ * This scraper uses Javascript to be able to pass the router's login process.
+ * Then it retrieves a hidden input with all the MAC addresses information and
+ * builds value objects with it.
+ */
 class WebDriverAttendanceChecker implements AttendanceChecker
 {
     /** @var array */

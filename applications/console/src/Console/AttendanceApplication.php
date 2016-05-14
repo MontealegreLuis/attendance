@@ -9,6 +9,10 @@ namespace Codeup\Console;
 use Pimple\Container;
 use Symfony\Component\Console\Application;
 
+/**
+ * This application has only one command to scrape the router's DHCP page to see
+ * who are the students currently in class
+ */
 class AttendanceApplication extends Application
 {
     /**

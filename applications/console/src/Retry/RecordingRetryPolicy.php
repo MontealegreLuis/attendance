@@ -11,6 +11,10 @@ use Exception;
 use Retry\Policy\SimpleRetryPolicy;
 use Retry\RetryContextInterface;
 
+/**
+ * Record every failed attempt in order to provide feedback when the attempts
+ * are exhausted
+ */
 class RecordingRetryPolicy extends SimpleRetryPolicy
 {
     /** @var array */

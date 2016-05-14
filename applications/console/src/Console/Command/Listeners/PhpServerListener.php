@@ -8,6 +8,7 @@ namespace Codeup\Console\Command\Listeners;
 
 use Codeup\TestHelpers\HeadlessRunner;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
+use Symfony\Component\Console\Event\ConsoleEvent;
 use Symfony\Component\Console\Event\ConsoleTerminateEvent;
 
 class PhpServerListener
@@ -28,10 +29,7 @@ class PhpServerListener
      */
     public function startPhpServer(ConsoleCommandEvent $event)
     {
-        if (
-               'codeup:rollcall' === $event->getCommand()->getName()
-            && $event->getInput()->getOption('locally')
-        ) {
+        if ($this->isLocalServerNeeded($event)) {
             $this->runner->startPhpServer();
 
             $event->getOutput()->writeln(sprintf(
@@ -46,10 +44,7 @@ class PhpServerListener
      */
     public function stopPhpServer(ConsoleTerminateEvent $event)
     {
-        if (
-            'codeup:rollcall' === $event->getCommand()->getName()
-            && $event->getInput()->getOption('locally')
-        ) {
+        if ($this->isLocalServerNeeded($event)) {
             $this->runner->stopPhpServer();
 
             $event->getOutput()->writeln(sprintf(
@@ -57,5 +52,18 @@ class PhpServerListener
                 $this->runner->phpServerPid()
             ));
         }
+    }
+
+    /**
+     * PHP built-in server is only useful for the `codeup:rollcall` command when
+     * the option `locally` is provided
+     *
+     * @param ConsoleEvent $event
+     * @return bool
+     */
+    private function isLocalServerNeeded(ConsoleEvent $event)
+    {
+        return 'codeup:rollcall' === $event->getCommand()->getName()
+            && $event->getInput()->getOption('locally');
     }
 }

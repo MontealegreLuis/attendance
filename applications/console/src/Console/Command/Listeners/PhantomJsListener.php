@@ -26,6 +26,11 @@ class PhantomJsListener
         $this->runner = $runner;
     }
 
+    /**
+     * Start PhantomJS only for the command `codeup:rollcall`
+     *
+     * @param ConsoleCommandEvent $event
+     */
     public function startPhantomJs(ConsoleCommandEvent $event)
     {
         if ('codeup:rollcall' !== $event->getCommand()->getName()) {
@@ -42,6 +47,11 @@ class PhantomJsListener
         sleep(2);
     }
 
+    /**
+     * Stop PhantomJS only for the command `codeup:rollcall`
+     *
+     * @param ConsoleTerminateEvent $event
+     */
     public function stopPhantomJs(ConsoleTerminateEvent $event)
     {
         if ('codeup:rollcall' !== $event->getCommand()->getName()) {

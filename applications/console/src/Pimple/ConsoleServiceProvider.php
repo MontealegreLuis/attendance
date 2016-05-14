@@ -21,6 +21,9 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class ConsoleServiceProvider extends DatabaseServiceProvider
 {
+    /**
+     * @param Container $container
+     */
     public function register(Container $container)
     {
         parent::register($container);
@@ -57,7 +60,7 @@ class ConsoleServiceProvider extends DatabaseServiceProvider
             return $factory->createProxy(DoRollCall::class, $initializer);
         };
         $container['console.runner'] = function () {
-            return new HeadlessRunner();
+            return new HeadlessRunner($this->options['webdriver']['host']);
         };
         $container['console.listeners.phantomjs'] = function () use ($container) {
             return new PhantomJsListener($container['console.runner']);
