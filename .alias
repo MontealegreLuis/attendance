@@ -1,1 +1,2 @@
 alias setup='docker-compose run --rm attendance_setup $@'
+alias console='docker-compose -f applications/console/docker-compose.yml run --rm console console $@'
