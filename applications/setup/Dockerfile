@@ -17,10 +17,9 @@ WORKDIR /usr/src/myapp
 
 # Install PhantomJS
 RUN apt-get install -y libfreetype6 libfontconfig bzip2
-RUN curl -O -J -L https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.8-linux-x86_64.tar.bz2
-RUN tar xjf phantomjs-1.9.8-linux-x86_64.tar.bz2
-RUN rm phantomjs-1.9.8-linux-x86_64.tar.bz2
-RUN ln -s /phantomjs-1.9.8-linux-x86_64/bin/phantomjs /usr/bin/phantomjs
+RUN apt-get install -y nodejs-legacy
+RUN apt-get install -y npm
+RUN npm install -g phantomjs-prebuilt
 
 EXPOSE 4444
 

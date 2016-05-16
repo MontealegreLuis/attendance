@@ -11,7 +11,7 @@ This application uses [PhantomJS][1] to scrape the router's DHCP page looking
 for the students MAC addresses.
 
 To install this application you will only need Docker. If you have it
-configured run this commands:
+configured run this command:
 
 ```bash
 $ make install

@@ -18,9 +18,12 @@ class HeadlessBrowserListener implements TestListener
     /** @var HeadlessRunner */
     private $runner;
 
-    public function __construct()
+    /**
+     * @param string $phantomJsHost `host:port` configuration for PhantomJS
+     */
+    public function __construct($phantomJsHost)
     {
-        $this->runner = new HeadlessRunner();
+        $this->runner = new HeadlessRunner($phantomJsHost);
     }
 
     public function addError(Test $test, Exception $e, $time)

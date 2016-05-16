@@ -11,6 +11,9 @@
     </testsuites>
     <listeners>
         <listener class="Codeup\PHPUnit\HeadlessBrowserListener">
+            <arguments>
+                <string>127.0.0.1:4444</string>
+            </arguments>
         </listener>
     </listeners>
 </phpunit>
