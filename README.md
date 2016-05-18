@@ -30,6 +30,20 @@ using the applications.
 $ make start
 ```
 
+## Installing dependencies
+
+You can install the dependencies either for the packages or the applications
+with the following commands.
+
+```bash
+composer install --working-dir applications/console
+composer install --working-dir applications/setup
+composer install --working-dir applications/web
+composer install --working-dir packages/attendance
+composer install --working-dir packages/events
+composer install --working-dir packages/persistency
+```
+
 ## Tests
 
 To run the tests, use the following commands:

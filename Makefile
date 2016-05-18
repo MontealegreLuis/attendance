@@ -18,5 +18,5 @@ install:
 start:
 	@echo "Starting database containers..."
 	@docker-compose -f build/containers/docker-compose.yml up -d
-	@echo "Load aliases"
+	@echo "Loading aliases..."
 	@source .alias
