@@ -46,12 +46,14 @@ composer install --working-dir packages/persistency
 
 ## Tests
 
-To run the tests, use the following commands:
+To run the tests, use the following command:
 
 ```bash
-$ bin/phpspec run
-$ bin/phpunit --testdox
+$ tests
 ```
+
+This command will start bash in a container, you can run all the applications
+and packages tests from there.
 
 [1]: http://phantomjs.org/download.html
 [2]: https://github.com/settings/tokens
