@@ -14,7 +14,20 @@ To install this application you will only need Docker. If you have it
 configured run this command:
 
 ```bash
-$ make install
+$ make install YOUR_GITHUB_TOKEN
+```
+
+Sometimes running `composer install` will ask you for a [Github token][2], in
+order to avoid having to type it every time, your [token is saved][3] in
+composer's global configuration.
+
+## Usage
+
+The database container is in a shared container that you need to start before
+using the applications.
+
+```bash
+$ make start
 ```
 
 ## Tests
@@ -27,3 +40,5 @@ $ bin/phpunit --testdox
 ```
 
 [1]: http://phantomjs.org/download.html
+[2]: https://github.com/settings/tokens
+[3]: https://getcomposer.org/doc/06-config.md#github-oauth

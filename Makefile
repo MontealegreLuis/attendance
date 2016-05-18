@@ -8,6 +8,12 @@ install:
 	@echo "Copying development configuration to the console application"
 	@cp build/templates/.env.dev applications/console/.env
 	@cp build/templates/config.dev.php applications/console/config.php
+	@echo "Building console container"
+	@docker-compose -f applications/console/docker-compose.yml up
+	@echo "Building web container"
+	@docker-compose -f applications/web/docker-compose.yml up -d
+	@echo "Building setup container"
+	@docker-compose -f applications/setup/docker-compose.yml up
 
 start:
 	@echo "Starting database containers..."
