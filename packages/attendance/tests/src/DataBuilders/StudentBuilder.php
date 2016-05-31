@@ -62,7 +62,7 @@ class StudentBuilder
 
     /**
      * @param Bootcamp $bootcamp
-     * @return BootcampBuilder
+     * @return StudentBuilder
      */
     public function enrolledOn(Bootcamp $bootcamp)
     {

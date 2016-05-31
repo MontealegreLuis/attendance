@@ -20,11 +20,12 @@ class BootcampSpec extends ObjectBehavior
     function let()
     {
         $this->now = new DateTimeImmutable('now');
-        $currentHour = $this->now->format('G') >= 18
-            ? $this->now->format('G') - 12
-            : $this->now->format('G')
-        ;
         $currentMinute = (int) $this->now->format('i');
+        $currentHour = (int) $this->now->format('G');
+        if ($currentHour >= 16) {
+            $currentHour -= 7;
+            $this->now = $this->now->setTime($currentHour, $currentMinute);
+        }
 
         $this->beConstructedThrough('start', [
             BootcampId::fromLiteral(1),
@@ -34,8 +35,8 @@ class BootcampSpec extends ObjectBehavior
             ),
             'Hampton',
             Schedule::withClassTimeBetween(
-                $this->now->setTime($currentHour - 1, $currentMinute),
-                $this->now->setTime($currentHour + 6, $currentMinute)
+                $this->now,
+                $this->now->setTime($currentHour + 7, $currentMinute)
             )
         ]);
     }

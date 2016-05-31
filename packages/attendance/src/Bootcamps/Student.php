@@ -29,6 +29,9 @@ class Student implements CanRecordEvents
     /** @var Attendance */
     private $checkIn;
 
+    /** @var Attendance */
+    private $checkOut;
+
     /**
      * @param StudentId $studentId
      * @param Bootcamp $bootcamp
@@ -100,11 +103,15 @@ class Student implements CanRecordEvents
      */
     public function register(Attendance $attendance)
     {
-        if ($attendance->isCheckIn()) {
-            $this->checkIn = $attendance;
-            $this->recordThat(new StudentHasCheckedIn($attendance->id()));
-            return $this->checkIn;
-        }
+        $this->checkIn = $attendance;
+        $this->recordThat(new StudentHasCheckedIn($attendance->id()));
+        return $this->checkIn;
+    }
+
+    public function update(Attendance $attendance)
+    {
+        $this->checkOut = $attendance;
+        return $this->checkOut;
     }
 
     /**
