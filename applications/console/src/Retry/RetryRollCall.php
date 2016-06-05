@@ -20,11 +20,7 @@ use Retry\RetryProxy;
  */
 class RetryRollCall extends DoRollCall
 {
-    /** @var RetryProxy */
-    private $proxy;
-
-    /** @var RecordingRetryPolicy */
-    private $retryPolicy;
+    use RetryProvider;
 
     /**
      * @param AttendanceChecker $checker
@@ -41,11 +37,7 @@ class RetryRollCall extends DoRollCall
         $interval
     ) {
         parent::__construct($checker, $students, $attendances);
-        $this->retryPolicy = new RecordingRetryPolicy($attempts);
-        $this->proxy = new RetryProxy(
-            $this->retryPolicy,
-            new ExponentialBackOffPolicy($interval)
-        );
+        $this->configureRetries($attempts, $interval);
     }
 
     /**
@@ -55,12 +47,8 @@ class RetryRollCall extends DoRollCall
      */
     public function rollCall(DateTimeInterface $today)
     {
-        try {
-            return $this->proxy->call(function (DateTimeInterface $today) {
-                return parent::rollCall($today);
-            }, [$today]);
-        } catch (Exception $exception) {
-            throw RetriesExhausted::using($this->retryPolicy);
-        }
+        $this->retry(function (DateTimeInterface $today) {
+            return parent::rollCall($today);
+        }, [$today]);
     }
 }
