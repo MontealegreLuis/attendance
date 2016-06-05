@@ -19,7 +19,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Scrape the router's DHCP page to know who are the students currently in class
  */
-class RollCallCommand extends Command
+class RollCallCommand extends AttendanceCommand
 {
     /** @var DoRollCall */
     private $useCase;
@@ -62,42 +62,8 @@ HELP
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        try {
-            $students = $this->useCase->rollCall(new DateTime('now'));
-            $this->showSummary($students, $output);
-        } catch (RetriesExhausted $exception) {
-            $output->writeln(
-                '<info>Could not complete command, retries exhausted.</info>'
-            );
-            $output->writeln(sprintf(
-                '<info>Following errors occured:<error>%s</error></info>',
-                $exception->getMessage()
-            ));
-        }
-    }
-
-    /**
-     * @param array $students
-     * @param OutputInterface $output
-     */
-    public function showSummary(array $students, OutputInterface $output)
-    {
-        $output->writeln(sprintf(
-            '<info>%d new student(s) found.</info>', count($students)
-        ));
-
-        if (empty($students)) {
-            return;
-        }
-
-        $table = new Table($output);
-        $table
-            ->setHeaders(['Student'])
-            ->setRows(array_map(function (Student $student) {
-                $information = $student->information();
-                return ["{$information->name()} - {$information->macAddress()->value()}"];
-            }, $students))
-        ;
-        $table->render();
+        $this->retryToUpdateAttendance(function () {
+            return $this->useCase->rollCall(new DateTime('now'));
+        }, $output);
     }
 }
