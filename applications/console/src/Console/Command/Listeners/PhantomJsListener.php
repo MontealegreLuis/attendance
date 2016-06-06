@@ -8,6 +8,7 @@ namespace Codeup\Console\Command\Listeners;
 
 use Codeup\TestHelpers\HeadlessRunner;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
+use Symfony\Component\Console\Event\ConsoleEvent;
 use Symfony\Component\Console\Event\ConsoleTerminateEvent;
 
 /**
@@ -15,6 +16,12 @@ use Symfony\Component\Console\Event\ConsoleTerminateEvent;
  */
 class PhantomJsListener
 {
+    /** @var array */
+    private $validCommands = [
+        'codeup:rollcall',
+        'codeup:checkout',
+    ];
+
     /** @var HeadlessRunner */
     private $runner;
 
@@ -33,7 +40,7 @@ class PhantomJsListener
      */
     public function startPhantomJs(ConsoleCommandEvent $event)
     {
-        if ('codeup:rollcall' !== $event->getCommand()->getName()) {
+        if (!$this->requiresPhantomJs($event)) {
             return;
         }
 
@@ -54,7 +61,7 @@ class PhantomJsListener
      */
     public function stopPhantomJs(ConsoleTerminateEvent $event)
     {
-        if ('codeup:rollcall' !== $event->getCommand()->getName()) {
+        if (!$this->requiresPhantomJs($event)) {
             return;
         }
 
@@ -64,5 +71,14 @@ class PhantomJsListener
             '<info>PhantomJS with PID <comment>%d</comment> was stopped</info>',
             $this->runner->phantomJsPid()
         ));
+    }
+
+    /**
+     * @param ConsoleEvent $event
+     * @return bool
+     */
+    private function requiresPhantomJs(ConsoleEvent $event)
+    {
+        return in_array($event->getCommand()->getName(), $this->validCommands);
     }
 }

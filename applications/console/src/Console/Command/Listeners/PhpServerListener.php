@@ -13,6 +13,12 @@ use Symfony\Component\Console\Event\ConsoleTerminateEvent;
 
 class PhpServerListener
 {
+    /** @var array */
+    private $validCommands = [
+        'codeup:rollcall',
+        'codeup:checkout',
+    ];
+
     /** @var HeadlessRunner */
     private $runner;
 
@@ -63,7 +69,7 @@ class PhpServerListener
      */
     private function isLocalServerNeeded(ConsoleEvent $event)
     {
-        return 'codeup:rollcall' === $event->getCommand()->getName()
+        return in_array($event->getCommand()->getName(), $this->validCommands)
             && $event->getInput()->getOption('locally');
     }
 }

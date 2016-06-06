@@ -21,6 +21,7 @@ class UpdateStudentsCheckout
     /** @var Students */
     private $students;
 
+    /** @var Attendances */
     private $attendances;
 
     /**
@@ -39,6 +40,8 @@ class UpdateStudentsCheckout
     }
 
     /**
+     * Update the checkout record for every student that has already checked in.
+     *
      * @param DateTimeInterface $today
      * @return array
      */
@@ -60,7 +63,13 @@ class UpdateStudentsCheckout
         return $studentsInClass;
     }
 
-    public function registerStudentCheckOut(
+    /**
+     * @param DateTimeInterface $today
+     * @param Student $student
+     * @param array $students
+     * @return array All the students currently in class
+     */
+    private function registerStudentCheckOut(
         DateTimeInterface $today,
         Student $student,
         array $students
