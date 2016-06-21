@@ -1,8 +1,0 @@
-setup:
-  container_name: attendance_setup
-  build: .
-  user: $UID
-  external_links:
-    - attendance_db
-  volumes:
-    - ./../../:/usr/src/myapp

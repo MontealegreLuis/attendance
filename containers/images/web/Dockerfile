@@ -1,8 +1,11 @@
-FROM php:5.6-apache
+FROM php:7.0-apache
 
 COPY ./config/entrypoint.sh /entrypoint.sh
 COPY ./config/attendance.conf /etc/apache2/sites-available/
 COPY ./config/php.ini /usr/local/etc/php/
+
+# Add execution permission
+RUN chmod a+x /entrypoint.sh
 
 # Install modules
 RUN apt-get update && apt-get install -y \

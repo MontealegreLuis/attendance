@@ -1,6 +1,0 @@
-console:
-  build: .
-  external_links:
-    - attendance_db
-  volumes:
-    - ./../../:/usr/src/myapp

@@ -1,0 +1,51 @@
+version: '2'
+
+services:
+    console:
+      container_name: ${CONTAINERS_PREFIX}_console
+      build:
+        context: ./images/console/
+      image: ${CONTAINERS_PREFIX}/console
+      links:
+        - db
+      volumes:
+        - ./../:/usr/src/myapp
+    dev:
+      container_name: ${CONTAINERS_PREFIX}_dev
+      build:
+        context: ./images/dev/
+      image: ${CONTAINERS_PREFIX}/dev
+      links:
+        - db
+      volumes:
+        - ./../:/usr/src/myapp
+    web:
+      container_name: ${CONTAINERS_PREFIX}_web
+      build:
+        context: ./images/web/
+      image: ${CONTAINERS_PREFIX}/web
+      ports:
+        - "80:80"
+      links:
+        - db
+      volumes:
+        - ./../:/usr/src/myapp
+    data:
+      container_name: ${CONTAINERS_PREFIX}_data
+      build:
+        context: ./images/data
+      image: ${CONTAINERS_PREFIX}/data
+    db:
+      container_name: ${CONTAINERS_PREFIX}_db
+      build:
+        context: ./images/db
+      image: ${CONTAINERS_PREFIX}/db
+      volumes_from:
+        - data
+      ports:
+        - "3306:3306"
+      environment:
+        MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+        MYSQL_USER: ${MYSQL_USER}
+        MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+        MYSQL_DATABASE: ${MYSQL_DATABASE}
