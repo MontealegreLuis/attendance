@@ -1,2 +1,3 @@
 alias dev='docker-compose -f containers/docker-compose.yml run --rm dev bash'
 alias console='docker-compose -f containers/docker-compose.yml run --rm console console $@'
+alias web='docker-compose -f containers/docker-compose.yml up -d web'

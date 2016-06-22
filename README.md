@@ -10,51 +10,55 @@ Command line and Web application to keep track of Codeup bootcamp's attendance.
 This application uses [PhantomJS][1] to scrape the router's DHCP page looking
 for the students MAC addresses.
 
-To install this application you will only need Docker. If you have it
-configured run this command:
+To install this application you'll need [Docker][3] and [Docker Compose][4]. If
+you have them configured, run this command:
 
 ```bash
-$ make install YOUR_GITHUB_TOKEN
+$ make env
 ```
 
-Sometimes running `composer install` will ask you for a [Github token][2], in
-order to avoid having to type it every time, your [token is saved][3] in
-composer's global configuration.
+This will create the file [containers/.env.sh](containers/.env.sh). You can
+change the configuration settings for the application, containers and images
+there. The only variable without a sensible default is `GITHUB_TOKEN`. You'll
+need a [Github token][2] as you will be running `composer install` for several
+applications.
 
 ## Usage
 
-The database container is in a shared container that you need to start before
-using the applications.
+I created some aliases to ease the use of the containers.
 
 ```bash
-$ make start
+$ source .alias
 ```
 
-## Installing dependencies
+To run the Web application execute:
+
+```bash
+$ web
+```
+
+You can run the console commands by using one of the following commands.
+
+```bash
+$ console codeup:rollcall
+$ console codeup:checkout
+```
+
+### Development environment
 
 You can install the dependencies either for the packages or the applications
-with the following commands.
+by running the `dev` container and executing composer. You can also run the
+migrations, where needed.
 
 ```bash
-composer install --working-dir applications/console
-composer install --working-dir applications/setup
-composer install --working-dir applications/web
-composer install --working-dir packages/attendance
-composer install --working-dir packages/events
-composer install --working-dir packages/persistency
+$ dev
 ```
 
-## Tests
+### Tests
 
-To run the tests, use the following command:
-
-```bash
-$ tests
-```
-
-This command will start bash in a container, you can run all the applications
-and packages tests from there.
+You can run the tests from the `dev` container:
 
 [1]: http://phantomjs.org/download.html
 [2]: https://github.com/settings/tokens
-[3]: https://getcomposer.org/doc/06-config.md#github-oauth
+[3]: https://www.docker.com/
+[4]: https://docs.docker.com/compose/
