@@ -37,7 +37,7 @@ class ConsoleServiceProvider extends DatabaseServiceProvider
             return new UpdateAttendanceCommand($container['attendance.update_checkout']);
         };
         $container['attendance.update_checkout'] = function () use ($container) {
-            $initializer = function (& $wrappedObject, $_, $_, $_, & $initializer) use ($container) {
+            $initializer = function (& $wrappedObject, $_, $__, $___, & $initializer) use ($container) {
                 $useCase = new RetryUpdateCheckout(
                     $container['attendance.checker'],
                     $container['attendance.students'],
@@ -58,7 +58,7 @@ class ConsoleServiceProvider extends DatabaseServiceProvider
             return $factory->createProxy(UpdateStudentsCheckout::class, $initializer);
         };
         $container['attendance.do_roll_call'] = function () use ($container) {
-            $initializer = function (& $wrappedObject, $_, $_, $_, & $initializer) use ($container) {
+            $initializer = function (& $wrappedObject, $_, $__, $___, & $initializer) use ($container) {
                 $useCase = new RetryRollCall(
                     $container['attendance.checker'],
                     $container['attendance.students'],

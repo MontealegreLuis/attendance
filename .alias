@@ -1,3 +1,2 @@
-alias composer='docker-compose run --rm attendance_setup composer $@'
-alias console='docker-compose -f applications/console/docker-compose.yml run --rm console console $@'
-alias tests='export UID && docker-compose -f applications/setup/docker-compose.yml run --rm setup bash'
+alias dev='docker-compose -f containers/docker-compose.yml run --rm dev bash'
+alias console='docker-compose -f containers/docker-compose.yml run --rm console console $@'
