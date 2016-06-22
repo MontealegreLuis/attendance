@@ -51,6 +51,16 @@ class AttendancesRepository implements Attendances
         ]);
     }
 
+    public function update(Attendance $attendance)
+    {
+        $information = $attendance->information();
+        $this->connection->update('attendances',[
+            'date' => $information->onDate()->format('Y-m-d H:i:s'),
+        ], [
+            'attendance_id' => $information->id()->value(),
+        ]);
+    }
+
     /**
      * @param AttendanceId $attendanceId
      * @return Student

@@ -55,7 +55,7 @@ class StudentSpec extends ObjectBehavior
 
     function it_is_able_to_check_out()
     {
-        $this->register(Attendance::checkOut(
+        $this->checkout(Attendance::checkOut(
             AttendanceId::fromLiteral(1),
             $today = new DateTime('now'),
             StudentId::fromLiteral(1)

@@ -108,7 +108,11 @@ class Student implements CanRecordEvents
         return $this->checkIn;
     }
 
-    public function update(Attendance $attendance)
+    /**
+     * @param Attendance $attendance
+     * @return Attendance
+     */
+    public function checkout(Attendance $attendance)
     {
         $this->checkOut = $attendance;
         return $this->checkOut;
@@ -153,19 +157,39 @@ class Student implements CanRecordEvents
             $storedValues['name'],
             MacAddress::withValue($storedValues['mac_address'])
         );
-        if (!is_null($storedValues['attendance_id'])) {
-            $student->checkIn = Attendance::from($storedValues);
+        if (!is_null($storedValues['check_in_id'])) {
+            $student->checkIn = Attendance::from([
+                'attendance_id' => $storedValues['check_in_id'],
+                'date' => $storedValues['check_in_date'],
+                'type' => $storedValues['check_in_type'],
+                'student_id' => $storedValues['student_id'],
+            ]);
+        }
+        if (!is_null($storedValues['check_out_id'])) {
+            $student->checkOut = Attendance::from([
+                'attendance_id' => $storedValues['check_out_id'],
+                'date' => $storedValues['check_out_date'],
+                'type' => $storedValues['check_out_type'],
+                'student_id' => $storedValues['student_id'],
+            ]);
         }
 
         return $student;
     }
 
-    public function checkOut(DateTimeInterface $now)
+    /**
+     * @param DateTimeInterface $now
+     * @return Attendance
+     */
+    public function updateCheckout(DateTimeInterface $now)
     {
+        $this->checkOut->update($now);
+
+        return $this->checkOut;
     }
 
-    public function hasCheckedOut()
+    public function hasCheckedOut($today)
     {
-        return true;
+        return !is_null($this->checkOut) && $this->checkOut->occurredOn($today);
     }
 }

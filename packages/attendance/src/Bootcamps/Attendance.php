@@ -134,6 +134,14 @@ class Attendance
     }
 
     /**
+     * @param DateTimeInterface $now
+     */
+    public function update(DateTimeInterface $now)
+    {
+        $this->date = $now;
+    }
+
+    /**
      * @return AttendanceInformation
      */
     public function information()

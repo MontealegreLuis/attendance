@@ -74,14 +74,20 @@ class UpdateStudentsCheckout
         Student $student,
         array $students
     ) {
-        if ($student->hasCheckedIn($today)) {
-            $this->attendances->add($student->update(Attendance::checkOut(
+        if (!$student->hasCheckedIn($today)) {
+            return $students;
+        }
+        if ($student->hasCheckedOut($today)) {
+            $this->attendances->update($student->updateCheckout($today));
+        } else {
+            $this->attendances->add($student->checkOut(Attendance::checkOut(
                 $this->attendances->nextAttendanceId(),
                 $today,
                 $student->id()
             )));
-            $students[] = $student;
         }
+        $students[] = $student;
+
         return $students;
     }
 }

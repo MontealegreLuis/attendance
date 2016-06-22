@@ -56,22 +56,32 @@ class StudentsRepository implements Students
                 b.stop_date,
                 b.start_time,
                 b.stop_time,
-                a.attendance_id,
-                a.date,
-                a.type
+                check_in.attendance_id AS check_in_id,
+                check_in.date AS check_in_date,
+                check_in.type AS check_in_type,
+                check_out.attendance_id AS check_out_id,
+                check_out.date AS check_out_date,
+                check_out.type AS check_out_type
             ')
             ->from('students', 's')
             ->innerJoin('s', 'bootcamps', 'b', 's.bootcamp_id = b.bootcamp_id')
             ->leftJoin(
                 's',
                 'attendances',
-                'a',
-                'a.student_id = s.student_id AND DATE(a.date) = :today AND a.type = :type'
+                'check_in',
+                'check_in.student_id = s.student_id AND DATE(check_in.date) = :today AND check_in.type = :checkin'
+            )
+            ->leftJoin(
+                's',
+                'attendances',
+                'check_out',
+                'check_out.student_id = s.student_id AND DATE(check_out.date) = :today AND check_out.type = :checkout'
             )
             ->where('b.start_date <= :today AND :today <= b.stop_date')
             ->andWhere("s.mac_address IN ({$this->buildParameters($addresses)})")
             ->setParameter('today', $today->format('Y-m-d'))
-            ->setParameter('type', Attendance::CHECK_IN)
+            ->setParameter('checkin', Attendance::CHECK_IN)
+            ->setParameter('checkout', Attendance::CHECK_OUT)
         ;
 
         return array_map(function (array $values) {

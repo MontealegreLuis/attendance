@@ -19,6 +19,11 @@ interface Attendances
     public function add(Attendance $attendance);
 
     /**
+     * @param Attendance $attendance
+     */
+    public function update(Attendance $attendance);
+
+    /**
      * @param AttendanceId $attendanceId
      * @return Attendance
      */

@@ -30,6 +30,14 @@ class InMemoryAttendances implements Attendances
     }
 
     /**
+     * @param Attendance $attendance
+     */
+    public function update(Attendance $attendance)
+    {
+        $this->attendances->attach($attendance);
+    }
+
+    /**
      * @return \Codeup\Bootcamps\Identifier
      */
     public function nextAttendanceId()

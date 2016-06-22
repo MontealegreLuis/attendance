@@ -102,7 +102,6 @@ class UpdateStudentsCheckoutSpec extends ObjectBehavior
         ;
 
         $this->beConstructedWith($checker, $students, $attendances);
-        //$this->setPublisher(new EventPublisher());
 
         // Then
         $attendances
