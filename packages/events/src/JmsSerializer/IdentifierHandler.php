@@ -13,10 +13,10 @@ class IdentifierHandler
     /**
      * @param $_ Visitor
      * @param Identifier $id
-     * @param array $_ Type
+     * @param array $__ Type
      * @return int
      */
-    public function serialize($_, Identifier $id, array $_)
+    public function serialize($_, Identifier $id)
     {
         return $id->value();
     }
@@ -24,11 +24,11 @@ class IdentifierHandler
     /**
      * @param $_ Visitor
      * @param Identifier $id
-     * @param array $_ Type
+     * @param array $__ Type
      * @return int
      */
-    public function __invoke($_, Identifier $id, array $_)
+    public function __invoke($_, Identifier $id)
     {
-        return $this->serialize($_, $id, $_);
+        return $this->serialize($_, $id);
     }
 }

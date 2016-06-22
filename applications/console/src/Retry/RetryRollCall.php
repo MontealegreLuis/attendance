@@ -47,7 +47,7 @@ class RetryRollCall extends DoRollCall
      */
     public function rollCall(DateTimeInterface $today)
     {
-        $this->retry(function (DateTimeInterface $today) {
+        return $this->retry(function (DateTimeInterface $today) {
             return parent::rollCall($today);
         }, [$today]);
     }

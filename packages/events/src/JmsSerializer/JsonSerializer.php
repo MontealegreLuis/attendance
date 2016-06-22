@@ -44,7 +44,7 @@ class JsonSerializer implements Serializer
                     'serialization',
                     DateTime::class,
                     'json',
-                    function ($_, DateTime $dateTime, array $_) {
+                    function ($_, DateTime $dateTime, array $__) {
                         return $dateTime->format('Y-m-d H:i:s');
                     }
                 );

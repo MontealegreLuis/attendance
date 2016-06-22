@@ -32,6 +32,7 @@
     "require": {
         "attendance/persistency": "^1.0",
         "pimple/pimple": "^3.0",
-        "anahkiasen/underscore-php": "^2.0"
+        "anahkiasen/underscore-php": "^2.0",
+        "vlucas/phpdotenv": "^2.3"
     }
 }
