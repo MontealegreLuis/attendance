@@ -52,20 +52,5 @@ class SetupServiceProvider extends DatabaseServiceProvider
                 $container['events.store']
             );
         };
-        $container['fixtures.loader'] = function () use ($container) {
-            return new Loader('en_US', [new AttendanceProvider(
-                $container['events.store'],
-                $container['messages.tracker'],
-                $container['attendance.attendances'],
-                $container['attendance.bootcamps'],
-                $container['attendance.students']
-            )]);
-        };
-        $container['command.db_seeder'] = function () use ($container) {
-            return new SeedDatabaseCommand(
-                $container['db.persister'],
-                $container['fixtures.loader']
-            );
-        };
     }
 }

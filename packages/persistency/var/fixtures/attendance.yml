@@ -1,0 +1,72 @@
+Codeup\Bootcamps\BootcampId (local):
+    bootcamp_id{1..2}:
+        value: <bootcampId()>
+DateTime (local):
+    start:
+        __construct: { createFromFormat: ['Y-m-d H:i:s', '2016-03-06 09:00:00'] }
+    stop:
+        __construct: { createFromFormat: ['Y-m-d H:i:s', '2016-03-06 16:00:00'] }
+    today:
+        __construct: { createFromFormat: ['Y-m-d H:i:s', '2016-03-21 08:58:00'] }
+    yesterday:
+        __construct: { createFromFormat: ['Y-m-d H:i:s', '2016-03-21 08:30:00'] }
+Codeup\Bootcamps\Schedule (local):
+    schedule{1..2}:
+        startTime: '@start'
+        stopTime: '@stop'
+Codeup\Bootcamps\Bootcamp:
+    bootcamp{1..2}:
+        bootcampId: '@bootcamp_id<current()>'
+        duration: <startingYesterday()>
+        cohortName: <word()>
+        schedule: '@schedule<current()>'
+
+Codeup\Bootcamps\StudentId (local):
+    student_id{1..46}:
+        value: <studentId()>
+Codeup\Bootcamps\MacAddress (local):
+    address1:
+        value: 'ac:bc:32:93:64:29'
+    address2:
+        value: 'b8:e8:56:23:5c:34'
+    address{3..46}:
+        value: <macAddress()>
+Codeup\Bootcamps\Student:
+    student1:
+        studentId: '@student_id1'
+        bootcamp: '@bootcamp1'
+        name: <name()>
+        macAddress: '@address1'
+    student2:
+        studentId: '@student_id2'
+        bootcamp: '@bootcamp2'
+        name: <name()>
+        macAddress: '@address2'
+    student{3..26}:
+        studentId: '@student_id<current()>'
+        bootcamp: '@bootcamp1'
+        name: <name()>
+        macAddress: '@address<current()>'
+    student{27..46}:
+        studentId: '@student_id<current()>'
+        bootcamp: '@bootcamp2'
+        name: <name()>
+        macAddress: '@address<current()>'
+
+Codeup\Bootcamps\AttendanceId (local):
+    attendance_id{1..46}:
+        value: <attendanceId()>
+Codeup\Bootcamps\Attendance:
+    attendance{1..25}:
+        __construct: { checkIn: ['@attendance_id<current()>', '@today', '@student_id<current()>'] }
+    attendance2{26..46}:
+        __construct: { checkIn: ['@attendance_id<current()>', '@yesterday', '@student_id<current()>'] }
+Codeup\Bootcamps\StudentHasCheckedIn:
+    checkIn1:
+        __construct: false
+        occurredOn: '@today'
+        attendanceId: '@attendance_id1'
+    checkIn2:
+        __construct: false
+        occurredOn: '@today'
+        attendanceId: '@attendance_id2'

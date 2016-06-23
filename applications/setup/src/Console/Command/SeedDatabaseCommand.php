@@ -6,6 +6,7 @@
  */
 namespace Codeup\Console\Command;
 
+use Codeup\Fixtures\TwoBootcampsWith2CheckIns;
 use Nelmio\Alice\Fixtures\Loader;
 use Nelmio\Alice\PersisterInterface;
 use Symfony\Component\Console\Command\Command;
@@ -46,10 +47,9 @@ class SeedDatabaseCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $objects = $this->loader->load(
-            __DIR__ . '/../../../var/fixtures/attendance.yml'
-        );
-        $this->persister->persist($objects);
+        $fixture = new TwoBootcampsWith2CheckIns();
+        $fixture->load($this->persister, $this->loader);
+
         $output->writeln(
             '<info>Fake database information has been loaded successfully.</info>'
         );
