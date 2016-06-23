@@ -1,3 +1,0 @@
-#!/usr/bin/env php
-<?php
-require 'database.php';
