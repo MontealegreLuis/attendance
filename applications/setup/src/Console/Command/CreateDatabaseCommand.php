@@ -9,11 +9,10 @@ namespace Codeup\Console\Command;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 use Exception;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class CreateDatabaseCommand extends Command
+class CreateDatabaseCommand extends DatabaseCommand
 {
     /**
      * @inheritDoc
@@ -35,45 +34,12 @@ class CreateDatabaseCommand extends Command
         $connection = DriverManager::getConnection($this->withoutDatabaseName($parameters));
 
         try {
-            if ($this->databaseExists($parameters, $connection)) {
-                $this->doNotCreateDatabase($output, $parameters);
-            } else {
-                $this->createDatabase($output, $connection, $parameters);
-            }
+            $this->createIfExists($output, $parameters, $connection);
         } catch (Exception $e) {
             $this->cannotCreateDatabase($output, $parameters, $e);
         }
 
         $connection->close();
-    }
-
-    /**
-     * @param array $parameters
-     * @return array
-     */
-    private function withoutDatabaseName(array $parameters)
-    {
-        $filtered = $parameters;
-        unset($filtered['dbname'], $filtered['path']);
-
-        return $filtered;
-    }
-
-    /**
-     * @param array $parameters
-     * @param Connection $connection
-     * @return bool
-     */
-    private function databaseExists(array $parameters, Connection $connection)
-    {
-        if ($this->hasPath($parameters)) {
-            return file_exists($this->databaseName($parameters));
-        }
-
-        return in_array(
-            $this->databaseName($parameters),
-            $connection->getSchemaManager()->listDatabases()
-        );
     }
 
     /**
@@ -86,11 +52,16 @@ class CreateDatabaseCommand extends Command
         Connection $connection,
         array $parameters
     ) {
-        $name = $connection
-            ->getDatabasePlatform()
-            ->quoteSingleIdentifier($this->databaseName($parameters))
-        ;
+        $name = $this->databaseName($parameters);
+        if (!$this->hasPath($parameters)) {
+            $name = $connection
+                ->getDatabasePlatform()
+                ->quoteSingleIdentifier($name)
+            ;
+        }
+
         $connection->getSchemaManager()->createDatabase($name);
+
         $output->writeln(sprintf(
             '<info>Created database <comment>%s</comment></info>',
             $this->databaseName($parameters)
@@ -129,20 +100,19 @@ class CreateDatabaseCommand extends Command
     }
 
     /**
+     * @param OutputInterface $output
      * @param array $parameters
-     * @return string
+     * @param Connection $connection
      */
-    private function databaseName(array $parameters)
-    {
-        return $this->hasPath($parameters) ? $parameters['path'] : $parameters['dbname'];
-    }
-
-    /**
-     * @param array $parameters
-     * @return bool
-     */
-    private function hasPath(array $parameters)
-    {
-        return isset($parameters['path']);
+    private function createIfExists(
+        OutputInterface $output,
+        array $parameters,
+        Connection $connection
+    ) {
+        if ($this->databaseExists($parameters, $connection)) {
+            $this->doNotCreateDatabase($output, $parameters);
+        } else {
+            $this->createDatabase($output, $connection, $parameters);
+        }
     }
 }
