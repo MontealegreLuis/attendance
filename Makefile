@@ -24,5 +24,6 @@ install:
 	@echo "Generating configuration for the 'console' image/container/application..."
 	@source containers/.env.sh; rm -f applications/console/.env; CONTAINER_VARS='$$APP_ENV:$$MYSQL_USER:$$MYSQL_PASSWORD:$$MYSQL_HOST:$$MYSQL_DATABASE'; envsubst "$$CONTAINER_VARS" < "containers/images/console/templates/.env.template" > "applications/console/.env";
 	@cp containers/config/php.ini containers/images/console/config/php.ini
+	@cp containers/images/console/templates/attendance-cron containers/images/console/config/attendance-cron
 	@echo "Building containers..."
 	@docker-compose -f containers/docker-compose.yml up -d

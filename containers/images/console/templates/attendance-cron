@@ -1,0 +1,2 @@
+* * * * * root /usr/local/bin/php /usr/src/myapp/applications/console/bin/console codeup:rollcall >> /var/log/cron.log 2>&1
+* * * * * root /usr/local/bin/php /usr/src/myapp/applications/console/bin/console codeup:checkout >> /var/log/cron.log 2>&1
