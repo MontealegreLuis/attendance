@@ -8,6 +8,7 @@ namespace Codeup\Retry;
 
 use Retry\BackOff\ExponentialBackOffPolicy;
 use Retry\RetryProxy;
+use Exception;
 
 trait RetryProvider
 {
